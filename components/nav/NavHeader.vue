@@ -11,22 +11,12 @@ const { data: user } = await useFetch('/api/user')
 </script>
 
 <template>
-  <header
-    fixed
-    z-9999
-    top-0
-    inset-x-0
-    trans
-    backdrop-blur
-    fcc
-    px-8
-    pl-4
-  >
+  <header fixed z-9999 top-0 inset-x-0 trans backdrop-blur fcc px-8 pl-4>
     <nav w-full :class="inHome ? 'fcc' : 'fbc'">
       <div v-if="!inHome" class="transLogo">
         <NuxtLink to="/" title="Home">
           <ImgBlurHash
-            :src="user?.avatar_url"
+            :src="user!.avatar_url"
             blurhash="LYN0}600~q%LIT9Ft7IoIV-;-pxu"
             alt="Avatar"
             w-10
@@ -48,7 +38,10 @@ const { data: user } = await useFetch('/api/user')
           v-for="_route in routes"
           :key="_route.path"
           :to="_route.path"
-          :title="_route.path.slice(1, 2).toUpperCase() + _route.path.slice(2).toLowerCase()"
+          :title="
+            _route.path.slice(1, 2).toUpperCase()
+              + _route.path.slice(2).toLowerCase()
+          "
         >
           <span v-if="_route.text" icon-text>{{ _route.text }}</span>
           <div v-else icon-btn :class="_route.icon" />
@@ -63,7 +56,13 @@ const { data: user } = await useFetch('/api/user')
           icon-link
           i-ri:twitter-line
         /> -->
-        <a title="Github" :href="user?.html_url" target="_blank" icon-link i-ri-github-line />
+        <a
+          title="Github"
+          :href="user?.html_url"
+          target="_blank"
+          icon-link
+          i-ri-github-line
+        />
         <div fcc>
           <DrakToggle />
         </div>

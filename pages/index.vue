@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { useTitle } from '@vueuse/core'
 
-const { data: user = ref({}) } = await useFetch('/api/user')
+const { data: user } = await useFetch('/api/user')
 useTitle(user.value?.name)
 </script>
 
@@ -12,7 +12,7 @@ useTitle(user.value?.name)
       <ImgBlurHash
         mode="bg"
         class="transLogo"
-        :src="user?.avatar_url"
+        :src="user!.avatar_url"
         blurhash="LYN0}600~q%LIT9Ft7IoIV-;-pxu"
         alt="Avatar"
         w-30

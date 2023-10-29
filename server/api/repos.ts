@@ -2,6 +2,11 @@
 import type { Repo } from '~/types'
 
 export default defineEventHandler(async () => {
+  // const { data } = await OctokitCtx.rest.repos.listForAuthenticatedUser({
+  //   per_page: 100,
+  //   type: 'owner',
+  //   sort: 'updated',
+  // })
   const data = await $fetch<Repo[]>('https://api.github.com/users/iceywu/repos?per_page=100&type=owner&sort=updated')
 
   const publicRepos = data.filter(repo => !repo.private && !repo.archived)
