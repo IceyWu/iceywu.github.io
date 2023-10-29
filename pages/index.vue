@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import { useTitle } from "@vueuse/core";
-const { data: user = ref({}) } = await useFetch("/api/user");
-useTitle(user.value?.name);
+import { useTitle } from '@vueuse/core'
+
+const { data: user = ref({}) } = await useFetch('/api/user')
+useTitle(user.value?.name)
 </script>
 
 <template>
@@ -32,8 +33,7 @@ useTitle(user.value?.name);
         :to="isDark ? '#00f2fe' : '#8ec5fc'"
         href="https://github.com/IceyWu"
         target="_blank"
-        ><strong>{{ user?.name }}</strong></a
-      >, front-end engineer 🌈 & open source enthusiast.
+      ><strong>{{ user?.name }}</strong></a>, front-end engineer 🌈 & open source enthusiast.
     </p>
     <p>
       Team member of
@@ -42,8 +42,7 @@ useTitle(user.value?.name);
         o="#c18139"
         href="https://github.com/Life-Palette"
         target="_blank"
-        ><strong>Life</strong> <sub bottom-0>Palette</sub></a
-      >, Creator of
+      ><strong>Life</strong> <sub bottom-0>Palette</sub></a>, Creator of
       <a
         trans
         linear-text
@@ -53,8 +52,7 @@ useTitle(user.value?.name);
         to="#C084FC"
         href="https://github.com/Life-Palette"
         target="_blank"
-        ><strong>Life palette</strong></a
-      >
+      ><strong>Life palette</strong></a>
       <a
         trans
         linear-text
@@ -64,10 +62,9 @@ useTitle(user.value?.name);
         to="#C084FC"
         href="http://47.108.192.147:10086/#/index"
         target="_blank"
-        ><strong>Go de</strong></a
-      >
+      ><strong>Go de</strong></a>
       <i i-fluent-emoji-sparkles ml-1 />
-      <br />
+      <br>
       In the community, I am also a ecological contributors of the
       <i i-logos-element w-1.1em h-1.1em mr-1 />
       <a
@@ -79,16 +76,14 @@ useTitle(user.value?.name);
         to="#bd34fe"
         href="https://github.com/element-plus/element-plus"
         target="_blank"
-        >element-plus</a
-      >、
+      >element-plus</a>、
       <i i-logos-vueuse w-1.1em h-1.1em mr-1 />
       <a
         linkInProse
         o="#64b687"
         href="https://github.com/vueuse/vueuse"
         target="_blank"
-        >VueUse</a
-      >& etc.
+      >VueUse</a>& etc.
 
       <i i-fluent-emoji-partying-face />
     </p>

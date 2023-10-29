@@ -1,5 +1,5 @@
 <script lang='ts' setup>
-import { useTitle } from '@vueuse/core'
+// import { useTitle } from '@vueuse/core'
 
 const { data: repoGroup } = await useFetch('/api/repos')
 

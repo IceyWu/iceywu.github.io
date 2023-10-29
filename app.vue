@@ -1,7 +1,3 @@
-<script setup>
-const { data: user } = await useFetch("/api/user");
-</script>
-
 <template>
   <div>
     <NuxtLoadingIndicator
