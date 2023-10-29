@@ -1,0 +1,10 @@
+node_modules
+*.log
+dist
+.output
+.nuxt
+.env
+.vscode
+*.zip
+data
+dev-dist

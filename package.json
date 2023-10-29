@@ -1,0 +1,60 @@
+{
+  "name": "iceywu.me",
+  "private": true,
+  "description": "IceyWu' blog build with Nuxt3.",
+  "author": "IceyWu <https://github.com/IceyWu>",
+  "license": "MIT",
+  "homepage": "https://github.com/IceyWu/iceywu.me#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IceyWu/iceywu.me.git"
+  },
+  "bugs": {
+    "url": "https://github.com/IceyWu/iceywu.me/issues"
+  },
+  "keywords": [
+    "blog",
+    "vue3",
+    "nuxt3",
+    "unocss"
+  ],
+  "scripts": {
+    "dev": "nuxt dev -o",
+    "build": "nuxt build",
+    "preview": "nuxt preview",
+    "lint": "eslint .",
+    "postinstall": "nuxt prepare && esno scripts/posts-route.ts"
+  },
+  "dependencies": {
+    "blurhash": "^2.0.5",
+    "dayjs": "^1.11.9",
+    "octokit": "^3.1.0"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^0.41.0",
+    "@iconify-json/akar-icons": "^1.1.19",
+    "@iconify-json/carbon": "^1.1.21",
+    "@iconify-json/fluent-emoji": "^1.1.14",
+    "@iconify-json/logos": "^1.1.35",
+    "@iconify-json/ri": "^1.1.12",
+    "@iconify/utils": "^2.1.9",
+    "@nuxt/content": "npm:@nuxt/content-edge@latest",
+    "@nuxt/devtools": "^0.8.0",
+    "@types/fs-extra": "^11.0.1",
+    "@unocss/nuxt": "^0.55.3",
+    "@vueuse/nuxt": "^10.4.0",
+    "eslint": "^8.48.0",
+    "esno": "^0.17.0",
+    "fs-extra": "^11.1.1",
+    "nuxt": "3.6.5",
+    "sass": "^1.66.1",
+    "typescript": "5.1.6",
+    "unocss-preset-useful": "^0.1.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "@nuxt/kit": "npm:@nuxt/kit-edge@latest",
+      "@nuxt/kit-edge": "latest"
+    }
+  }
+}
