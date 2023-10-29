@@ -33,3 +33,9 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+      - name: generate
+        run: pnpm generate
+
+      - name: deploy
+        run: pnpm deploy
