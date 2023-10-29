@@ -23,7 +23,9 @@
     "build": "nuxt build",
     "preview": "nuxt preview",
     "lint": "eslint .",
-    "postinstall": "nuxt prepare && esno scripts/posts-route.ts"
+    "postinstall": "nuxt prepare && esno scripts/posts-route.ts",
+    "generate": "nuxt generate",
+    "deploy": "push-dir --dir=dist --master=gh-pages --cleanup"
   },
   "dependencies": {
     "blurhash": "^2.0.5",
