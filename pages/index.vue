@@ -11,7 +11,7 @@ useTitle(user.value?.name);
       <ImgBlurHash
         mode="bg"
         class="transLogo"
-        :src="user!.avatar_url"
+        :src="user?.avatar_url"
         blurhash="LYN0}600~q%LIT9Ft7IoIV-;-pxu"
         alt="Avatar"
         w-30

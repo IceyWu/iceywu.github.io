@@ -5,7 +5,7 @@ const { data: user } = await useFetch('/api/user')
 <template>
   <div flex flex-col items-center md="gap-10 flex-row">
     <ImgBlurHash
-      :src="user!.avatar_url"
+      :src="user?.avatar_url"
       blurhash="LYN0}600~q%LIT9Ft7IoIV-;-pxu"
       alt="Avatar"
       w-10
