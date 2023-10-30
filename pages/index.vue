@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { useTitle } from '@vueuse/core'
 
+// import lineSvg from "~/public/images/line.svg";
+
 const { data: user } = await useFetch('/api/user')
 useTitle(user.value?.name)
 </script>
@@ -33,7 +35,8 @@ useTitle(user.value?.name)
         :to="isDark ? '#00f2fe' : '#8ec5fc'"
         href="https://github.com/IceyWu"
         target="_blank"
-      ><strong>{{ user?.name }}</strong></a>, front-end engineer 🌈 & open source enthusiast.
+      ><strong>{{ user?.name }}</strong></a>, this is my
+      <strong class="text-class">Blog.</strong>
     </p>
     <p>
       Team member of
@@ -109,5 +112,20 @@ p {
   font-weight: 300;
   line-height: 1.4;
   max-width: 28em;
+}
+.text-class {
+  position: relative;
+}
+.text-class::after {
+  background-image: url("~/public/images/line.svg");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  content: "";
+  display: block;
+  height: 0.3em;
+  position: absolute;
+  left: 0;
+  bottom: -0.3em;
+  width: 100%;
 }
 </style>
