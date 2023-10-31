@@ -67,7 +67,7 @@ useTitle(user.value?.name)
         target="_blank"
         ><strong>Go de</strong></a
       > -->
-      <i i-fluent-emoji-sparkles ml-1 />
+      <!-- <i i-fluent-emoji-sparkles ml-1 /> -->
       <br>
     </p>
     <p>
@@ -104,7 +104,8 @@ useTitle(user.value?.name)
         href="http://47.108.192.147:10086/#/index"
         target="_blank"
       ><strong>website</strong></a>
-      , welcome to join <i i-fluent-emoji-partying-face />
+      , welcome to join
+      <!-- <i i-fluent-emoji-partying-face /> -->
     </p>
 
     <p>
@@ -124,7 +125,7 @@ useTitle(user.value?.name)
 
 <style scoped>
 p {
-  font-size: 1.6em;
+  font-size: 1.5em;
   font-weight: 300;
   line-height: 1.4;
   max-width: 28em;

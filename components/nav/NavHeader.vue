@@ -11,7 +11,18 @@ const { data: user } = await useFetch('/api/user')
 </script>
 
 <template>
-  <header fixed z-9999 top-0 inset-x-0 trans backdrop-blur fcc px-8 pl-4>
+  <header
+    fixed
+    z-9999
+    top-0
+    inset-x-0
+    trans
+    backdrop-blur
+    fcc
+    px-8
+    pl-4
+    border="0 b-1 #dcdfe6 dark:#4c4d4f op-70 hover:op-100"
+  >
     <nav w-full :class="inHome ? 'fcc' : 'fbc'">
       <div v-if="!inHome" class="transLogo">
         <NuxtLink to="/" title="Home">
