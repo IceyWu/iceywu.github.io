@@ -35,8 +35,8 @@ useTitle(user.value?.name)
         :to="isDark ? '#00f2fe' : '#8ec5fc'"
         href="https://github.com/IceyWu"
         target="_blank"
-      ><strong>{{ user?.name }}</strong></a>, this is my
-      <strong class="text-class">Blog.</strong>
+      ><strong>{{ user?.name }}</strong></a>, Front-end developer and Open source
+      <strong class="text-class"> enthusiasts</strong>
     </p>
     <p>
       Team member of
@@ -56,7 +56,7 @@ useTitle(user.value?.name)
         href="https://github.com/Life-Palette"
         target="_blank"
       ><strong>Life palette</strong></a>
-      <a
+      <!-- <a
         trans
         linear-text
         shape-bl
@@ -65,9 +65,12 @@ useTitle(user.value?.name)
         to="#C084FC"
         href="http://47.108.192.147:10086/#/index"
         target="_blank"
-      ><strong>Go de</strong></a>
+        ><strong>Go de</strong></a
+      > -->
       <i i-fluent-emoji-sparkles ml-1 />
       <br>
+    </p>
+    <p>
       In the community, I am also a ecological contributors of the
       <i i-logos-element w-1.1em h-1.1em mr-1 />
       <a
@@ -87,8 +90,21 @@ useTitle(user.value?.name)
         href="https://github.com/vueuse/vueuse"
         target="_blank"
       >VueUse</a>& etc.
-
-      <i i-fluent-emoji-partying-face />
+    </p>
+    <p>
+      I also love photography. I want to record every beautiful moment, sharing
+      these photos on my
+      <a
+        trans
+        linear-text
+        shape-bottom-right
+        class="c-context::#bd34fe"
+        from="#cc208e"
+        to="#6713d2"
+        href="http://47.108.192.147:10086/#/index"
+        target="_blank"
+      ><strong>website</strong></a>
+      , welcome to join <i i-fluent-emoji-partying-face />
     </p>
 
     <p>
