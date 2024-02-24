@@ -47,6 +47,9 @@ devDependencies:
   '@iconify-json/logos':
     specifier: ^1.1.35
     version: 1.1.35
+  '@iconify-json/meteocons':
+    specifier: ^1.1.4
+    version: 1.1.4
   '@iconify-json/ri':
     specifier: ^1.1.12
     version: 1.1.12
@@ -1281,6 +1284,12 @@ packages:
 
   /@iconify-json/logos@1.1.35:
     resolution: {integrity: sha512-yJPNSKNgfMGeE6dP9/drkS2PVaBBqcUW5lsSfTG6qps/Yc3W3KfP2oLcZcUwMZujkJ881Q8/AqKOxEahc2kWxw==}
+    dependencies:
+      '@iconify/types': 2.0.0
+    dev: true
+
+  /@iconify-json/meteocons@1.1.4:
+    resolution: {integrity: sha512-6qp5nGkATMqtuDmKHshHzhxL6fNOlBsI4KfeUOxT9O78k6FjW5nO6sXS7m8D3IRChf2dCcRRljDH/guH44+Xfg==}
     dependencies:
       '@iconify/types': 2.0.0
     dev: true

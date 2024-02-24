@@ -42,6 +42,7 @@
     "@iconify-json/carbon": "^1.1.21",
     "@iconify-json/fluent-emoji": "^1.1.14",
     "@iconify-json/logos": "^1.1.35",
+    "@iconify-json/meteocons": "^1.1.4",
     "@iconify-json/ri": "^1.1.12",
     "@iconify/utils": "^2.1.9",
     "@nuxt/content": "npm:@nuxt/content-edge@latest",
