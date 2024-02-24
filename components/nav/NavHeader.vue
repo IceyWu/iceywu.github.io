@@ -2,6 +2,7 @@
 const routes = reactive<{ icon?: string; path: string; text?: string }[]>([
   { path: '/', text: 'Home' },
   { path: '/projects', text: 'Projects' },
+  { path: '/map', text: 'Map' },
 ])
 
 const route = useRoute()

@@ -2,11 +2,11 @@ import {
   type CSSObject,
   type RuleContext,
   defineConfig,
-  presetUno,
   transformerCompileClass,
   transformerDirectives,
   transformerVariantGroup,
 } from 'unocss'
+import presetUno from '@unocss/preset-uno'
 import { presetUseful } from 'unocss-preset-useful'
 import { parseColor } from '@unocss/preset-mini/utils'
 import { FileSystemIconLoader } from '@iconify/utils/lib/loader/node-loaders'
