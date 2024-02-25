@@ -34,11 +34,13 @@ async function getData() {
     return
   getDataLoading.value = true
   const params = {
+    baseApi: 'https://test.wktest.cn:3001',
+    // baseApi: 'http://localhost:3001',
     page: 1,
     size: 100,
     userId: 1,
   }
-  const API = `https://test.wktest.cn:3001/api/topic?page=${params.page}&size=${params.size}&sort=desc,createdAt&userId=${params.userId}`
+  const API = `${params.baseApi}/api/topic?page=${params.page}&size=${params.size}&sort=desc,createdAt&userId=${params.userId}`
   const [err, res] = await to($fetch<any>(API))
   if (res) {
     const { code, result = [] } = res || {}
@@ -63,7 +65,11 @@ async function addMarkers() {
 
   for (let index = 0; index < dataList.value.length; index++) {
     const element = dataList.value[index]
-    addMarker([104.072325 + index, 30.664893], element)
+    const { extraData } = element || {}
+    if (extraData) {
+      const { gps_data } = JSON.parse(extraData)
+      addMarker([gps_data?.lng, gps_data?.lat], element)
+    }
   }
 }
 onBeforeUnmount(() => {
