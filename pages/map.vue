@@ -90,6 +90,7 @@ const end = {
   // pitch: 75,
   pitch: 0,
 }
+const hasFly = ref(false)
 function init() {
   mapboxgl.accessToken
     = 'pk.eyJ1IjoidnlrYXd6YXRpcyIsImEiOiJjbHJycm1lYXAwaGxhMmlvMWhwZTA3Zmg2In0.eo2EYOK6v0smB1IRunC8VA'
@@ -104,12 +105,15 @@ function init() {
   // ### 添加导航控制条
   // map.addControl(new mapboxgl.NavigationControl(), 'top-left')
   map.on('style.load', () => {
+    if (hasFly.value)
+      return
     map.setFog({})
     map.flyTo({
       ...end,
       duration: 2000,
       essential: true,
     })
+    hasFly.value = true
   })
   // 点击增加弹窗
   // map.on("click", (e: any) => {

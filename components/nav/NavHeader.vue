@@ -14,7 +14,7 @@ const { data: user } = await useFetch('/api/user')
 <template>
   <header
     fixed
-    z-9999
+    z-99
     top-0
     inset-x-0
     trans
@@ -22,8 +22,9 @@ const { data: user } = await useFetch('/api/user')
     fcc
     px-8
     pl-4
-    border="0 b-1 #dcdfe6 dark:#4c4d4f op-70 hover:op-100"
+    border="0 b-1 #dcdfe6 dark:#4c4d4f op-70 hover:op-100 relative"
   >
+    <div class="blog-header-bg w-full h-[50%] absolute top-0 left-0" />
     <nav w-full :class="inHome ? 'fcc' : 'fbc'">
       <div v-if="!inHome" class="transLogo">
         <NuxtLink to="/" title="Home">
@@ -84,3 +85,11 @@ const { data: user } = await useFetch('/api/user')
   <!-- For header fixed -->
   <div h-16 md:h-18 />
 </template>
+
+<style>
+.blog-header-bg {
+  background-image: linear-gradient(-45deg, #00a98e 30%, #009ff7);
+  filter: blur(100px);
+  transition: opacity 1s ease;
+}
+</style>

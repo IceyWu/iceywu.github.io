@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import 'viewerjs/dist/viewer.css'
+import { api as viewerApi } from 'v-viewer'
+
 const props = defineProps<{
   data: object
 }>()
@@ -11,6 +14,7 @@ function getCover(data: any) {
   const { fileType, file, cover } = data || {}
   if (fileType === 'IMAGE') {
     const preSrc = `${file}?x-oss-process=image/resize,l_100`
+    // const preSrc = `${file}`;
     return preSrc
   }
   else if (fileType === 'VIDEO') {
@@ -23,10 +27,31 @@ function getCover(data: any) {
 function handleClosePop() {
   emit('closePop')
 }
+function showImgs(index: number) {
+  // eslint-disable-next-line array-callback-return
+  const images = fileList.value.map((item: any) => {
+    const { fileType, file, cover } = item || {}
+    if (fileType === 'IMAGE') {
+      return file
+    }
+    else if (fileType === 'VIDEO') {
+      const srcT
+        = cover
+        || `${file}?x-oss-process=video/snapshot,t_7000,f_jpg,w_0,h_0,m_fast`
+      return srcT
+    }
+  })
+  viewerApi({
+    images,
+    options: {
+      initialViewIndex: index,
+    },
+  })
+}
 </script>
 
 <template>
-  <div class="dark:bg-black rounded-md bg-white p-5 w-fit shadow-lg">
+  <div class="rounded-md bg p-5 w-fit shadow-lg">
     <!-- 头部 -->
     <header class="header-part relative">
       <h3 class="header-title">
@@ -40,14 +65,26 @@ function handleClosePop() {
     </header>
     <!-- 内容 -->
     <div class="img-list">
-      <div v-for="item in fileList" :key="item.id" class="img-item">
-        <img :src="getCover(item)" class="w-full h-full object-cover" alt="">
+      <div
+        v-for="(item, index) in fileList"
+        :key="item.id"
+        class="img-item"
+        @click="showImgs(index)"
+      >
+        <img
+          :src="getCover(item)"
+          class="w-full h-full object-cover cursor-pointer"
+          alt=""
+        >
       </div>
     </div>
   </div>
 </template>
 
 <style>
+.mapboxgl-popup {
+  z-index: 9999;
+}
 .mapboxgl-popup-tip {
   display: none;
 }
