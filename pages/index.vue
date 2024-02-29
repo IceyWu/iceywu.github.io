@@ -39,6 +39,18 @@ useTitle(user.value?.name)
       <strong class="text-class"> enthusiasts</strong>
     </p>
     <p>
+      Want to travel the world and fill up my
+      <a
+        trans
+        linear-text
+        shape-bl
+        class="c-context::#C084FC font-italic"
+        :from="isDark ? '#4facfe' : '#e0c3fc'"
+        :to="isDark ? '#00f2fe' : '#8ec5fc'"
+        href="/map"
+      ><strong>Map</strong></a>.
+    </p>
+    <p>
       Team member of
       <a
         linkInProse

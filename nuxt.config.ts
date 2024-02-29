@@ -14,11 +14,7 @@ export default defineNuxtConfig({
     viewTransition: true,
     renderJsonPayloads: true,
   },
-  css: [
-    '~/styles/fonts.css',
-    '~/styles/main.css',
-    '~/styles/vars.css',
-  ],
+  css: ['~/styles/fonts.css', '~/styles/main.css', '~/styles/vars.css'],
   // devtools: true,
   unocss: {
     preflight: true,
@@ -36,10 +32,15 @@ export default defineNuxtConfig({
   },
   app: {
     keepalive: true,
+    head: {
+      link: [{ rel: 'icon', type: 'image/x-icon', href: 'favicon.ico' }],
+    },
   },
   vite: {
     define: {
-      'import.meta.env.__BUILD_TIME__': JSON.stringify(new Date().toISOString()),
+      'import.meta.env.__BUILD_TIME__': JSON.stringify(
+        new Date().toISOString(),
+      ),
       '__DEV__': process.env.NODE_ENV !== 'production',
     },
     build: {
