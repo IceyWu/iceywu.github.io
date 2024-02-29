@@ -1,5 +1,6 @@
 import { decode } from 'blurhash'
 import { getDataUrlFromArr } from '~/composables/utils'
+import defaultAvatar from '~/public/avatar.jpg'
 
 export default defineComponent({
   inheritAttrs: false,
@@ -30,14 +31,18 @@ export default defineComponent({
     onMounted(() => {
       const img = document.createElement('img')
       img.onload = () => {
-        isLoaded.value = true
+        setTimeout(() => {
+          isLoaded.value = true
+        }, 1_000)
+      }
+      img.onerror = () => {
+        setTimeout(() => {
+          placeholderSrc.value = defaultAvatar
+        }, 1_000)
       }
       img.src = props.src
       if (props.srcset)
         img.srcset = props.srcset
-      setTimeout(() => {
-        isLoaded.value = true
-      }, 3_000)
 
       if (props.blurhash) {
         const pixels = decode(props.blurhash, 32, 32)
@@ -47,9 +52,9 @@ export default defineComponent({
 
     const domTag = isImgMode ? 'img' : 'div'
 
-    return () => isLoaded.value || !placeholderSrc.value
-      ? h(domTag,
-        {
+    return () =>
+      isLoaded.value || !placeholderSrc.value
+        ? h(domTag, {
           ...attrs,
           ...(isImgMode
             ? {
@@ -63,18 +68,18 @@ export default defineComponent({
                 },
               }),
         })
-      : h(domTag, {
-        ...attrs,
-        ...(isImgMode
-          ? {
-              src: placeholderSrc.value,
-            }
-          : {
-              style: {
-                backgroundImage: `url(${placeholderSrc.value})`,
-                backgroundSize: 'cover',
-              },
-            }),
-      })
+        : h(domTag, {
+          ...attrs,
+          ...(isImgMode
+            ? {
+                src: placeholderSrc.value,
+              }
+            : {
+                style: {
+                  backgroundImage: `url(${placeholderSrc.value})`,
+                  backgroundSize: 'cover',
+                },
+              }),
+        })
   },
 })
