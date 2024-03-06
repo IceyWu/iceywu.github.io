@@ -3,13 +3,13 @@ import SetSvgAnimation from 'svg-animate-web'
 
 const svgRef = ref<HTMLElement>()
 onMounted(() => {
-  // SetSvgAnimation(svgRef.value, {
-  //   duration: 3,
-  //   // count: 1,
-  //   fill: 'transparent',
-  //   stroke: '#333',
-  //   strokeWidth: 12,
-  // })
+  SetSvgAnimation(svgRef.value, {
+    duration: 3,
+    // count: 1,
+    fill: 'transparent',
+    stroke: '#333',
+    strokeWidth: 12,
+  })
 })
 </script>
 

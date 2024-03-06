@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 const routes = reactive<{ icon?: string; path: string; text?: string }[]>([
   // { path: '/posts', text: 'Blog' },
-  { path: "/projects", text: "Projects" },
-  { path: "/map", text: "Map" },
-]);
+  { path: '/projects', text: 'Projects' },
+  { path: '/map', text: 'Map' },
+])
 
-const route = useRoute();
-const inHome = computed(() => route.path === "/");
+const route = useRoute()
+const inHome = computed(() => route.path === '/')
 
-const { data: user } = await useFetch("/api/user");
+const { data: user } = await useFetch('/api/user')
 </script>
 
 <template>
@@ -48,8 +48,8 @@ const { data: user } = await useFetch("/api/user");
           :key="_route.path"
           :to="_route.path"
           :title="
-            _route.path.slice(1, 2).toUpperCase() +
-            _route.path.slice(2).toLowerCase()
+            _route.path.slice(1, 2).toUpperCase()
+              + _route.path.slice(2).toLowerCase()
           "
         >
           <span v-if="_route.text" icon-text>{{ _route.text }}</span>
