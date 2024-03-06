@@ -32,9 +32,9 @@
     "@turf/circle": "^6.5.0",
     "blurhash": "^2.0.5",
     "dayjs": "^1.11.10",
-    "mapbox-gl": "^3.1.2",
+    "mapbox-gl": "^3.2.0",
     "octokit": "^3.1.2",
-    "svg-animate-web": "^0.0.1",
+    "svg-animate-web": "^0.0.2",
     "v-viewer": "^3.0.13",
     "viewerjs": "^1.11.6"
   },
@@ -42,7 +42,7 @@
     "@antfu/eslint-config": "^0.41.0",
     "@iceywu/utils": "^0.0.37",
     "@iconify-json/akar-icons": "^1.1.23",
-    "@iconify-json/carbon": "^1.1.30",
+    "@iconify-json/carbon": "^1.1.31",
     "@iconify-json/fluent-emoji": "^1.1.18",
     "@iconify-json/logos": "^1.1.42",
     "@iconify-json/meteocons": "^1.1.4",
@@ -56,12 +56,12 @@
     "@unocss/preset-uno": "^0.58.5",
     "@vueuse/nuxt": "^10.9.0",
     "eslint": "^8.57.0",
-    "esno": "^4.0.0",
+    "esno": "^4.7.0",
     "fs-extra": "^11.2.0",
     "nuxt": "3.6.5",
     "sass": "^1.71.1",
     "typescript": "5.3.3",
-    "unocss-preset-useful": "^0.4.0"
+    "unocss-preset-useful": "^0.4.1"
   },
   "pnpm": {
     "overrides": {

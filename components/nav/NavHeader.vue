@@ -27,7 +27,11 @@ const { data: user } = await useFetch('/api/user')
     <div class="blog-header-bg w-full h-[50%] absolute top-0 left-0" />
     <nav w-full :class="inHome ? 'fcc' : 'fbc'">
       <div v-if="!inHome" class="transLogo">
-        <NuxtLink to="/" title="Home">
+        <div w-20 h-auto>
+          <Logo />
+        </div>
+
+        <!-- <NuxtLink to="/" title="Home">
           <ImgBlurHash
             :src="user!.avatar_url"
             blurhash="LYN0}600~q%LIT9Ft7IoIV-;-pxu"
@@ -36,7 +40,7 @@ const { data: user } = await useFetch('/api/user')
             h-10
             rounded-full
           />
-        </NuxtLink>
+        </NuxtLink> -->
       </div>
 
       <div

@@ -11,7 +11,7 @@ overrides:
 dependencies:
   '@mapbox/mapbox-gl-language':
     specifier: ^1.0.1
-    version: 1.0.1(mapbox-gl@3.1.2)
+    version: 1.0.1(mapbox-gl@3.2.0)
   '@turf/circle':
     specifier: ^6.5.0
     version: 6.5.0
@@ -22,14 +22,14 @@ dependencies:
     specifier: ^1.11.10
     version: 1.11.10
   mapbox-gl:
-    specifier: ^3.1.2
-    version: 3.1.2
+    specifier: ^3.2.0
+    version: 3.2.0
   octokit:
     specifier: ^3.1.2
     version: 3.1.2
   svg-animate-web:
-    specifier: ^0.0.1
-    version: 0.0.1
+    specifier: ^0.0.2
+    version: 0.0.2
   v-viewer:
     specifier: ^3.0.13
     version: 3.0.13(viewerjs@1.11.6)(vue@3.4.21)
@@ -48,8 +48,8 @@ devDependencies:
     specifier: ^1.1.23
     version: 1.1.23
   '@iconify-json/carbon':
-    specifier: ^1.1.30
-    version: 1.1.30
+    specifier: ^1.1.31
+    version: 1.1.31
   '@iconify-json/fluent-emoji':
     specifier: ^1.1.18
     version: 1.1.18
@@ -90,8 +90,8 @@ devDependencies:
     specifier: ^8.57.0
     version: 8.57.0
   esno:
-    specifier: ^4.0.0
-    version: 4.0.0
+    specifier: ^4.7.0
+    version: 4.7.0
   fs-extra:
     specifier: ^11.2.0
     version: 11.2.0
@@ -105,8 +105,8 @@ devDependencies:
     specifier: 5.3.3
     version: 5.3.3
   unocss-preset-useful:
-    specifier: ^0.4.0
-    version: 0.4.0(unocss@0.58.5)
+    specifier: ^0.4.1
+    version: 0.4.1(unocss@0.58.5)
 
 packages:
 
@@ -1564,8 +1564,8 @@ packages:
       '@iconify/types': 2.0.0
     dev: true
 
-  /@iconify-json/carbon@1.1.30:
-    resolution: {integrity: sha512-tEvEmxCO0J0t0p2NT2IvJ+iiSNqqnabygSo/S8wkeh2Guhc4tQOgl9dxvDMpy6RqwtKRTKsaROPtnRfu/bl+Tg==}
+  /@iconify-json/carbon@1.1.31:
+    resolution: {integrity: sha512-CAvECFfiwGyZmlcuM2JLMRDEN3VsIEZv6lml7Xf+3giQ5oXloADm0b5wiVPFZmONKM5jXERmx+E7YSvAtFJIbw==}
     dependencies:
       '@iconify/types': 2.0.0
     dev: true
@@ -1689,16 +1689,16 @@ packages:
     engines: {node: '>= 0.6'}
     dev: false
 
-  /@mapbox/mapbox-gl-language@1.0.1(mapbox-gl@3.1.2):
+  /@mapbox/mapbox-gl-language@1.0.1(mapbox-gl@3.2.0):
     resolution: {integrity: sha512-gL58ojl7gaWLfbSISoB2QJEfTK3j+NKvPH9og0r+c3bd5BNqhY19Eb4OPfDc5+dGmjW03LhtZBc4n2b7Xn8kjA==}
     peerDependencies:
       mapbox-gl: '>=0.29.0'
     dependencies:
-      mapbox-gl: 3.1.2
+      mapbox-gl: 3.2.0
     dev: false
 
-  /@mapbox/mapbox-gl-supported@2.0.1:
-    resolution: {integrity: sha512-HP6XvfNIzfoMVfyGjBckjiAOQK9WfX0ywdLubuPMPv+Vqf5fj0uCbgBQYpiqcWZT6cbyyRnTSXDheT1ugvF6UQ==}
+  /@mapbox/mapbox-gl-supported@3.0.0:
+    resolution: {integrity: sha512-2XghOwu16ZwPJLOFVuIOaLbN0iKMn867evzXFyf0P22dqugezfJwLmdanAgU25ITvz1TvOfVP4jsDImlDJzcWg==}
     dev: false
 
   /@mapbox/node-pre-gyp@1.0.11:
@@ -2197,7 +2197,7 @@ packages:
       consola: 3.2.3
       debug: 4.3.4
       defu: 6.1.4
-      destr: 2.0.2
+      destr: 2.0.3
       detab: 3.0.2
       github-slugger: 2.0.0
       hast-util-to-string: 3.0.0
@@ -5749,8 +5749,8 @@ packages:
       - supports-color
     dev: true
 
-  /esno@4.0.0:
-    resolution: {integrity: sha512-tmaM9gfnSWqzePVJ5FJLYX9mMyE6ZevvOIvd1CMoMk2Fn1F3aKI/OQPjubS5wCIKlPpWfDfKFEtoslCNCiZJpQ==}
+  /esno@4.7.0:
+    resolution: {integrity: sha512-81owrjxIxOwqcABt20U09Wn8lpBo9K6ttqbGvQcB3VYNLJyaV1fvKkDtpZd3Rj5BX3WXiGiJCjUevKQGNICzJg==}
     hasBin: true
     dependencies:
       tsx: 4.7.1
@@ -7070,6 +7070,10 @@ packages:
     resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
     dev: false
 
+  /lodash.clonedeep@4.5.0:
+    resolution: {integrity: sha512-H5ZhCF25riFd9uB5UCkVKo61m3S/xZk1x4wA6yp/L3RFP6Z/eHH1ymQcGLo7J3GMPfm0V/7m1tryHuGVxpqEBQ==}
+    dev: false
+
   /lodash.defaults@4.2.0:
     resolution: {integrity: sha512-qjxPLHd3r5DnsdGacqOMU6pb/avJzdh9tFX2ymgoZE27BmjXrNy/y4LoaiTeAb+O3gL8AfpJGtqfX/ae2leYYQ==}
     dev: true
@@ -7162,12 +7166,12 @@ packages:
       ssri: 10.0.5
     dev: true
 
-  /mapbox-gl@3.1.2:
-    resolution: {integrity: sha512-+KoLEqZM8GxO/ViPz9tKgGURteKne+Y0pXiVCNsowymiZFH3FiL6dt9oZE95owMg5XqD3Kygz5mfchR1ZgmWlA==}
+  /mapbox-gl@3.2.0:
+    resolution: {integrity: sha512-v8S7x+wTr35kJ9nqzgn/VPiSFZxBkyQhwCk9bdyiFHVwCukNGG3LXt03FoaHHTsOuB9JWenWE96k0Uw+HGMZ8w==}
     dependencies:
       '@mapbox/geojson-rewind': 0.5.2
       '@mapbox/jsonlint-lines-primitives': 2.0.2
-      '@mapbox/mapbox-gl-supported': 2.0.1
+      '@mapbox/mapbox-gl-supported': 3.0.0
       '@mapbox/point-geometry': 0.1.0
       '@mapbox/tiny-sdf': 2.0.6
       '@mapbox/unitbezier': 0.0.1
@@ -7180,13 +7184,16 @@ packages:
       gl-matrix: 3.4.3
       grid-index: 1.1.0
       kdbush: 4.0.2
+      lodash.clonedeep: 4.5.0
       murmurhash-js: 1.0.0
       pbf: 3.2.1
       potpack: 2.0.0
       quickselect: 2.0.0
       rw: 1.3.3
+      serialize-to-js: 3.1.2
       supercluster: 8.0.1
       tinyqueue: 2.0.3
+      tweakpane: 4.0.3
       vt-pbf: 3.1.3
     dev: false
 
@@ -9045,7 +9052,7 @@ packages:
     resolution: {integrity: sha512-lNeOl38Ws0eNxpO3+wD1I9rkHGQyj1NU1jlzv4go2CtEnEQEUfqnIvZG7W+bC/aXdJ27n5x/yUjb6RoT9tko+Q==}
     dependencies:
       defu: 6.1.4
-      destr: 2.0.2
+      destr: 2.0.3
       flat: 5.0.2
     dev: true
 
@@ -9474,6 +9481,11 @@ packages:
       randombytes: 2.1.0
     dev: true
 
+  /serialize-to-js@3.1.2:
+    resolution: {integrity: sha512-owllqNuDDEimQat7EPG0tH7JjO090xKNzUtYz6X+Sk2BXDnOCilDdNLwjWeFywG9xkJul1ULvtUQa9O4pUaY0w==}
+    engines: {node: '>=4.0.0'}
+    dev: false
+
   /serve-placeholder@2.0.1:
     resolution: {integrity: sha512-rUzLlXk4uPFnbEaIz3SW8VISTxMuONas88nYWjAWaM2W9VDbt9tyFOr3lq8RhVOFrT3XISoBw8vni5una8qMnQ==}
     dependencies:
@@ -9844,8 +9856,8 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /svg-animate-web@0.0.1:
-    resolution: {integrity: sha512-/4icT+8fKIO/TpijN2Hgx6yioQR3mAxZpazVo3BUej05PDwBZejswB2Dz2Ljco+7v0Tb4MnwFwVWtan7p2sQ1Q==}
+  /svg-animate-web@0.0.2:
+    resolution: {integrity: sha512-RwSoBOpxOCykg9YMmRHlZA+GlBSWYQnbxNeSaEvuLnELfx/kjAy6mWX2MKObi+oWwPhhnbzhSLa1D4JgWE6wRQ==}
     dev: false
 
   /svg-tags@1.0.0:
@@ -10036,6 +10048,10 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /tweakpane@4.0.3:
+    resolution: {integrity: sha512-BlcWOAe8oe4c+k9pmLBARGdWB6MVZMszayekkixQXTgkxTaYoTUpHpwVEp+3HkoamZkomodpbBf0CkguIHTgLg==}
+    dev: false
 
   /type-check@0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
@@ -10265,8 +10281,8 @@ packages:
       unocss: 0.58.5(@unocss/webpack@0.58.5)(postcss@8.4.35)(vite@5.1.4)
     dev: true
 
-  /unocss-preset-useful@0.4.0(unocss@0.58.5):
-    resolution: {integrity: sha512-Cto9inNV+hl5o0i6yhXbt8hpqnSKBl062vcgRQTn5u28btoqcHecSG+j2fRPGfDNLNgzYzwBLcgbN9d7gkA0rw==}
+  /unocss-preset-useful@0.4.1(unocss@0.58.5):
+    resolution: {integrity: sha512-Nvv6FEsX9l24LXYF1PCdBh/Vsz3723BDBhAjW2VGPRE+BaSciK8/1dYNTFUeL7tToEsFV/zNeXxkyU+X73JiXw==}
     dependencies:
       '@unocss/core': 0.58.5
       '@unocss/preset-attributify': 0.58.5
@@ -10405,7 +10421,7 @@ packages:
     dependencies:
       anymatch: 3.1.3
       chokidar: 3.5.3
-      destr: 2.0.2
+      destr: 2.0.3
       h3: 1.10.2
       ioredis: 5.3.2
       listhen: 1.6.0
