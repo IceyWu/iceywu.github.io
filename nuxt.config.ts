@@ -54,9 +54,9 @@ export default defineNuxtConfig({
   },
   // pwa: {
   //   manifest: {
-  //     name: 'Chris',
-  //     short_name: 'Chris',
-  //     description: 'Chris\' Portfolio',
+  //     name: 'IceyWu',
+  //     short_name: 'IceyWu',
+  //     description: 'IceyWu\' Portfolio',
   //     theme_color: '#6f6f6f',
   //     icons: [
   //       {
