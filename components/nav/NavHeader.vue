@@ -1,20 +1,20 @@
 <script lang="ts" setup>
 const routes = reactive<{ icon?: string; path: string; text?: string }[]>([
-  { path: '/', text: 'Home' },
-  { path: '/projects', text: 'Projects' },
-  { path: '/map', text: 'Map' },
-])
+  // { path: '/posts', text: 'Blog' },
+  { path: "/projects", text: "Projects" },
+  { path: "/map", text: "Map" },
+]);
 
-const route = useRoute()
-const inHome = computed(() => route.path === '/')
+const route = useRoute();
+const inHome = computed(() => route.path === "/");
 
-const { data: user } = await useFetch('/api/user')
+const { data: user } = await useFetch("/api/user");
 </script>
 
 <template>
   <header
     fixed
-    z-99
+    z-9999
     top-0
     inset-x-0
     trans
@@ -27,20 +27,12 @@ const { data: user } = await useFetch('/api/user')
     <div class="blog-header-bg w-full h-[50%] absolute top-0 left-0" />
     <nav w-full :class="inHome ? 'fcc' : 'fbc'">
       <div v-if="!inHome" class="transLogo">
-        <div w-20 h-auto>
-          <Logo />
-        </div>
-
-        <!-- <NuxtLink to="/" title="Home">
-          <ImgBlurHash
-            :src="user!.avatar_url"
-            blurhash="LYN0}600~q%LIT9Ft7IoIV-;-pxu"
-            alt="Avatar"
-            w-10
-            h-10
-            rounded-full
-          />
-        </NuxtLink> -->
+        <NuxtLink to="/" title="Home">
+          <UserAvatar />
+          <!-- <div w-20 h-auto>
+            <Logo />
+          </div> -->
+        </NuxtLink>
       </div>
 
       <div
@@ -56,8 +48,8 @@ const { data: user } = await useFetch('/api/user')
           :key="_route.path"
           :to="_route.path"
           :title="
-            _route.path.slice(1, 2).toUpperCase()
-              + _route.path.slice(2).toLowerCase()
+            _route.path.slice(1, 2).toUpperCase() +
+            _route.path.slice(2).toLowerCase()
           "
         >
           <span v-if="_route.text" icon-text>{{ _route.text }}</span>

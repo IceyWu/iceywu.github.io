@@ -9,38 +9,37 @@ export default defineNuxtConfig({
     // '@vite-pwa/nuxt',
   ],
   experimental: {
-    reactivityTransform: true,
-    inlineSSRStyles: false,
     viewTransition: true,
     renderJsonPayloads: true,
   },
-  css: ['~/styles/fonts.css', '~/styles/main.css', '~/styles/vars.css'],
-  // devtools: true,
+  css: [
+    '~/styles/fonts.css',
+    '~/styles/main.css',
+    '~/styles/vars.css',
+  ],
+  devtools: {
+    enabled: true,
+  },
   unocss: {
     preflight: true,
   },
-  content: {
-    highlight: {
-      theme: 'vitesse-dark',
-    },
-    markdown: {
-      toc: {
-        depth: 3,
-      },
-    },
-    documentDriven: true,
-  },
+  // content: {
+  //   highlight: {
+  //     theme: 'vitesse-dark',
+  //   },
+  //   markdown: {
+  //     toc: {
+  //       depth: 3,
+  //     },
+  //   },
+  //   documentDriven: true,
+  // },
   app: {
     keepalive: true,
-    head: {
-      link: [{ rel: 'icon', type: 'image/x-icon', href: 'favicon.ico' }],
-    },
   },
   vite: {
     define: {
-      'import.meta.env.__BUILD_TIME__': JSON.stringify(
-        new Date().toISOString(),
-      ),
+      'import.meta.env.__BUILD_TIME__': JSON.stringify(new Date().toISOString()),
       '__DEV__': process.env.NODE_ENV !== 'production',
     },
     build: {
@@ -55,9 +54,9 @@ export default defineNuxtConfig({
   },
   // pwa: {
   //   manifest: {
-  //     name: 'IceyWu',
-  //     short_name: 'IceyWu',
-  //     description: 'IceyWu\' Portfolio',
+  //     name: 'Chris',
+  //     short_name: 'Chris',
+  //     description: 'Chris\' Portfolio',
   //     theme_color: '#6f6f6f',
   //     icons: [
   //       {

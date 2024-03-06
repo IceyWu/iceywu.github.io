@@ -3,20 +3,20 @@ import SetSvgAnimation from 'svg-animate-web'
 
 const svgRef = ref<HTMLElement>()
 onMounted(() => {
-  SetSvgAnimation(svgRef.value, {
-    duration: 3,
-    // count: 1,
-    fill: 'transparent',
-    stroke: '#333',
-    strokeWidth: 12,
-  })
+  // SetSvgAnimation(svgRef.value, {
+  //   duration: 3,
+  //   // count: 1,
+  //   fill: 'transparent',
+  //   stroke: '#333',
+  //   strokeWidth: 12,
+  // })
 })
 </script>
 
 <template>
   <svg
     ref="svgRef"
-    class="w-full h-full"
+    class="w-20 h-auto"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="543.535 363.549 714.421 294.549"
   >

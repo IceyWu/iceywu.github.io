@@ -6,7 +6,6 @@ import {
   transformerDirectives,
   transformerVariantGroup,
 } from 'unocss'
-import presetUno from '@unocss/preset-uno'
 import { presetUseful } from 'unocss-preset-useful'
 import { parseColor } from '@unocss/preset-mini/utils'
 import { FileSystemIconLoader } from '@iconify/utils/lib/loader/node-loaders'
@@ -110,13 +109,12 @@ export default defineConfig({
     },
   },
   presets: [
-    presetUno(),
     presetUseful({
       theme: {
-        animation: {
-          animate: [
-            'shape 5s linear infinite',
-          ],
+        extend: {
+          animation: {
+            shape: 'shape 5s linear infinite',
+          },
         },
       },
       icons: {

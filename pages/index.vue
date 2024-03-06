@@ -1,10 +1,8 @@
 <script lang="ts" setup>
-import { useTitle } from '@vueuse/core'
-
-// import lineSvg from "~/public/images/line.svg";
-
+useHead({
+  title: 'IceyWu',
+})
 const { data: user } = await useFetch('/api/user')
-useTitle(user.value?.name)
 </script>
 
 <template>
