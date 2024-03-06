@@ -6,9 +6,13 @@ const routes = reactive<{ icon?: string; path: string; text?: string }[]>([
 ])
 
 const route = useRoute()
+const router = useRouter()
 const inHome = computed(() => route.path === '/')
 
 const { data: user } = await useFetch('/api/user')
+function goHome() {
+  router.replace('/')
+}
 </script>
 
 <template>
@@ -27,12 +31,12 @@ const { data: user } = await useFetch('/api/user')
     <div class="blog-header-bg w-full h-[50%] absolute top-0 left-0" />
     <nav w-full :class="inHome ? 'fcc' : 'fbc'">
       <div v-if="!inHome" class="transLogo">
-        <NuxtLink to="/" title="Home">
+        <div ml-4 w-20 h-auto>
+          <Logo />
+        </div>
+        <!-- <NuxtLink to="/" title="Home">
           <UserAvatar />
-          <!-- <div w-20 h-auto>
-            <Logo />
-          </div> -->
-        </NuxtLink>
+        </NuxtLink> -->
       </div>
 
       <div
@@ -43,6 +47,14 @@ const { data: user } = await useFetch('/api/user')
         h-16
         md:h-18
       >
+        <div
+          v-if="!inHome"
+          title="Home"
+          class="z-999 cursor-pointer"
+          @click="goHome"
+        >
+          <span icon-text>Home</span>
+        </div>
         <NuxtLink
           v-for="_route in routes"
           :key="_route.path"

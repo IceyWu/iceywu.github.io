@@ -3,14 +3,28 @@ import SetSvgAnimation from 'svg-animate-web'
 
 const svgRef = ref<HTMLElement>()
 onMounted(() => {
+  setSVGAnim()
+})
+
+const isDark = useDark({
+  onChanged() {
+    nextTick(() => {
+      if (svgRef.value)
+        setSVGAnim()
+    })
+  },
+})
+function setSVGAnim() {
+  const color = isDark.value ? '#fff' : '#333'
   SetSvgAnimation(svgRef.value, {
-    duration: 3,
+    duration: 5,
     // count: 1,
     fill: 'transparent',
-    stroke: '#333',
+    // fillBase: color,
+    stroke: color,
     strokeWidth: 12,
   })
-})
+}
 </script>
 
 <template>
