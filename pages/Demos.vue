@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 useHead({
-  title: "Demos | IceyWu",
-});
+  title: 'Demos | IceyWu',
+})
 </script>
 
 <template>

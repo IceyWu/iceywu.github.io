@@ -59,6 +59,9 @@ export default defineConfig({
         [`--${n}`]: v,
       }
     }],
+    [/^slide-enter-(\d+)$/, ([_, n]) => ({
+      '--enter-stage': n,
+    })],
   ],
   shortcuts: [
     ['text', 'text-primary-text'],

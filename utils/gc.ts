@@ -42,10 +42,6 @@ export function parseISO(date: string) {
   return new Date(year, month - 1, day)
 }
 
-export function formatDate(date: Date) {
-  return dayjs(date).format('MMM DD, YYYY')
-}
-
 export function groupByWeeks(days: Day[], weekStart: WeekDay = 0): Weeks {
   if (days.length === 0)
     return []
@@ -171,4 +167,11 @@ function differenceInCalendarDays(dateLeft: Date, dateRight: Date) {
 
 export function getDayjsSubtract(date: Date | undefined, amount: number, unit: dayjs.ManipulateType) {
   return dayjs(date).subtract(amount, unit).toDate()
+}
+
+export function formatDate(d: string | Date, onlyDate = true) {
+  const date = dayjs(d)
+  if (onlyDate || date.year() === dayjs().year())
+    return date.format('MMM D')
+  return date.format('MMM D, YYYY')
 }

@@ -1,10 +1,4 @@
 <script setup lang="ts">
-// import { formatDate } from '~/logics'
-const formatDate = () => {
-  console.log("💗fnName---------->");
-  return "fnName";
-};
-
 const { frontmatter, video, date } = defineProps({
   frontmatter: {
     type: Object,
@@ -17,7 +11,7 @@ const { frontmatter, video, date } = defineProps({
     type: String,
     required: false,
   },
-});
+})
 </script>
 
 <template>
