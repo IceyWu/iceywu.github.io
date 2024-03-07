@@ -18,9 +18,9 @@ function setSVGAnim() {
   const color = isDark.value ? '#fff' : '#333'
   SetSvgAnimation(svgRef.value, {
     duration: 5,
-    // count: 1,
+    count: 1,
     fill: 'transparent',
-    // fillBase: color,
+    fillBase: color,
     stroke: color,
     strokeWidth: 12,
   })
