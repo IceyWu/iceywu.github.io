@@ -2,12 +2,13 @@
 import { breakpointsTailwind } from '@vueuse/core'
 
 // 获取../data/demo文件夹下的所有md文件
-const { data } = await useAsyncData('../content/', () =>
-  queryContent('/posts').find(),
-)
+// const { data } = await useAsyncData('../content/', () =>
+//   queryContent('/posts').find(),
+// )
+const data = ref([])
 
 const demoItems = data.value?.map((item, idx) => {
-  const { date } = item
+  const { date = '2024-02-03' } = item
   return {
     comp: item,
     date: date.slice(2, -3) as string,
@@ -55,7 +56,7 @@ const parts = computed(() => {
         }"
       >
         <ContentRenderer :value="comp">
-          <h1>{{ comp.title }}</h1>
+          <h1>{{ comp?.title }}</h1>
           <ContentRendererMarkdown :value="comp" />
         </ContentRenderer>
       </WrapperDemo>
