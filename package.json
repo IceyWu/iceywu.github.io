@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@mapbox/mapbox-gl-language": "^1.0.1",
+    "@nuxt/content": "^2.12.1",
     "@turf/circle": "^6.5.0",
     "blurhash": "^2.0.5",
     "dayjs": "^1.11.10",
