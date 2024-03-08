@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   modules: [
     '@vueuse/nuxt',
     '@unocss/nuxt',
-    // '@nuxt/content',
+    '@nuxt/content',
     // '@vite-pwa/nuxt',
   ],
   experimental: {
@@ -16,8 +16,8 @@ export default defineNuxtConfig({
     '~/styles/fonts.css',
     '~/styles/main.css',
     '~/styles/vars.css',
-    // '~/styles/markdown.css',
-    // '~/styles/prose.css',
+    '~/styles/markdown.css',
+    '~/styles/prose.css',
   ],
   devtools: {
     enabled: true,
