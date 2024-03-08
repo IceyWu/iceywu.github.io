@@ -35,33 +35,42 @@ const typographyCssExtend: Record<string, CSSObject> = {
 
 export default defineConfig({
   rules: [
-    [/^o-(.*)$/, ([, body]: string[], { theme }: RuleContext) => {
-      const color = parseColor(body, theme)
-      if (color?.cssColor?.type === 'rgb' && color.cssColor.components) {
-        return {
-          '--c-context': `${color.cssColor.components.join(',')}`,
+    [
+      /^o-(.*)$/,
+      ([, body]: string[], { theme }: RuleContext) => {
+        const color = parseColor(body, theme)
+        if (color?.cssColor?.type === 'rgb' && color.cssColor.components) {
+          return {
+            '--c-context': `${color.cssColor.components.join(',')}`,
+          }
         }
-      }
-      else {
-        return {
-          '--c-context': color?.color,
+        else {
+          return {
+            '--c-context': color?.color,
+          }
         }
-      }
-    }],
-    [/^(.+)::(.+)$/, ([, n, v], { theme }) => {
-      const color = parseColor(v, theme)
-      if (color?.cssColor?.type === 'rgb' && color.cssColor.components) {
-        return {
-          [`--${n}`]: `${color.cssColor.components.join(',')}`,
+      },
+    ],
+    [
+      /^(.+)::(.+)$/,
+      ([, n, v], { theme }) => {
+        const color = parseColor(v, theme)
+        if (color?.cssColor?.type === 'rgb' && color.cssColor.components) {
+          return {
+            [`--${n}`]: `${color.cssColor.components.join(',')}`,
+          }
         }
-      }
-      return {
-        [`--${n}`]: v,
-      }
-    }],
-    [/^slide-enter-(\d+)$/, ([_, n]) => ({
-      '--enter-stage': n,
-    })],
+        return {
+          [`--${n}`]: v,
+        }
+      },
+    ],
+    [
+      /^slide-enter-(\d+)$/,
+      ([_, n]) => ({
+        '--enter-stage': n,
+      }),
+    ],
   ],
   shortcuts: [
     ['text', 'text-primary-text'],
@@ -71,24 +80,45 @@ export default defineConfig({
     ['linear-text', 'text-transparent bg-clip-text bg-gradient-to-r'],
     ['text-p-r', 'linear-text from-purple to-red'], // test case
 
-    ['icon', 'w-5.5 h-5.5 cursor-pointer select-none transition-opacity-300 ease-in-out text'],
-    ['icon-btn', 'icon color-inherit op64 hover-op100 hover-color-teal-500 dark-hover-color-inherit'],
-    ['icon-link', 'icon color-inherit op64 hover:op100 hover-text-red-300 dark-hover-color-inherit'],
-    ['icon-text', 'color-inherit op64 hover:op100 hover-text-purple dark-hover-color-inherit'],
+    [
+      'icon',
+      'w-5.5 h-5.5 cursor-pointer select-none transition-opacity-300 ease-in-out text',
+    ],
+    [
+      'icon-btn',
+      'icon color-inherit op64 hover-op100 hover-color-teal-500 dark-hover-color-inherit',
+    ],
+    [
+      'icon-link',
+      'icon color-inherit op64 hover:op100 hover-text-red-300 dark-hover-color-inherit',
+    ],
+    [
+      'icon-text',
+      'color-inherit op64 hover:op100 hover-text-purple dark-hover-color-inherit',
+    ],
     ['linkInProse', 'trans c-context'],
 
-    ['header-anchor', 'float-left mt-[0.125em] ml-[-0.8em] pr-[0.2em] text-[0.85em] op-0 group-hover-op-60 fw-600'],
+    [
+      'header-anchor',
+      'float-left mt-[0.125em] ml-[-0.8em] pr-[0.2em] text-[0.85em] op-0 group-hover-op-60 fw-600',
+    ],
 
     [/^badge-(.*)$/, ([, c]) => `bg-${c}4:10 text-${c}5 rounded`],
     [/^badge-xs-(.*)$/, ([, c]) => `badge-${c} text-xs px2 py0.5`],
     [/^badge-sm-(.*)$/, ([, c]) => `badge-${c} text-sm px3 py0.6`],
     [/^badge-lg-(.*)$/, ([, c]) => `badge-${c} px3 py0.8`],
-    [/^badge-square-(.*)$/, ([, c]) => `badge-${c} w-7 h-7 text-lg font-200 flex flex-none items-center justify-center`],
+    [
+      /^badge-square-(.*)$/,
+      ([, c]) =>
+        `badge-${c} w-7 h-7 text-lg font-200 flex flex-none items-center justify-center`,
+    ],
+    ['border-base', 'border-[#8884]'],
   ],
   theme: {
     animation: {
       keyframes: {
-        shape: '{0%,100%{border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;transform: translate3d(0,0,0) rotateZ(0.01deg);}34%{border-radius: 70% 30% 46% 54% / 30% 29% 71% 70%;transform:  translate3d(0,5px,0) rotateZ(0.01deg);}50%{transform: translate3d(0,0,0) rotateZ(0.01deg);}67%{border-radius: 100% 60% 60% 100% / 100% 100% 60% 60% ;transform: translate3d(0,-3px,0) rotateZ(0.01deg);}}',
+        shape:
+          '{0%,100%{border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;transform: translate3d(0,0,0) rotateZ(0.01deg);}34%{border-radius: 70% 30% 46% 54% / 30% 29% 71% 70%;transform:  translate3d(0,5px,0) rotateZ(0.01deg);}50%{transform: translate3d(0,0,0) rotateZ(0.01deg);}67%{border-radius: 100% 60% 60% 100% / 100% 100% 60% 60% ;transform: translate3d(0,-3px,0) rotateZ(0.01deg);}}',
       },
     },
     fontFamily: {

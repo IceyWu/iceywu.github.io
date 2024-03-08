@@ -1,17 +1,19 @@
 <script setup lang="ts">
-const { frontmatter, video, date } = defineProps({
-  frontmatter: {
-    type: Object,
-    required: false,
-  },
-  video: {
-    type: String,
-  },
+const { date, title } = defineProps({
   date: {
     type: String,
     required: false,
   },
+  link: {
+    type: String,
+    required: false,
+  },
+  title: {
+    type: String,
+    required: false,
+  },
 })
+const module = await import(`../content/demos/${title}.gif`)
 </script>
 
 <template>
@@ -26,20 +28,10 @@ const { frontmatter, video, date } = defineProps({
       duration-500
       bg-base
       relative
-      :href="frontmatter?.link"
+      :href="link"
       target="_blank"
     >
-      <video
-        v-if="video"
-        :src="video"
-        w-full
-        autoplay
-        loop
-        muted
-        playsinline
-        border="b base"
-      />
-
+      <img :src="module?.default">
       <div class="prose prose-sm p4 m0 pb3">
         <slot />
         <div op50 text-sm pt2>{{ formatDate(date, false) }}</div>
