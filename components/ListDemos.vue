@@ -2,10 +2,9 @@
 import { breakpointsTailwind } from '@vueuse/core'
 
 // 获取../data/demo文件夹下的所有md文件
-// const { data } = await useAsyncData('../content/', () =>
-//   queryContent('/posts').find(),
-// )
-const data = ref([])
+const { data } = await useAsyncData('content', () =>
+  queryContent('/demos').find(),
+)
 
 const demoItems = data.value?.map((item, idx) => {
   const { date = '2024-02-03' } = item
