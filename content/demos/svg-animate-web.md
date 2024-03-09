@@ -9,3 +9,5 @@ type: "gif"
 {{ $doc.title }} 🪄
 
 - ✨ {{ $doc.description }}
+- [<span i-logos-npm-2></span> go npm](https://www.npmjs.com/package/svg-animate-web).
+- <span i-logos-typescript-icon></span> + <span i-logos-rollupjs></span>

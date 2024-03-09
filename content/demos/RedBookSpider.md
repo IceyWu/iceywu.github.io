@@ -9,3 +9,4 @@ type: "png"
 {{ $doc.title }} 🪄
 
 - ✨ {{ $doc.description }}
+- <span i-logos-python></span>

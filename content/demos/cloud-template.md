@@ -9,3 +9,4 @@ type: "gif"
 {{ $doc.title }} 🪄
 
 - ✨ {{ $doc.description }}
+- <span i-logos-typescript-icon></span> + <span i-logos-vue></span>
