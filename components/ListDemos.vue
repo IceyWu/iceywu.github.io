@@ -15,6 +15,7 @@ const demoItems = data.value
     }
   })
   .sort((a, b) => b.date.localeCompare(a.date))
+// console.log('🎁-----demoItems-----', demoItems)
 
 const breakpoints = useBreakpoints(breakpointsTailwind)
 
@@ -42,19 +43,16 @@ const parts = computed(() => {
   <div grid="~ cols-1 lg:cols-2 xl:cols-3 gap-4">
     <div v-for="(items, idx) of parts" :key="idx" flex="~ col gap-4">
       <WrapperDemo
-        v-for="{ date, comp, link } of items"
-        :key="date"
-        :date="date"
-
-        :link="link"
-        :title="comp?.title"
+        v-for="dataObj of items"
+        :key="dataObj.date"
+        :data="dataObj"
         class="slide-enter"
         :style="{
           '--enter-stage': idx + 1,
         }"
       >
-        <ContentRenderer :value="comp">
-          <ContentRendererMarkdown :value="comp" />
+        <ContentRenderer :value="dataObj.comp">
+          <ContentRendererMarkdown :value="dataObj.comp" />
         </ContentRenderer>
       </WrapperDemo>
     </div>

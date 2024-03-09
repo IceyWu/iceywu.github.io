@@ -1,19 +1,40 @@
 <script setup lang="ts">
-const { date, title } = defineProps({
-  date: {
-    type: String,
-    required: false,
-  },
-  link: {
-    type: String,
-    required: false,
-  },
-  title: {
-    type: String,
-    required: false,
-  },
+interface CompType {
+  link: string
+  title: string
+  description: string
+  date: string
+  type: string
+}
+interface DataType {
+  comp: CompType
+  link: string
+  date: string
+}
+interface Props {
+  data: DataType | undefined
+  // desc?: string
+  // lottieJsonData: Record<string, any>
+}
+const props = defineProps<Props>()
+// console.log('🐬-----props-----', props);
+const { comp, date, link } = props.data as DataType
+const { title, type } = comp || {}
+function getImageUrl() {
+  if (type === 'gif')
+    return import(`../content/demos/${title}.gif`)
+  else return import(`../content/demos/${title}.gif`)
+}
+const coverModule = ref()
+const loading = ref(true)
+async function getImgData() {
+  loading.value = true
+  coverModule.value = await getImageUrl()
+  loading.value = false
+}
+onMounted(() => {
+  getImgData()
 })
-const module = await import(`../content/demos/${title}.gif`)
 </script>
 
 <template>
@@ -31,7 +52,7 @@ const module = await import(`../content/demos/${title}.gif`)
       :href="link"
       target="_blank"
     >
-      <img :src="module?.default">
+      <img v-if="!loading" :src="coverModule?.default">
       <div class="prose prose-sm p4 m0 pb3">
         <slot />
         <div op50 text-sm pt2>{{ formatDate(date, false) }}</div>
