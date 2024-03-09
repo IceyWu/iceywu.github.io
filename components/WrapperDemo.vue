@@ -23,7 +23,7 @@ const { title, type } = comp || {}
 function getImageUrl() {
   if (type === 'gif')
     return import(`../content/demos/${title}.gif`)
-  else return import(`../content/demos/${title}.gif`)
+  else return import(`../content/demos/${title}.png`)
 }
 const coverModule = ref()
 const loading = ref(true)
