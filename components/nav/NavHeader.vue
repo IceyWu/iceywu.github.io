@@ -65,7 +65,11 @@ function goHome() {
               + _route.path.slice(2).toLowerCase()
           "
         >
-          <span v-if="_route.text" icon-text>{{ _route.text }}</span>
+          <span
+            v-if="_route.text"
+            :class="route.path === _route.path ? 'color-teal-500' : ''"
+            icon-text
+          >{{ _route.text }}</span>
           <div v-else icon-btn :class="_route.icon" />
         </NuxtLink>
 

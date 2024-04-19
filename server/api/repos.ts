@@ -13,16 +13,16 @@ export default defineEventHandler(async () => {
   const publicAndNotForkRepos = publicRepos.filter(repo => !repo.fork)
 
   const repoGroups: Record<string, Repo[]> = {
+    'Templates': filterRepos(publicAndNotForkRepos, 'template'),
     'Vite Ecosystem': filterRepos(publicAndNotForkRepos, 'vite'),
-    'Plugins': filterRepos(publicAndNotForkRepos, 'plugin'),
-    'Presets': filterRepos(publicAndNotForkRepos, 'preset'),
+    // 'Plugins': filterRepos(publicAndNotForkRepos, 'plugin'),
+    // 'Presets': filterRepos(publicAndNotForkRepos, 'preset'),
     'Utils': filterRepos(publicAndNotForkRepos, 'util'),
     'UnoCSS': filterRepos(publicRepos, 'unocss'),
-    'UI': filterRepos(publicRepos, 'ui'),
-    'Config': filterRepos(publicAndNotForkRepos, 'config'),
-    'Component': filterRepos(publicAndNotForkRepos, 'component'),
-    'Templates': filterRepos(publicAndNotForkRepos, 'template'),
-    'Games': filterRepos(publicAndNotForkRepos, 'game'),
+    // 'UI': filterRepos(publicRepos, 'ui'),
+    // 'Config': filterRepos(publicAndNotForkRepos, 'config'),
+    // 'Component': filterRepos(publicAndNotForkRepos, 'component'),
+    // 'Games': filterRepos(publicAndNotForkRepos, 'game'),
     'All': publicAndNotForkRepos,
   }
 
