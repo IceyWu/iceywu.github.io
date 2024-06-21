@@ -1,11 +1,9 @@
 <script lang="ts" setup>
-import { to } from "@iceywu/utils";
+import { to } from '@iceywu/utils'
 
 // import { useTitle } from '@vueuse/core'
 
-const [err, { data: repoGroup }] = await to(useFetch('/api/repos'))
-console.log('🎉-----err-----', err);
-console.log("🐳-----repoGroup-----", repoGroup.value);
+const [_, { data: repoGroup }] = await to(useFetch('/api/repos'))
 
 // useTitle('Projects | IceyWu')
 // useHead({

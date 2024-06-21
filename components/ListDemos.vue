@@ -2,9 +2,8 @@
 import { breakpointsTailwind } from '@vueuse/core'
 
 const { data } = await useAsyncData('content', () =>
-queryContent('/demos').find(),
-)
-console.log('🦄-----data-----', data.value);
+  queryContent('/demos').find())
+
 const demoItems = data.value
   ?.map((item, idx) => {
     const { date = '2024-02-03', link } = item
@@ -16,7 +15,6 @@ const demoItems = data.value
     }
   })
   .sort((a, b) => b.date.localeCompare(a.date))
-// console.log('🎁-----demoItems-----', demoItems)
 
 const breakpoints = useBreakpoints(breakpointsTailwind)
 
@@ -33,7 +31,7 @@ const parts = computed(() => {
     { length: cols.value },
     () => [] as typeof demoItems,
   )
-  console.log('🌵-----demoItems-----', demoItems);
+
   demoItems.forEach((item, i) => {
     result[i % cols.value].push(item)
   })

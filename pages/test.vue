@@ -1,59 +1,57 @@
 <script lang="ts" setup>
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger)
 definePageMeta({
   layout: false,
-});
+})
 onMounted(() => {
-  console.clear();
+  gsap.registerPlugin(ScrollTrigger)
 
-  gsap.registerPlugin(ScrollTrigger);
-
-  window.addEventListener("load", () => {
+  window.addEventListener('load', () => {
     gsap
       .timeline({
         scrollTrigger: {
-          trigger: ".wrapper",
-          start: "top top",
-          end: "+=350%",
+          trigger: '.wrapper',
+          start: 'top top',
+          end: '+=350%',
           pin: true,
           scrub: true,
           markers: true,
         },
       })
-      .to("img", {
+      .to('img', {
         scale: 2,
         z: 350,
-        transformOrigin: "center center",
-        ease: "power1.inOut",
+        transformOrigin: 'center center',
+        ease: 'power1.inOut',
       })
       .to(
-        ".section.hero",
+        '.section.hero',
         {
           scale: 1.1,
-          transformOrigin: "center center",
-          ease: "power1.inOut",
+          transformOrigin: 'center center',
+          ease: 'power1.inOut',
         },
-        "<"
-      );
-  });
-});
+        '<',
+      )
+  })
+})
 </script>
 
 <template>
   <div class="wrapper">
     <div class="content">
-      <section class="section hero"></section>
-      <section class="section gradient-purple"></section>
-      <section class="section gradient-blue"></section>
+      <section class="section hero" />
+      <section class="section gradient-purple" />
+      <section class="section gradient-blue" />
     </div>
     <div class="image-container">
       <img
         src="https://assets-global.website-files.com/63ec206c5542613e2e5aa784/643312a6bc4ac122fc4e3afa_main%20home.webp"
         alt="image"
-      />
+      >
     </div>
   </div>
 </template>
