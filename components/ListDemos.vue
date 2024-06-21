@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { breakpointsTailwind } from '@vueuse/core'
 
-const { data } = await useAsyncData('content', () =>
+const { data } = await useAsyncData('/content', () =>
 queryContent('/demos').find())
 
 const demoItems = data.value
