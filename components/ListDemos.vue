@@ -32,7 +32,7 @@ const parts = computed(() => {
     () => [] as typeof demoItems,
   )
 
-  demoItems.forEach((item, i) => {
+  demoItems?.forEach((item, i) => {
     result[i % cols.value].push(item)
   })
   return result
