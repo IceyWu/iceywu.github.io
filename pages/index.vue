@@ -1,8 +1,21 @@
 <script lang="ts" setup>
+// import { to } from "@iceywu/utils";
 useHead({
-  title: 'IceyWu',
-})
-const { data: user } = await useFetch('/api/user')
+  title: "IceyWu",
+});
+const userInfo = ref({
+  avatar_url: "https://avatars.githubusercontent.com/u/66096254?v=4",
+  name: "Icey Wu",
+  company: null,
+  blog: "https://iceywu.github.io/",
+  location: "Chengdu, China",
+  email: null,
+});
+onMounted(async () => {
+  // const [_, resData] = await to(useFetch("/api/user"));
+  // console.log("🐠-----resData-----", resData?.data?.value);
+  // userInfo.value = resData?.data?.value as any;
+});
 </script>
 
 <template>
@@ -12,7 +25,7 @@ const { data: user } = await useFetch('/api/user')
       <ImgBlurHash
         mode="bg"
         class="transLogo"
-        :src="user!.avatar_url"
+        :src="userInfo?.avatar_url"
         blurhash="LYN0}600~q%LIT9Ft7IoIV-;-pxu"
         alt="Avatar"
         w-30
@@ -33,7 +46,8 @@ const { data: user } = await useFetch('/api/user')
         :to="isDark ? '#00f2fe' : '#8ec5fc'"
         href="https://github.com/IceyWu"
         target="_blank"
-      ><strong>{{ user?.name }}</strong></a>, Front-end developer and Open source
+        ><strong>{{ userInfo?.name }}</strong></a
+      >, Front-end developer and Open source
       <strong class="text-class"> enthusiasts</strong>
     </p>
     <p>
@@ -46,7 +60,8 @@ const { data: user } = await useFetch('/api/user')
         :from="isDark ? '#4facfe' : '#e0c3fc'"
         :to="isDark ? '#00f2fe' : '#8ec5fc'"
         href="/map"
-      ><strong>Map</strong></a>.
+        ><strong>Map</strong></a
+      >.
     </p>
     <p>
       Team member of
@@ -55,7 +70,8 @@ const { data: user } = await useFetch('/api/user')
         o="#c18139"
         href="https://github.com/Life-Palette"
         target="_blank"
-      ><strong>Life</strong> <sub bottom-0>Palette</sub></a>, Creator of
+        ><strong>Life</strong> <sub bottom-0>Palette</sub></a
+      >, Creator of
       <a
         trans
         linear-text
@@ -65,7 +81,8 @@ const { data: user } = await useFetch('/api/user')
         to="#C084FC"
         href="https://github.com/Life-Palette"
         target="_blank"
-      ><strong>Life palette</strong></a>
+        ><strong>Life palette</strong></a
+      >
       <!-- <a
         trans
         linear-text
@@ -78,7 +95,7 @@ const { data: user } = await useFetch('/api/user')
         ><strong>Go de</strong></a
       > -->
       <!-- <i i-fluent-emoji-sparkles ml-1 /> -->
-      <br>
+      <br />
     </p>
     <p>
       In the community, I am also a ecological contributors of the
@@ -92,14 +109,16 @@ const { data: user } = await useFetch('/api/user')
         to="#bd34fe"
         href="https://github.com/element-plus/element-plus"
         target="_blank"
-      >element-plus</a>、
+        >element-plus</a
+      >、
       <i i-logos-vueuse w-1.1em h-1.1em mr-1 />
       <a
         linkInProse
         o="#64b687"
         href="https://github.com/vueuse/vueuse"
         target="_blank"
-      >VueUse</a>& etc.
+        >VueUse</a
+      >& etc.
     </p>
     <p>
       I also love photography. I want to record every beautiful moment, sharing
@@ -113,7 +132,8 @@ const { data: user } = await useFetch('/api/user')
         to="#6713d2"
         href="http://47.108.192.147:10086/#/index"
         target="_blank"
-      ><strong>website</strong></a>
+        ><strong>website</strong></a
+      >
       , welcome to join
       <!-- <i i-fluent-emoji-partying-face /> -->
     </p>
@@ -124,7 +144,7 @@ const { data: user } = await useFetch('/api/user')
         text-p-r
         class="group"
         hover-op-75
-        :href="`mailto:${user?.email ?? '3128006406@qq.com'}`"
+        :href="`mailto:${userInfo?.email ?? '3128006406@qq.com'}`"
       >
         Contact Me
         <i trans group-hover="ml-2" i-ri:arrow-right-up-line bg-gradient-to-r />
