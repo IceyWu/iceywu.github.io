@@ -2,12 +2,8 @@ export default defineNuxtConfig({
   devServer: {
     port: 1111,
   },
-  modules: [
-    '@vueuse/nuxt',
-    '@unocss/nuxt',
-    '@nuxt/content',
-    // '@vite-pwa/nuxt',
-  ],
+  modules: ['@vueuse/nuxt', '@unocss/nuxt', // '@vite-pwa/nuxt',
+  '@nuxt/content', "@nuxt/image"],
   experimental: {
     viewTransition: true,
     renderJsonPayloads: true,
