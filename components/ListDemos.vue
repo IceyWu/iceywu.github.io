@@ -2,7 +2,6 @@
 import { to } from '@iceywu/utils'
 import { breakpointsTailwind } from '@vueuse/core'
 
-
 const [_, { data }] = await to(useAsyncData('home', () =>
   queryContent('/demos').find()))
 

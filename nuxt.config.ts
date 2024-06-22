@@ -16,11 +16,11 @@ export default defineNuxtConfig({
     '~/styles/prose.css',
   ],
   devtools: {
-    enabled: true,
+    enabled: false,
   },
-  unocss: {
-    preflight: true,
-  },
+  // unocss: {
+  //   preflight: true,
+  // },
   // content: {
   //   highlight: {
   //     theme: 'vitesse-dark',
