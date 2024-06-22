@@ -5,7 +5,7 @@ import { breakpointsTailwind } from '@vueuse/core'
 const [err, { data }] = await to(useAsyncData('/content', () =>
   queryContent('/demos').find()))
 
-console.log('🍭-----data-----', data.value, err)
+
 const demoItems = data.value
   ?.map((item, idx) => {
     const { date = '2024-02-03', link } = item
