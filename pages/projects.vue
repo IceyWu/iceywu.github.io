@@ -4,7 +4,16 @@ import { to } from '@iceywu/utils'
 // import { useTitle } from '@vueuse/core'
 
 const [_, { data: repoGroup }] = await to(useFetch('/api/repos'))
-const [errTest, { data: dataTest }] = await to(useFetch('/api/test'))
+const [errTest, { data: dataTest }] = await to(useFetch('/api/test', {
+  onRequestError({ request, options, error }) {
+    console.log('🍧-----onRequestError request, options, error-----', request, options, error)
+    // Handle the request errors
+  },
+  onResponseError({ request, response, options }) {
+    console.log('🌳-----onResponseError-----', request, response, options)
+    // Handle the response errors
+  },
+}))
 console.log('🌳-----dataTest-----', dataTest.value, errTest)
 
 // useTitle('Projects | IceyWu')
