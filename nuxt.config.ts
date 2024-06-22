@@ -3,7 +3,7 @@ export default defineNuxtConfig({
     port: 1111,
   },
   modules: ['@vueuse/nuxt', '@unocss/nuxt', // '@vite-pwa/nuxt',
-  '@nuxt/content', "@nuxt/image"],
+    '@nuxt/content', '@nuxt/image'],
   experimental: {
     viewTransition: true,
     renderJsonPayloads: true,

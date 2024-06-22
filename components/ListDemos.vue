@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { to } from '@iceywu/utils'
 import { breakpointsTailwind } from '@vueuse/core'
 
-const { data } = await useAsyncData('/content', () =>
-queryContent('/demos').find())
+const [err, { data }] = await to(useAsyncData('/content', () =>
+  queryContent('/demos').find()))
 
+console.log('🍭-----data-----', data.value, err)
 const demoItems = data.value
   ?.map((item, idx) => {
     const { date = '2024-02-03', link } = item

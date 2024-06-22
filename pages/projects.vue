@@ -4,6 +4,8 @@ import { to } from '@iceywu/utils'
 // import { useTitle } from '@vueuse/core'
 
 const [_, { data: repoGroup }] = await to(useFetch('/api/repos'))
+const [errTest, { data: dataTest }] = await to(useFetch('/api/test'))
+console.log('🌳-----dataTest-----', dataTest.value, errTest)
 
 // useTitle('Projects | IceyWu')
 // useHead({
