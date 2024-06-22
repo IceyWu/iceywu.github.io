@@ -1,37 +1,27 @@
-name: CI
-
+# https://github.com/actions/deploy-pages#usage
+name: Deploy to GitHub Pages
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
-
-  pull_request:
-    branches:
-      - main
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
-      - name: Set node
-        uses: actions/setup-node@v4
+      - run: corepack enable
+      - uses: actions/setup-node@v3
         with:
-          node-version: 18
-
+          node-version: "20"
+      # Pick your own package manager and build script
       - name: Setup PNPM
         uses: pnpm/action-setup@v2
 
       - name: 📦 Install dependencies
         run: pnpm install
-
       - name: 📝 Lint
         run: pnpm lint
-
-    #   - name: 🍥 Build
-    #     run: pnpm build
-        
       - run: npx nuxt build --preset github_pages
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
