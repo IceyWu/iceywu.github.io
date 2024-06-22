@@ -18,9 +18,9 @@ export default defineNuxtConfig({
   devtools: {
     enabled: false,
   },
-  // unocss: {
-  //   preflight: true,
-  // },
+  unocss: {
+    preflight: true,
+  },
   // content: {
   //   highlight: {
   //     theme: 'vitesse-dark',
@@ -33,7 +33,7 @@ export default defineNuxtConfig({
   //   documentDriven: true,
   // },
   app: {
-    keepalive: true,
+    keepalive: false,
   },
   vite: {
     define: {
