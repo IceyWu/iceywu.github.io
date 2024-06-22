@@ -4,7 +4,8 @@ import { to } from '@iceywu/utils'
 // import { useTitle } from '@vueuse/core'
 
 const [_, { data: repoGroup }] = await to(useFetch('/api/repos'))
-const [errTest, { data: dataTest }] = await to(useFetch('/api/test', {
+
+const [errTest, { data: dataTest }] = await to(useFetch(new URL(`/api/test`, import.meta.url).href, {
   onRequestError({ request, options, error }) {
     console.log('🍧-----onRequestError request, options, error-----', request, options, error)
     // Handle the request errors
