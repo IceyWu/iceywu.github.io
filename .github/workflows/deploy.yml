@@ -11,15 +11,22 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: corepack enable
-      - uses: actions/setup-node@v3
+
+      - name: Set node
+        uses: actions/setup-node@v4
         with:
           node-version: "20"
+
       - name: Setup PNPM
-        uses: pnpm/action-setup@v2.2.1
-        with:
-         version: 9.4.0
+        uses: pnpm/action-setup@v2
+       
       # Pick your own package manager and build script
-      - run: pnpm install
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: 📝 Lint
+        run: pnpm lint
+        
       - run: npx nuxt build --preset github_pages
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
