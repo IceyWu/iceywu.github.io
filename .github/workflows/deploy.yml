@@ -16,7 +16,7 @@ jobs:
           node-version: "20"
       # Pick your own package manager and build script
       - name: Setup PNPM
-        uses: pnpm/action-setup@latest
+        uses: pnpm/action-setup@v4
 
       - name: 📦 Install dependencies
         run: pnpm install
