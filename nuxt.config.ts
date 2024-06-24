@@ -35,6 +35,7 @@ export default defineNuxtConfig({
   app: {
     keepalive: false,
   },
+  ssr: false,
   vite: {
     define: {
       'import.meta.env.__BUILD_TIME__': JSON.stringify(new Date().toISOString()),
