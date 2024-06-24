@@ -6,6 +6,7 @@
   "author": "IceyWu <https://github.com/IceyWu>",
   "license": "MIT",
   "homepage": "https://github.com/IceyWu/iceywu.me#readme",
+  "packageManager": "pnpm@9.1.2",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/IceyWu/iceywu.me.git"
