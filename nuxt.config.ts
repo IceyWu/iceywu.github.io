@@ -33,9 +33,8 @@ export default defineNuxtConfig({
   //   documentDriven: true,
   // },
   app: {
-    keepalive: false,
+    keepalive: true,
   },
-  ssr: false,
   vite: {
     define: {
       'import.meta.env.__BUILD_TIME__': JSON.stringify(new Date().toISOString()),
