@@ -13,15 +13,6 @@ import type { EChartsOption } from 'echarts'
 
 const isDark = useDark()
 
-use([
-  CanvasRenderer,
-  PieChart,
-  GraphChart,
-  TitleComponent,
-  TooltipComponent,
-  LegendComponent,
-])
-
 provide(
   THEME_KEY,
   computed(() => (isDark.value ? 'dark' : '')),
@@ -295,13 +286,21 @@ function handleLinks() {
 onMounted(() => {
   handleData()
   handleLinks()
+  use([
+    CanvasRenderer,
+    PieChart,
+    GraphChart,
+    TitleComponent,
+    TooltipComponent,
+    LegendComponent,
+  ])
 })
 </script>
 
 <template>
   <div>
     <!-- @vue-ignore -->
-    <VChart class="chart" :option="option" autoresize />  
+    <VChart class="chart" :option="option" autoresize />
   </div>
 </template>
 

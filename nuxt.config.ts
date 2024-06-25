@@ -2,8 +2,12 @@ export default defineNuxtConfig({
   devServer: {
     port: 1111,
   },
-  modules: ['@vueuse/nuxt', '@unocss/nuxt', // '@vite-pwa/nuxt',
-    '@nuxt/content', '@nuxt/image'],
+  modules: [
+    '@vueuse/nuxt',
+    '@unocss/nuxt', // '@vite-pwa/nuxt',
+    '@nuxt/content',
+    '@nuxt/image',
+  ],
   experimental: {
     viewTransition: true,
     renderJsonPayloads: true,
@@ -37,7 +41,9 @@ export default defineNuxtConfig({
   },
   vite: {
     define: {
-      'import.meta.env.__BUILD_TIME__': JSON.stringify(new Date().toISOString()),
+      'import.meta.env.__BUILD_TIME__': JSON.stringify(
+        new Date().toISOString(),
+      ),
       '__DEV__': process.env.NODE_ENV !== 'production',
     },
     build: {
@@ -49,6 +55,9 @@ export default defineNuxtConfig({
       crawlLinks: false,
       routes: ['/'],
     },
+  },
+  build: {
+    transpile: [/echarts/],
   },
   // pwa: {
   //   manifest: {
