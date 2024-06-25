@@ -129,11 +129,11 @@ export const skillData: ChartDataList = {
   ],
 }
 
-function handleChartData() {
+function handleChartData(skillDataList:any) {
   const seriesData: any[] = []
   const baseDataList: any[] = []
-  Object.keys(skillData).forEach((key) => {
-    skillData[key].forEach((item: any) => {
+  Object.keys(skillDataList).forEach((key) => {
+    skillDataList[key].forEach((item: any) => {
       seriesData.push({
         name: item.name,
         draggable: true,
@@ -168,7 +168,7 @@ function handleChartLinks(baseDataList: any) {
 }
 
 export function getChartData() {
-  const { seriesData, baseDataList } = handleChartData()
+  const { seriesData, baseDataList } = handleChartData(skillData)
   const linksList = handleChartLinks(baseDataList)
   return {
     seriesData,
