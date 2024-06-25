@@ -1,43 +1,43 @@
 <script lang="ts" setup>
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+// import gsap from 'gsap'
+// import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
-gsap.registerPlugin(ScrollTrigger)
-definePageMeta({
-  layout: false,
-})
-onMounted(() => {
-  gsap.registerPlugin(ScrollTrigger)
+// gsap.registerPlugin(ScrollTrigger)
+// definePageMeta({
+//   layout: false,
+// })
+// onMounted(() => {
+//   gsap.registerPlugin(ScrollTrigger)
 
-  window.addEventListener('load', () => {
-    gsap
-      .timeline({
-        scrollTrigger: {
-          trigger: '.wrapper',
-          start: 'top top',
-          end: '+=350%',
-          pin: true,
-          scrub: true,
-          markers: true,
-        },
-      })
-      .to('img', {
-        scale: 2,
-        z: 350,
-        transformOrigin: 'center center',
-        ease: 'power1.inOut',
-      })
-      .to(
-        '.section.hero',
-        {
-          scale: 1.1,
-          transformOrigin: 'center center',
-          ease: 'power1.inOut',
-        },
-        '<',
-      )
-  })
-})
+//   window.addEventListener('load', () => {
+//     gsap
+//       .timeline({
+//         scrollTrigger: {
+//           trigger: '.wrapper',
+//           start: 'top top',
+//           end: '+=350%',
+//           pin: true,
+//           scrub: true,
+//           markers: true,
+//         },
+//       })
+//       .to('img', {
+//         scale: 2,
+//         z: 350,
+//         transformOrigin: 'center center',
+//         ease: 'power1.inOut',
+//       })
+//       .to(
+//         '.section.hero',
+//         {
+//           scale: 1.1,
+//           transformOrigin: 'center center',
+//           ease: 'power1.inOut',
+//         },
+//         '<',
+//       )
+//   })
+// })
 </script>
 
 <template>
