@@ -8,15 +8,15 @@ import {
   TitleComponent,
   TooltipComponent,
 } from 'echarts/components'
-import VChart, { THEME_KEY } from 'vue-echarts'
+// import VChart, { THEME_KEY } from 'vue-echarts'
 import type { EChartsOption } from 'echarts'
 
 const isDark = useDark()
 
-provide(
-  THEME_KEY,
-  computed(() => (isDark.value ? 'dark' : '')),
-)
+// provide(
+//   THEME_KEY,
+//   computed(() => (isDark.value ? 'dark' : '')),
+// )
 const tempData = ref({
   // 方向
   direction: [
@@ -300,7 +300,7 @@ onMounted(() => {
 <template>
   <div>
     <!-- @vue-ignore -->
-    <VChart class="chart" :option="option" autoresize />
+    <!-- <VChart class="chart" :option="option" autoresize /> -->
   </div>
 </template>
 
