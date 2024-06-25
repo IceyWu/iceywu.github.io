@@ -1,6 +1,5 @@
 {
   "name": "iceywu.me",
-  "type": "module",
   "private": true,
   "description": "IceyWu' blog build with Nuxt3.",
   "author": "IceyWu <https://github.com/IceyWu>",
