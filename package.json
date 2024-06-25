@@ -1,11 +1,12 @@
 {
   "name": "iceywu.me",
+  "type": "module",
   "private": true,
+  "packageManager": "pnpm@9.1.2",
   "description": "IceyWu' blog build with Nuxt3.",
   "author": "IceyWu <https://github.com/IceyWu>",
   "license": "MIT",
   "homepage": "https://github.com/IceyWu/iceywu.me#readme",
-  "packageManager": "pnpm@9.1.2",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/IceyWu/iceywu.me.git"
