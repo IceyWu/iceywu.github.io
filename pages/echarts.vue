@@ -286,14 +286,14 @@ function handleLinks() {
 onMounted(() => {
   handleData()
   handleLinks()
-  use([
-    CanvasRenderer,
-    PieChart,
-    GraphChart,
-    TitleComponent,
-    TooltipComponent,
-    LegendComponent,
-  ])
+  // use([
+  //   CanvasRenderer,
+  //   PieChart,
+  //   GraphChart,
+  //   TitleComponent,
+  //   TooltipComponent,
+  //   LegendComponent,
+  // ])
 })
 </script>
 
