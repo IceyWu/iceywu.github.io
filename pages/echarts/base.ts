@@ -4,7 +4,7 @@ interface ChartDataList {
   [key: string]: ChartItem[]
 }
 
-export const skillData = <ChartDataList>{
+export const skillData: ChartDataList = {
   // 方向
   direction: [
     {
