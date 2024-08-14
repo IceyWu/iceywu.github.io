@@ -25,7 +25,8 @@
     "build": "nuxt build",
     "preview": "nuxt preview",
     "lint": "eslint . --fix",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@mapbox/mapbox-gl-language": "^1.0.1",
@@ -41,7 +42,7 @@
     "viewerjs": "^1.11.6"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.21.1",
+    "@antfu/eslint-config": "^2.25.1",
     "@iceywu/utils": "^0.0.46",
     "@iconify-json/akar-icons": "^1.1.26",
     "@iconify-json/carbon": "^1.1.37",
@@ -56,7 +57,7 @@
     "@unocss/nuxt": "^0.62.1",
     "@vueuse/nuxt": "^10.11.1",
     "echarts": "^5.5.1",
-    "eslint": "^8.57.0",
+    "eslint": "^9.9.0",
     "esno": "^4.7.0",
     "fs-extra": "^11.2.0",
     "nuxt": "3.12.4",
@@ -67,5 +68,8 @@
     "typescript": "5.5.4",
     "unocss-preset-useful": "^0.4.2",
     "vue-echarts": "^7.0.2"
+  },
+  "lint-staged": {
+    "*": "eslint --fix"
   }
 }
