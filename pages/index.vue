@@ -124,7 +124,7 @@ onMounted(async () => {
         class="c-context::#bd34fe"
         from="#cc208e"
         to="#6713d2"
-        href="http://47.108.192.147:10086/#/index"
+        href="http://47.108.192.147:10086"
         target="_blank"
       ><strong>website</strong></a>
       , welcome to join
