@@ -4,11 +4,17 @@ import { api as viewerApi } from 'v-viewer'
 
 const props = defineProps<{
   data: object
+  isSingle: boolean
 }>()
 
 const emit = defineEmits(['closePop'])
 const fileList = computed(() => {
-  return props.data.files || []
+  if (props.isSingle) {
+    return [props.data]
+  }
+  else {
+    return props.data?.files || []
+  }
 })
 function getCover(data: any) {
   const { fileType, file, cover } = data || {}
@@ -55,9 +61,9 @@ function showImgs(index: number) {
     <!-- 头部 -->
     <header class="header-part relative">
       <h3 class="header-title">
-        {{ data.title }}
+        {{ data?.title }}
       </h3>
-      <span class="header-subTitle">{{ data.content }}</span>
+      <span class="header-subTitle">{{ data?.content }}</span>
       <button
         class="close i-carbon-close-large absolute right-0 top-0 text-xl"
         @click="handleClosePop"

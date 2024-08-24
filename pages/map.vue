@@ -3,7 +3,7 @@ import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import MapboxLanguage from '@mapbox/mapbox-gl-language'
 import { createVNode, render } from 'vue'
-import { to } from '@iceywu/utils'
+import { customDestr, to } from '@iceywu/utils'
 import MapPop from '@/components/Mappop.vue'
 
 let map: mapboxgl.Map | null
@@ -39,19 +39,66 @@ async function getData() {
     page: 1,
     size: 100,
     userId: 1,
+    exif: true,
   }
-  const API = `${params.baseApi}/api/topic?page=${params.page}&size=${params.size}&sort=desc,createdAt&userId=${params.userId}`
+  const API = `${params.baseApi}/api/topic?page=${params.page}&size=${params.size}&sort=desc,createdAt&userId=${params.userId}&exif=${params.exif}`
   const [err, res] = await to($fetch<any>(API))
   if (res) {
     const { code, result = [] } = res || {}
     if (code === 200 && result) {
       const { data = [] } = result
       dataList.value = data
+
+      getImgsInfo()
     }
   }
   if (err)
     getDataLoading.value = false
   getDataLoading.value = false
+}
+function parseDMS(dms: string) {
+  const dmsPattern = /(-?\d+)deg (\d+)' (-?\d+\.\d+)"/
+  const match = dms.match(dmsPattern)
+
+  if (match) {
+    const degrees = Number.parseInt(match[1], 10)
+    const minutes = Number.parseInt(match[2], 10)
+    const seconds = Number.parseFloat(match[3])
+
+    const decimalDegrees = degrees + (minutes / 60) + (seconds / 3600)
+
+    return decimalDegrees
+  }
+  else {
+    // throw new Error('Invalid DMS format')
+    return 0
+  }
+}
+function getImgsInfo() {
+  dataList.value.forEach((item: any) => {
+    item.files.forEach((file: any) => {
+      const exifInfo = customDestr(file.exif, { customVal: {} }) || {}
+      file.exif = exifInfo || {}
+
+      const { GPSLatitude, GPSLongitude, GPSLatitudeRef, GPSLongitudeRef } = exifInfo as any
+      if (GPSLatitude?.value && GPSLongitude?.value) {
+        let lat = parseDMS(GPSLatitude.value)
+        let lng = parseDMS(GPSLongitude.value)
+        const latRef = GPSLatitudeRef
+        const lngRef = GPSLongitudeRef
+        if (latRef === 'S') {
+          lat = -lat
+        }
+        if (lngRef === 'W') {
+          lng = -lng
+        }
+        file.lat = lat
+        file.lng = lng
+
+        addMarker([lng, lat], file, true)
+      }
+    })
+  })
 }
 
 // 初始化生命周期
@@ -67,10 +114,12 @@ async function addMarkers() {
     const { extraData } = element || {}
     if (extraData) {
       const { gps_data } = JSON.parse(extraData)
+
       addMarker([gps_data?.lng, gps_data?.lat], element)
     }
   }
 }
+
 onUnmounted(() => {
   map!.remove()
 })
@@ -116,7 +165,6 @@ function init() {
   })
   // 点击增加弹窗
   // map.on("click", (e: any) => {
-  //   console.log('🐠-----click-----');
 
   //   // addPop([e.lngLat.lng, e.lngLat.lat])
   //   // drawCircle([e.lngLat.lng, e.lngLat.lat])
@@ -145,31 +193,40 @@ function getCover(data: any) {
 }
 // const popIsOpen = ref(false);
 // 传入坐标，添加标记
-function addMarker(lnglat: number[] | any, data?: any) {
+function addMarker(lnglat: number[] | any, data?: any, isSingle?: boolean) {
   const flagEl = document.createElement('div')
   flagEl.className = 'marker-flag z-998 i-meteocons-windsock text-6xl'
   new mapboxgl.Marker(flagEl).setLngLat(lnglat).addTo(map)
 
   // cover
   if (data) {
-    const { files, id } = data
-    const firstFile = files[0] || {}
-    const cover = getCover(firstFile) || {}
-
+    let cover = {}
     const dot = document.createElement('div')
-    dot.className = `marker-dot-${id} marker-dot`
-    // dot.style.backgroundColor = "#3AB236";
+    if (isSingle) {
+      const { id } = data
+
+      cover = getCover(data) || {}
+
+      dot.className = `marker-dot-${id} marker-dot`
+    }
+    else {
+      const { files, id } = data
+
+      const firstFile = files[0] || {}
+      cover = getCover(firstFile) || {}
+
+      dot.className = `marker-dot-${id} marker-dot`
+    }
     dot.style.backgroundImage = `url(${cover?.preSrc})`
     new mapboxgl.Marker(dot).setLngLat(lnglat).addTo(map)
     dot.addEventListener('click', () => {
-      // popIsOpen.value = true
-      addPop(lnglat, data)
+      addPop(lnglat, data, isSingle)
     })
   }
 }
 // 传入坐标，添加弹窗pop
 const popObj = ref()
-function addPop(lnglat: number[] | any, data?: any) {
+function addPop(lnglat: number[] | any, data?: any, isSingle?: boolean) {
   if (!data)
     return
 
@@ -184,6 +241,7 @@ function addPop(lnglat: number[] | any, data?: any) {
   const elpopup = document.createElement('div')
   const vNodePopup = createVNode(MapPop, {
     data,
+    isSingle,
     onClosePop: () => {
       if (popObj.value)
         popObj.value.remove()
