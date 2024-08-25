@@ -19,8 +19,12 @@ const fileList = computed(() => {
 function getCover(data: any) {
   const { fileType, file, cover } = data || {}
   if (fileType === 'IMAGE') {
-    const preSrc = `${file}?x-oss-process=image/resize,l_100`
+    let preSrc = `${file}?x-oss-process=image/resize,l_100`
     // const preSrc = `${file}`;
+    const fileSuffix = file.substring(file.lastIndexOf('.'))
+    if (fileSuffix.toUpperCase() === '.HEIC') {
+      preSrc = `${file}?x-oss-process=image/resize,l_100/format,jpg`
+    }
     return preSrc
   }
   else if (fileType === 'VIDEO') {
@@ -38,6 +42,10 @@ function showImgs(index: number) {
   const images = fileList.value.map((item: any) => {
     const { fileType, file, cover } = item || {}
     if (fileType === 'IMAGE') {
+      const fileSuffix = file.substring(file.lastIndexOf('.'))
+      if (fileSuffix.toUpperCase() === '.HEIC') {
+        return `${file}?x-oss-process=image/format,jpg`
+      }
       return file
     }
     else if (fileType === 'VIDEO') {

@@ -174,8 +174,13 @@ function getCover(data: any) {
   const fileTemp = data || {}
   const { fileType, file, cover } = fileTemp || {}
   if (fileType === 'IMAGE') {
-    const preSrc = `${file}?x-oss-process=image/resize,l_50`
-    const src = file
+    let preSrc = `${file}?x-oss-process=image/resize,l_50`
+    let src = file
+    const fileSuffix = file.substring(file.lastIndexOf('.'))
+    if (fileSuffix.toUpperCase() === '.HEIC') {
+      preSrc = `${file}?x-oss-process=image/resize,l_50/format,jpg`
+      src = `${file}?x-oss-process=image/format,jpg`
+    }
     return {
       src,
       preSrc,
