@@ -26,6 +26,7 @@ export default antfu(
     rules: {
       'unused-imports/no-unused-vars': 'off',
       'eslint-comments/no-unlimited-disable': 'off',
+      'ts/no-unused-expressions': 'off',
     },
   },
 )

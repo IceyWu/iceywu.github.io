@@ -4,9 +4,13 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 import MapboxLanguage from '@mapbox/mapbox-gl-language'
 import { createVNode, render } from 'vue'
 import { customDestr, to } from '@iceywu/utils'
+import TWEEN from '@tweenjs/tween.js'
+import { addLineLayer } from './utils/line'
 import MapPop from '@/components/Mappop.vue'
 
 let map: mapboxgl.Map | null
+let tbRef: any = null
+
 // const colorList = []
 
 const isDark = useDark({
@@ -65,7 +69,7 @@ function parseDMS(dms: string) {
     const minutes = Number.parseInt(match[2], 10)
     const seconds = Number.parseFloat(match[3])
 
-    const decimalDegrees = degrees + (minutes / 60) + (seconds / 3600)
+    const decimalDegrees = degrees + minutes / 60 + seconds / 3600
 
     return decimalDegrees
   }
@@ -80,7 +84,8 @@ function getImgsInfo() {
       const exifInfo = customDestr(file.exif, { customVal: {} }) || {}
       file.exif = exifInfo || {}
 
-      const { GPSLatitude, GPSLongitude, GPSLatitudeRef, GPSLongitudeRef } = exifInfo as any
+      const { GPSLatitude, GPSLongitude, GPSLatitudeRef, GPSLongitudeRef }
+        = exifInfo as any
       if (GPSLatitude?.value && GPSLongitude?.value) {
         let lat = parseDMS(GPSLatitude.value)
         let lng = parseDMS(GPSLongitude.value)
@@ -146,7 +151,7 @@ function init() {
     container: basicMapbox.value,
     style: mapStyle.value,
     ...start.value,
-    minZoom: 2.5,
+    minZoom: 1,
     maxZoom: 17,
   })
   map.addControl(new MapboxLanguage({ defaultLanguage: 'zh-Hans' }))
@@ -162,6 +167,24 @@ function init() {
       essential: true,
     })
     hasFly.value = true
+  })
+  map.on('load', () => {
+    map.addLayer({
+      id: 'custom_layer',
+      type: 'custom',
+      onAdd(map, mbxContext) {
+        this.map = map
+        tbRef = addLineLayer(map, mbxContext)
+        console.log('🍭-----tbRef-----', tbRef)
+      },
+      render() {
+        if (this.map) {
+          this.map.triggerRepaint()
+        }
+        tbRef.update()
+        TWEEN.update()
+      },
+    })
   })
   // 点击增加弹窗
   // map.on("click", (e: any) => {
