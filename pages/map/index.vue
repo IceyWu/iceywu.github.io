@@ -175,7 +175,6 @@ function init() {
       onAdd(map, mbxContext) {
         this.map = map
         tbRef = addLineLayer(map, mbxContext)
-        console.log('🍭-----tbRef-----', tbRef)
       },
       render() {
         if (this.map) {
