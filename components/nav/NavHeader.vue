@@ -2,7 +2,7 @@
 import SetSvgAnimation from 'svg-animate-web'
 
 const routes = reactive<{ icon?: string, path: string, text?: string }[]>([
-  // { path: '/posts', text: 'Blog' },
+  { path: '/posts', text: 'posts' },
   { path: '/projects', text: 'Projects' },
   { path: '/demos', text: 'Demos' },
   { path: '/map', text: 'Map' },
