@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { use } from 'echarts/core'
-import { CanvasRenderer } from 'echarts/renderers'
-import { LabelLayout } from 'echarts/features'
+import type { ChartItem } from '@/types/chartItem'
 import { GraphChart } from 'echarts/charts'
 import {
   LegendComponent,
   TitleComponent,
   TooltipComponent,
 } from 'echarts/components'
-import VChart from 'vue-echarts'
+import { use } from 'echarts/core'
+import { LabelLayout } from 'echarts/features'
+import { CanvasRenderer } from 'echarts/renderers'
 import { ref } from 'vue'
-import type { ChartItem } from '@/types/chartItem'
+import VChart from 'vue-echarts'
 
 interface ChartDataList {
   [key: string]: ChartItem[]

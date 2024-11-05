@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import 'viewerjs/dist/viewer.css'
 import { api as viewerApi } from 'v-viewer'
+import 'viewerjs/dist/viewer.css'
 
 const props = defineProps<{
   data: object

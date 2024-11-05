@@ -51,7 +51,8 @@ export function groupByWeeks(days: Day[], weekStart: WeekDay = 0): Weeks {
   const firstDate = parseISO(normalizedDays[0].date)
   const firstCalendarDate = getDay(firstDate) === weekStart ? firstDate : subWeeks(nextDay(firstDate, weekStart), 1)
 
-  const paddedDays: Array<Day | undefined> = [...Array(differenceInCalendarDays(firstDate, firstCalendarDate)).fill(undefined), ...normalizedDays]
+  // eslint-disable-next-line unicorn/no-new-array
+  const paddedDays: Array<Day | undefined> = [...new Array(differenceInCalendarDays(firstDate, firstCalendarDate)).fill(undefined), ...normalizedDays]
 
   return Array.from({ length: Math.ceil(paddedDays.length / 7) }, (_, i) => paddedDays.slice(i * 7, i * 7 + 7))
 }

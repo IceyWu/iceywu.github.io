@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import mapboxgl from 'mapbox-gl'
-import 'mapbox-gl/dist/mapbox-gl.css'
-import MapboxLanguage from '@mapbox/mapbox-gl-language'
-import { createVNode, render } from 'vue'
-import { customDestr, to } from '@iceywu/utils'
-import TWEEN from '@tweenjs/tween.js'
-import { THREE, Threebox } from 'threebox-plugin'
-
 import MapPop from '@/components/Mappop.vue'
+import { customDestr, to } from '@iceywu/utils'
+import MapboxLanguage from '@mapbox/mapbox-gl-language'
+import TWEEN from '@tweenjs/tween.js'
+import mapboxgl from 'mapbox-gl'
+import { THREE, Threebox } from 'threebox-plugin'
+import { createVNode, render } from 'vue'
+
+import 'mapbox-gl/dist/mapbox-gl.css'
 
 function draw2(tb: any, startPoint: any, endPoint: any) {
 //   const curveH = 1800 // 飞线最大高
