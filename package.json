@@ -26,7 +26,8 @@
     "preview": "nuxt preview",
     "lint": "eslint . --fix",
     "postinstall": "nuxt prepare",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "post": "esno scripts/posts-route.ts"
   },
   "dependencies": {
     "@mapbox/mapbox-gl-language": "^1.0.1",

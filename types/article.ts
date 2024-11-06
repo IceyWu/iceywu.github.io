@@ -7,6 +7,7 @@ export interface Article {
   _path: string
   _source: string
   _type: string
+  _dir: string
 
   id: number
   uid?: number
