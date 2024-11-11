@@ -25,7 +25,7 @@
     "build": "nuxt build",
     "preview": "nuxt preview",
     "lint": "eslint . --fix",
-    "postinstall": "nuxt prepare && esno scripts/posts-route.ts",
+    "postinstall": "nuxt prepare",
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
