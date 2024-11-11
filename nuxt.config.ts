@@ -50,12 +50,12 @@ export default defineNuxtConfig({
       target: 'esnext',
     },
   },
-  // nitro: {
-  //   prerender: {
-  //     crawlLinks: false,
-  //     routes: ['/'],
-  //   },
-  // },
+  nitro: {
+    prerender: {
+      crawlLinks: false,
+      // routes: ['/'],
+    },
+  },
   build: {
     transpile: [/echarts/],
   },
