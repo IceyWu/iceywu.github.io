@@ -62,7 +62,7 @@
     "eslint": "^9.14.0",
     "esno": "^4.8.0",
     "fs-extra": "^11.2.0",
-    "nuxt": "3.10.3",
+    "nuxt": "3.14.159",
     "octokit": "^4.0.2",
     "postcss-import": "^16.1.0",
     "postcss-url": "^10.1.3",
