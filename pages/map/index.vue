@@ -229,9 +229,19 @@ async function addMarkers() {
     }
   }
 }
+function clearCache() {
+  if ('caches' in window) {
+    caches.keys().then((cacheNames) => {
+      cacheNames.forEach((cacheName) => {
+        caches.delete(cacheName)
+      })
+    })
+  }
+}
 
 onUnmounted(() => {
   map!.remove()
+  clearCache()
 })
 
 const basicMapbox = ref<any>(null)
