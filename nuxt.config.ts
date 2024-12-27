@@ -7,11 +7,11 @@ export default defineNuxtConfig({
     '@unocss/nuxt', // '@vite-pwa/nuxt',
     '@nuxt/content',
     '@nuxt/image',
-    '@nuxtjs/mdc',
+    // '@nuxtjs/mdc',
   ],
-  content: {
-    documentDriven: true,
-  },
+  // content: {
+  //   documentDriven: true,
+  // },
   experimental: {
     viewTransition: true,
     renderJsonPayloads: true,
