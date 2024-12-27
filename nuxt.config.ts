@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     '@unocss/nuxt', // '@vite-pwa/nuxt',
     '@nuxt/content',
     '@nuxt/image',
+    '@nuxtjs/mdc',
   ],
   content: {
     documentDriven: true,

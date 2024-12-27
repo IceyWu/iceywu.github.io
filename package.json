@@ -2,6 +2,7 @@
   "name": "iceywu.me",
   "type": "module",
   "private": true,
+  "packageManager": "pnpm@9.15.1",
   "description": "IceyWu' blog build with Nuxt3.",
   "author": "IceyWu <https://github.com/IceyWu>",
   "license": "MIT",
@@ -30,6 +31,7 @@
   "dependencies": {
     "@mapbox/mapbox-gl-language": "^1.0.1",
     "@nuxt/content": "^2.13.4",
+    "@nuxtjs/mdc": "^0.11.1",
     "@turf/circle": "^7.1.0",
     "@tweenjs/tween.js": "^25.0.0",
     "blurhash": "^2.0.5",
