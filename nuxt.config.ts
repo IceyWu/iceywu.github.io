@@ -8,6 +8,9 @@ export default defineNuxtConfig({
     '@nuxt/content',
     '@nuxt/image',
   ],
+  content: {
+    documentDriven: true,
+  },
   experimental: {
     viewTransition: true,
     renderJsonPayloads: true,
