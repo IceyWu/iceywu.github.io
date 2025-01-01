@@ -6,4 +6,8 @@ dist
 .env
 .vscode
 *.zip
+mock
 dev-dist
+.eslintcache
+.data
+.netlify

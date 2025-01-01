@@ -2,104 +2,60 @@ export default defineNuxtConfig({
   devServer: {
     port: 1111,
   },
+
   modules: [
     '@vueuse/nuxt',
-    '@unocss/nuxt', // '@vite-pwa/nuxt',
+    '@unocss/nuxt',
     '@nuxt/content',
-    '@nuxt/image',
-    // '@nuxtjs/mdc',
+    '@nuxtjs/color-mode',
+    // '@vite-pwa/nuxt',
   ],
-  // content: {
-  //   documentDriven: true,
-  // },
+
   experimental: {
     viewTransition: true,
     renderJsonPayloads: true,
   },
+
+  colorMode: {
+    preference: 'system',
+    fallback: 'dark',
+    classSuffix: '',
+  },
+
   css: [
-    '~/styles/fonts.css',
-    '~/styles/main.css',
     '~/styles/vars.css',
-    '~/styles/markdown.css',
+    '~/styles/fonts.css',
     '~/styles/prose.css',
+    '~/styles/main.css',
   ],
-  devtools: {
-    enabled: false,
+
+  content: {
+    build: {
+      markdown: {
+        toc: {
+          depth: 3,
+          searchDepth: 3,
+        },
+        highlight: {
+          theme: {
+            default: 'vitesse-dark',
+            light: 'vitesse-light',
+          },
+        },
+      },
+    },
+
   },
-  unocss: {
-    preflight: true,
-  },
-  // content: {
-  //   highlight: {
-  //     theme: 'vitesse-dark',
-  //   },
-  //   markdown: {
-  //     toc: {
-  //       depth: 3,
-  //     },
-  //   },
-  //   documentDriven: true,
-  // },
-  app: {
-    keepalive: true,
-  },
+
   vite: {
     define: {
-      'import.meta.env.__BUILD_TIME__': JSON.stringify(
-        new Date().toISOString(),
-      ),
+      'import.meta.env.__BUILD_TIME__': JSON.stringify(new Date().toISOString()),
       '__DEV__': process.env.NODE_ENV !== 'production',
     },
     build: {
       target: 'esnext',
     },
   },
-  nitro: {
-    prerender: {
-      crawlLinks: false,
-      routes: ['/'],
-    },
-  },
-  build: {
-    transpile: [/echarts/],
-  },
-  // pwa: {
-  //   manifest: {
-  //     name: 'IceyWu',
-  //     short_name: 'IceyWu',
-  //     description: 'IceyWu\' Portfolio',
-  //     theme_color: '#6f6f6f',
-  //     icons: [
-  //       {
-  //         src: 'favicon-192x192.png',
-  //         sizes: '192x192',
-  //         type: 'image/png',
-  //       },
-  //       {
-  //         src: 'favicon-512x512.png',
-  //         sizes: '512x512',
-  //         type: 'image/png',
-  //       },
-  //       {
-  //         src: 'favicon-512x512.png',
-  //         sizes: '512x512',
-  //         type: 'image/png',
-  //         purpose: 'any maskable',
-  //       },
-  //     ],
-  //   },
-  //   workbox: {
-  //     navigateFallback: '/',
-  //   },
-  //   client: {
-  //     installPrompt: true,
-  //     periodicSyncForUpdates: 20,
-  //   },
-  //   devOptions: {
-  //     enabled: true,
-  //     type: 'module',
-  //   },
-  // },
 
   // intlify: {
   //   localeDir: 'locales',
@@ -107,4 +63,15 @@ export default defineNuxtConfig({
   //     locale: 'zh-cn',
   //   },
   // },
+  nitro: {
+    prerender: {
+      crawlLinks: false,
+      routes: ['/'],
+    },
+  },
+
+  future: {
+    compatibilityVersion: 4,
+  },
+  compatibilityDate: '2024-09-05',
 })
