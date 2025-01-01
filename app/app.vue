@@ -1,5 +1,5 @@
 <script setup>
-const ogUrl = 'https://zyyv.dev/'
+const ogUrl = 'https://iceywu.github.io/'
 const ogImage = `${ogUrl}og.png#1`
 const title = 'IceyWu.me'
 const description = 'Regardless of the past, do not ask the future.'

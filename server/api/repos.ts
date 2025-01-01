@@ -1,5 +1,5 @@
 import type { Repo } from '~/types'
-import { useOctokit } from '../utils/github'
+// import { useOctokit } from '../utils/github'
 
 export default defineEventHandler(async () => {
   // const { data } = await useOctokit().request('GET /user/repos', { per_page: 100 })
