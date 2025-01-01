@@ -10,6 +10,7 @@ export default antfu(
       '.nuxt',
       'content/posts',
       'data',
+      '.github',
     ],
   },
   {
