@@ -22,8 +22,8 @@ jobs:
         run: pnpm install
       - name: 📝 Lint
         run: pnpm lint
-      - name: Use Environment Variable
-        run: export MY_TOKEN=${{ secrets.MY_TOKEN }}
+      - name: 🎉 Use Environment Variable
+        uses: JamesIves/github-pages-deploy-action@v4
         env:
           MY_TOKEN: ${{ secrets.MY_TOKEN }}
         

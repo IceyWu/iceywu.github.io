@@ -22,7 +22,7 @@ const { comp, date, link } = props.data as DataType
 const { title, type } = comp || {}
 
 function getImageUrl() {
-  if (type === 'gif\r')
+  if (type.includes('gif'))
     return import(`../../content/demos/${title}.gif`)
   else return import(`../../content/demos/${title}.png`)
 }
