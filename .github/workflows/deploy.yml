@@ -22,7 +22,8 @@ jobs:
         run: pnpm install
       - name: 📝 Lint
         run: pnpm lint
-      - name: 🎉 Use Environment Variable
+      - name: Use Environment Variable
+        run: export MY_TOKEN=${{ secrets.MY_TOKEN }}
         env:
           MY_TOKEN: ${{ secrets.MY_TOKEN }}
         
