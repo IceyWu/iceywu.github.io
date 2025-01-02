@@ -23,7 +23,6 @@ jobs:
       - name: 📝 Lint
         run: pnpm lint
       - name: 🎉 Use Environment Variable
-        uses: JamesIves/github-pages-deploy-action@v4
         env:
           MY_TOKEN: ${{ secrets.MY_TOKEN }}
         
