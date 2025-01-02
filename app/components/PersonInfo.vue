@@ -1,5 +1,29 @@
-<script lang='ts' setup>
-const { data: userInfo } = await useFetch('/api/user')
+<script lang="ts" setup>
+const { data } = await useFetch('/api/user')
+const userInfo = computed(() => {
+  return (
+    data.value || {
+      avatar_url: 'https://avatars.githubusercontent.com/u/66096254?v=4',
+      gravatar_id: '',
+      url: 'https://api.github.com/users/IceyWu',
+      html_url: 'https://github.com/IceyWu',
+      name: 'Icey Wu',
+      company: null,
+      blog: 'https://iceywu.github.io/',
+      location: 'Chengdu, China',
+      email: null,
+      hireable: null,
+      bio: null,
+      twitter_username: null,
+      public_repos: 60,
+      public_gists: 0,
+      followers: 30,
+      following: 19,
+      created_at: '2020-05-28T23:35:36Z',
+      updated_at: '2024-12-23T16:20:27Z',
+    }
+  )
+})
 </script>
 
 <template>
@@ -10,48 +34,45 @@ const { data: userInfo } = await useFetch('/api/user')
     <section>
       <p>
         I'm
-        <a
-          trans
-          linear-text
-          shape-bl
-          class="c-context::#C084FC font-italic"
-          :from="isDark ? '#4facfe' : '#e0c3fc'"
-          :to="isDark ? '#00f2fe' : '#8ec5fc'"
-          href="https://github.com/IceyWu"
-          target="_blank"
-        ><strong>{{ userInfo?.name }}</strong></a>, Front-end developer and Open source
+        <strong>
+          <a
+            trans
+            linear-text
+            shape-bl
+            class="c-context::#C084FC font-italic"
+            :from="isDark ? '#4facfe' : '#e0c3fc'"
+            :to="isDark ? '#00f2fe' : '#8ec5fc'"
+            href="https://github.com/IceyWu"
+            target="_blank"
+          >{{ userInfo?.name }}</a></strong>, Front-end developer and Open source
         <strong class="text-class"> enthusiasts</strong>
       </p>
       <p>
         Want to travel the world and fill up my
-        <a
-          trans
-          linear-text
-          shape-bl
-          class="c-context::#C084FC font-italic"
-          :from="isDark ? '#4facfe' : '#e0c3fc'"
-          :to="isDark ? '#00f2fe' : '#8ec5fc'"
-          href="/map"
-        ><strong>Map</strong></a>.
+        <strong>
+          <a
+            trans
+            linear-text
+            shape-bl
+            class="c-context::#C084FC font-italic"
+            :from="isDark ? '#4facfe' : '#e0c3fc'"
+            :to="isDark ? '#00f2fe' : '#8ec5fc'"
+            href="/map"
+          >Map</a></strong>.
       </p>
       <p>
-        Team member of
-        <a
-          linkInProse
-          o="#c18139"
-          href="https://github.com/Life-Palette"
-          target="_blank"
-        ><strong>Life</strong> <sub bottom-0>Palette</sub></a>, Creator of
-        <a
-          trans
-          linear-text
-          shape-bl
-          class="c-context::#C084FC"
-          from="#ACC1EE"
-          to="#C084FC"
-          href="https://github.com/Life-Palette"
-          target="_blank"
-        ><strong>Life palette</strong></a>
+        Team member and Creator of
+        <strong>
+          <a
+            trans
+            linear-text
+            shape-bl
+            class="c-context::#C084FC"
+            from="#ACC1EE"
+            to="#C084FC"
+            href="https://github.com/Life-Palette"
+            target="_blank"
+          >Life palette</a></strong>
         <!-- <a
         trans
         linear-text
@@ -88,8 +109,8 @@ const { data: userInfo } = await useFetch('/api/user')
         >VueUse</a>& etc.
       </p>
       <p>
-        I also love photography. I want to record every beautiful moment, sharing
-        these photos on my
+        I also love photography. I want to record every beautiful moment,
+        sharing these photos on my
         <a
           trans
           linear-text
@@ -97,11 +118,11 @@ const { data: userInfo } = await useFetch('/api/user')
           class="c-context::#bd34fe"
           from="#cc208e"
           to="#6713d2"
-          href="http://47.108.192.147:10086"
+          href="http://lpalette.cn/"
           target="_blank"
         ><strong>website</strong></a>
         , welcome to join
-      <!-- <i i-fluent-emoji-partying-face /> -->
+        <!-- <i i-fluent-emoji-partying-face /> -->
       </p>
 
       <p>
@@ -113,7 +134,12 @@ const { data: userInfo } = await useFetch('/api/user')
           :href="`mailto:${userInfo?.email ?? '3128006406@qq.com'}`"
         >
           Contact Me
-          <i trans group-hover="ml-2" i-ri:arrow-right-up-line bg-gradient-to-r />
+          <i
+            trans
+            group-hover="ml-2"
+            i-ri:arrow-right-up-line
+            bg-gradient-to-r
+          />
         </a>
       </p>
     </section>
