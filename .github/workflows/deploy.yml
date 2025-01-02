@@ -22,12 +22,10 @@ jobs:
         run: pnpm install
       - name: 📝 Lint
         run: pnpm lint
-      - name: Use Environment Variable
-        run: export MY_TOKEN=${{ secrets.MY_TOKEN }}
+      - name: 🚀 Build
         env:
           MY_TOKEN: ${{ secrets.MY_TOKEN }}
-        
-      - run: npx nuxt build --preset github_pages
+        run: npx nuxt build --preset github_pages
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
