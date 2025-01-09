@@ -33,7 +33,7 @@ const userInfo = computed(() => {
     </h1>
     <section>
       <p>
-        I'm
+        I'm-{{ process?.env?.TEST_VAL || 'o' }}
         <strong>
           <a
             trans
