@@ -23,10 +23,8 @@ jobs:
       - name: 📝 Lint
         run: pnpm lint
       - name: 🚀 Build
-        env:
-          MY_TOKEN: ${{ secrets.MY_TOKEN }}
-          TEST_VAL: ${{ secrets.TEST_VAL }}
-        run: npx nuxt build --preset github_pages
+        run: |
+          MY_TOKEN=${{ secrets.MY_TOKEN }} TEST_VAL=${{ secrets.TEST_VAL }} npx nuxt build --preset github_pages
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
