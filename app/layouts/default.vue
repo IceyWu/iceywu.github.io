@@ -14,6 +14,6 @@
       </router-view> -->
     <slot />
   </main>
-  <NavFooter />
+  <!-- <NavFooter /> -->
   <Bg />
 </template>
