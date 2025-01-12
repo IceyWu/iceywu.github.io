@@ -185,7 +185,7 @@ function parseDMS(dms: string) {
 }
 function getImgsInfo() {
   dataList.value.forEach((item: any) => {
-    item.files.forEach((file: any) => {
+    item.fileList.forEach((file: any) => {
       const exifInfo = customDestr(file.exif, { customVal: {} }) || {}
       file.exif = exifInfo || {}
 
@@ -308,30 +308,7 @@ function init() {
   // });
 }
 function getCover(data: any) {
-  const fileTemp = data || {}
-  const { fileType, file, cover } = fileTemp || {}
-  if (fileType === 'IMAGE') {
-    let preSrc = `${file}?x-oss-process=image/resize,l_50`
-    let src = file
-    const fileSuffix = file.substring(file.lastIndexOf('.'))
-    if (fileSuffix.toUpperCase() === '.HEIC') {
-      preSrc = `${file}?x-oss-process=image/resize,l_50/format,jpg`
-      src = `${file}?x-oss-process=image/format,jpg`
-    }
-    return {
-      src,
-      preSrc,
-    }
-  }
-  else if (fileType === 'VIDEO') {
-    const srcT
-      = cover
-      || `${file}?x-oss-process=video/snapshot,t_7000,f_jpg,w_0,h_0,m_fast`
-    return {
-      src: srcT,
-      preSrc: srcT,
-    }
-  }
+  return adjustImgData(data)
 }
 // const popIsOpen = ref(false);
 // 传入坐标，添加标记
@@ -352,9 +329,9 @@ function addMarker(lnglat: number[] | any, data?: any, isSingle?: boolean) {
       dot.className = `marker-dot-${id} marker-dot`
     }
     else {
-      const { files, id } = data
+      const { fileList, id } = data
 
-      const firstFile = files[0] || {}
+      const firstFile = fileList[0] || {}
       cover = getCover(firstFile) || {}
 
       dot.className = `marker-dot-${id} marker-dot`
