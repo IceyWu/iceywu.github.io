@@ -1,10 +1,11 @@
 import type { Repo } from '~/types'
-import { useOctokit } from '../utils/github'
+// import { useOctokit } from '../utils/github'
 
 export default defineEventHandler(async () => {
-  const { data } = await useOctokit().request('GET /user/repos', { per_page: 100 })
+  // const { data } = await useOctokit().request('GET /user/repos', { per_page: 100 })
+  const data = await $fetch<Repo[]>('https://api.github.com/users/iceywu/repos?per_page=100&type=owner&sort=updated')
 
-  const publicRepos = data.filter(repo => !repo.fork && !repo.archived && !repo.private && repo.permissions?.admin && repo.description)
+  const publicRepos = data.filter(repo => !repo.private && !repo.archived)
   const publicAndNotForkRepos = publicRepos.filter(repo => !repo.fork)
 
   const repoGroups: Record<string, Repo[]> = {
