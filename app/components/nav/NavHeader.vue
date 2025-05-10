@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import SetSvgAnimation from 'svg-animate-web'
+import GithubIcon from './GithubIcon.vue'
 
 interface Menu {
   icon?: string
@@ -40,7 +41,7 @@ function svgRef(data: any) {
 <template>
   <header sticky z-999 top-0 trans backdrop-blur fcc px-6>
     <div class="blog-header-bg w-full h-[50%] absolute top-0 left-0" />
-    <nav w-full :class="inHome ? 'fcc' : 'fbc'">
+    <nav class="overflow-auto" w-full :class="inHome ? 'fcc' : 'fbc'">
       <div v-show="!inHome">
         <div ml-4 w-20 h-auto>
           <Logo />
@@ -92,7 +93,10 @@ function svgRef(data: any) {
           </span>
           <!-- <i v-else="_route.icon" icon-btn :class="_route.icon" /> -->
         </NuxtLink>
-        <a title="Github" href="https://github.com/iceywu" target="_blank" icon-link i-ri-github-line />
+        <a title="Github" href="https://github.com/iceywu" target="_blank">
+          <GithubIcon />
+        </a>
+
         <DrakToggle />
       </div>
     </nav>
