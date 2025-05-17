@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import MapPop from '@/components/Mappop.vue'
 import { customDestr, to } from '@iceywu/utils'
 import MapboxLanguage from '@mapbox/mapbox-gl-language'
 import TWEEN from '@tweenjs/tween.js'
 import mapboxgl from 'mapbox-gl'
 import { THREE, Threebox } from 'threebox-plugin'
 import { createVNode, render } from 'vue'
+import MapPop from '@/components/Mappop.vue'
 
 import 'mapbox-gl/dist/mapbox-gl.css'
 
