@@ -25,6 +25,7 @@
     "build": "nuxt build",
     "preview": "nuxt preview",
     "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "postinstall": "nuxt prepare",
     "typecheck": "tsc --noEmit",
     "taze": "taze minor -wIr"

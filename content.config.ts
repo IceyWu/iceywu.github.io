@@ -22,4 +22,18 @@ export const collections = {
       type: z.string(),
     }),
   }),
+  essays: defineCollection({
+    type: 'page',
+    source: 'essays/*.md',
+    schema: z.object({
+      date: z.string(),
+      tags: z.array(z.string()),
+      lang: z.string(),
+      rawbody: z.string(),
+      title: z.string(),
+      description: z.string(),
+      path: z.string().optional(),
+      id: z.string().optional(),
+    }),
+  }),
 }

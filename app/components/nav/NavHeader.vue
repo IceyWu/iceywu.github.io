@@ -10,6 +10,7 @@ interface Menu {
 
 const routes = reactive<Menu[]>([
   { path: '/posts', icon: 'i-custom-post', text: 'Posts' },
+  { path: '/essays', icon: 'i-carbon-pen', text: 'Essays' },
   { path: '/projects', icon: 'i-custom-package', text: 'Projects' },
   // { path: '/talks', icon: 'i-custom-ppt' },
   // { path: '/images', icon: 'i-ri-image-line' },
