@@ -18,7 +18,7 @@ export const collections = {
       link: z.string(),
       title: z.string(),
       description: z.string(),
-      // date: z.string(),
+      date: z.string(),
       type: z.string(),
     }),
   }),
