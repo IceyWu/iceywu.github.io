@@ -2,6 +2,7 @@
   "name": "iceywu.me",
   "type": "module",
   "private": true,
+  "packageManager": "pnpm@10.14.0",
   "description": "IceyWu' blog build with Nuxt3.",
   "author": "IceyWu <https://github.com/IceyWu>",
   "license": "MIT",
