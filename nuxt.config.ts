@@ -7,7 +7,7 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@unocss/nuxt',
     '@nuxt/content',
-    '@nuxtjs/color-mode',
+    // '@nuxtjs/color-mode',
     // '@vite-pwa/nuxt',
   ],
 
@@ -16,11 +16,11 @@ export default defineNuxtConfig({
     renderJsonPayloads: true,
   },
 
-  colorMode: {
-    preference: 'system',
-    fallback: 'dark',
-    classSuffix: '',
-  },
+  // colorMode: {
+  //   preference: 'system',
+  //   fallback: 'dark',
+  //   classSuffix: '',
+  // },
 
   css: [
     '~/styles/vars.css',

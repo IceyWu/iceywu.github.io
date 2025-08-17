@@ -9,6 +9,10 @@ import MapPop from '@/components/Mappop.vue'
 
 import 'mapbox-gl/dist/mapbox-gl.css'
 
+definePageMeta({
+  layout: 'map',
+})
+
 function draw2(tb: any, startPoint: any, endPoint: any) {
 //   const curveH = 1800 // 飞线最大高
   const lineGroup = new THREE.Group()
@@ -423,9 +427,7 @@ function addPop(lnglat: number[] | any, data?: any, isSingle?: boolean) {
 
 <style>
 .map-temp-box {
-  transform: translateY(-100px);
-  padding-bottom: 100px;
-  height: calc(100vh + 100px);
+  height: calc(100dvh - 74px);
 }
 .mapboxgl-ctrl-bottom-left,
 .mapboxgl-ctrl-bottom-right {

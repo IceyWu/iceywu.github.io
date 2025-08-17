@@ -44,11 +44,11 @@ const userInfo = computed(() => {
             :to="isDark ? '#00f2fe' : '#8ec5fc'"
             href="https://github.com/IceyWu"
             target="_blank"
-          >{{ userInfo?.name }}</a></strong>, Front-end developer and Open source
-        <strong class="text-class"> enthusiasts</strong>
+          >{{ userInfo?.name }}</a></strong>, a Front-end developer and Open source
+        <strong class="text-class"> enthusiast</strong>
       </p>
       <p>
-        Want to travel the world and fill up my
+        I dream of traveling the world and filling up my
         <strong>
           <a
             trans
@@ -72,7 +72,7 @@ const userInfo = computed(() => {
             to="#C084FC"
             href="https://github.com/Life-Palette"
             target="_blank"
-          >Life palette</a></strong>
+          >Life Palette</a></strong>
         <!-- <a
         trans
         linear-text
@@ -88,7 +88,7 @@ const userInfo = computed(() => {
         <br>
       </p>
       <p>
-        In the community, I am also a ecological contributors of the
+        In the community, I am an active ecological contributor to
         <i i-logos-element w-1.1em h-1.1em mr-1 />
         <a
           trans
@@ -99,18 +99,30 @@ const userInfo = computed(() => {
           to="#bd34fe"
           href="https://github.com/element-plus/element-plus"
           target="_blank"
-        >element-plus</a>、
+        >Element Plus</a>,
         <i i-logos-vueuse w-1.1em h-1.1em mr-1 />
         <a
           linkInProse
           o="#64b687"
           href="https://github.com/vueuse/vueuse"
           target="_blank"
-        >VueUse</a>& etc.
+        >VueUse</a>,
+        <i i-logos-expo-icon w-1.1em h-1.1em mr-1 />
+        <a
+          trans
+          linear-text
+          shape-bottom-right
+          class="c-context::#bd34fe"
+          from="#cc208e"
+          to="#6713d2"
+          href="https://github.com/expo/expo"
+          target="_blank"
+        >Expo</a>,
+        & more.
       </p>
       <p>
-        I also love photography. I want to record every beautiful moment,
-        sharing these photos on my
+        I also love photography and capturing beautiful moments.
+        I share these photos on my
         <a
           trans
           linear-text
@@ -121,7 +133,7 @@ const userInfo = computed(() => {
           href="http://lpalette.cn/"
           target="_blank"
         ><strong>website</strong></a>
-        , welcome to join
+        — welcome to join me!
         <!-- <i i-fluent-emoji-partying-face /> -->
       </p>
 
