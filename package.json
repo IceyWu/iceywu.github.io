@@ -67,7 +67,7 @@
     "fs-extra": "^11.3.1",
     "lint-staged": "^16.1.5",
     "node-fetch": "^3.3.2",
-    "nuxt": "^4.0.3",
+    "nuxt": "^4.1.0",
     "octokit": "^5.0.3",
     "postcss-import": "^16.1.1",
     "postcss-url": "^10.1.3",
