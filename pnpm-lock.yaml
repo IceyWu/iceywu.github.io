@@ -37,6 +37,9 @@ importers:
       dayjs:
         specifier: ^1.11.18
         version: 1.11.18
+      live-photo:
+        specifier: ^0.0.45
+        version: 0.0.45
       mapbox-gl:
         specifier: ^3.15.0
         version: 3.15.0
@@ -4133,6 +4136,9 @@ packages:
   listr2@9.0.4:
     resolution: {integrity: sha512-1wd/kpAdKRLwv7/3OKC8zZ5U8e/fajCfWMxacUvB79S5nLrYGPtUI/8chMQhn3LQjsRVErTb9i1ECAwW0ZIHnQ==}
     engines: {node: '>=20.0.0'}
+
+  live-photo@0.0.45:
+    resolution: {integrity: sha512-7BwAcs8SqLxWEd6K3c0UNlvU7RpWyeWS5Fmvu4ZMPwdHljWrouyQC/gjRm3s+Wp70jZBt/OjRfXsLiiEHIB1rw==}
 
   loader-runner@4.3.0:
     resolution: {integrity: sha512-3R/1M+yS3j5ou80Me59j7F9IMs4PXs3VqRrm0TU3AbKPxlmpoY1TNscJV/oGJXo8qCatFGTfDbY6W6ipGOYXfg==}
@@ -10756,6 +10762,10 @@ snapshots:
       rfdc: 1.4.1
       wrap-ansi: 9.0.0
 
+  live-photo@0.0.45:
+    dependencies:
+      tslib: 2.8.1
+
   loader-runner@4.3.0: {}
 
   local-pkg@1.1.1:
@@ -12933,8 +12943,7 @@ snapshots:
       picomatch: 4.0.3
       typescript: 5.9.3
 
-  tslib@2.8.1:
-    optional: true
+  tslib@2.8.1: {}
 
   tsx@4.20.4:
     dependencies:

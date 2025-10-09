@@ -1,9 +1,19 @@
 <script lang="ts" setup>
 const { data: posts } = await useAsyncData(() => {
   return queryCollection('posts')
-    .select('title', 'description', 'path', 'id', 'date', 'tags', 'lang', 'rawbody')
+    .select('title', 'description', 'path', 'id', 'date', 'tags', 'lang', 'rawbody', 'draft')
     .order('date', 'DESC')
     .all()
+})
+
+// 过滤掉草稿文章(仅在生产环境)
+const filteredPosts = computed(() => {
+  if (import.meta.env.DEV) {
+    // 开发环境显示所有文章(包括草稿)
+    return posts.value
+  }
+  // 生产环境过滤掉草稿
+  return posts.value?.filter(post => !post.draft) || []
 })
 
 function calculateReadingTime(text: string): number {
@@ -27,12 +37,12 @@ function toggleTag(tag: string) {
 const sortedPosts = computed(() => {
   if (tags.value.size === 0) {
     window.history.replaceState(null, '', '/posts')
-    return posts.value
+    return filteredPosts.value
   }
   else {
     window.history.replaceState(null, '', `/posts?tags=${Array.from(tags.value).join(',')}`)
 
-    return [...posts.value].sort((a, b) => {
+    return [...filteredPosts.value].sort((a, b) => {
       const aHasTag = a.tags.some(tag => tags.value.has(tag))
       const bHasTag = b.tags.some(tag => tags.value.has(tag))
 

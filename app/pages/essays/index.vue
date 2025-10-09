@@ -1,9 +1,19 @@
 <script lang="ts" setup>
 const { data: essays } = await useAsyncData(() => {
   return queryCollection('essays')
-    .select('title', 'description', 'path', 'id', 'date', 'tags', 'lang', 'rawbody')
+    .select('title', 'description', 'path', 'id', 'date', 'tags', 'lang', 'rawbody', 'draft')
     .order('date', 'DESC')
     .all()
+})
+
+// 过滤掉草稿文章(仅在生产环境)
+const filteredEssays = computed(() => {
+  if (import.meta.env.DEV) {
+    // 开发环境显示所有文章(包括草稿)
+    return essays.value
+  }
+  // 生产环境过滤掉草稿
+  return essays.value?.filter(essay => !essay.draft) || []
 })
 
 function calculateReadingTime(text: string): number {
@@ -26,13 +36,17 @@ function toggleTag(tag: string) {
 
 const sortedPosts = computed(() => {
   if (tags.value.size === 0) {
-    window.history.replaceState(null, '', '/essays')
-    return essays.value
+    if (typeof window !== 'undefined') {
+      window.history.replaceState(null, '', '/essays')
+    }
+    return filteredEssays.value
   }
   else {
-    window.history.replaceState(null, '', `/essays?tags=${Array.from(tags.value).join(',')}`)
+    if (typeof window !== 'undefined') {
+      window.history.replaceState(null, '', `/essays?tags=${Array.from(tags.value).join(',')}`)
+    }
 
-    return [...essays.value].sort((a, b) => {
+    return [...filteredEssays.value].sort((a, b) => {
       const aHasTag = a.tags.some(tag => tags.value.has(tag))
       const bHasTag = b.tags.some(tag => tags.value.has(tag))
 

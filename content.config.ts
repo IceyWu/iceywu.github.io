@@ -9,6 +9,7 @@ export const collections = {
       tags: z.array(z.string()),
       lang: z.string(),
       rawbody: z.string(),
+      draft: z.boolean().optional(),
     }),
   }),
   demos: defineCollection({
@@ -32,6 +33,7 @@ export const collections = {
       rawbody: z.string(),
       title: z.string(),
       description: z.string(),
+      draft: z.boolean().optional(),
       path: z.string().optional(),
       id: z.string().optional(),
     }),
