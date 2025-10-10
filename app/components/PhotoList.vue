@@ -38,7 +38,7 @@ const gridStyle = computed(() => {
 function getphotoSrc(data: any) {
   const { imageSrc } = data
 
-  return `${imageSrc}??x-oss-process=image/resize,l_800`
+  return `${imageSrc}?x-oss-process=image/resize,l_800/format,avif`
 }
 </script>
 
