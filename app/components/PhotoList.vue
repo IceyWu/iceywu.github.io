@@ -35,6 +35,11 @@ const gridStyle = computed(() => {
     gap: `${props.gap}px`,
   }
 })
+function getphotoSrc(data: any) {
+  const { imageSrc } = data
+
+  return `${imageSrc}??x-oss-process=image/resize,l_800`
+}
 </script>
 
 <template>
@@ -42,12 +47,12 @@ const gridStyle = computed(() => {
     <PhotoItem
       v-for="photo in photos"
       :key="photo.id"
-      :image-src="photo.imageSrc"
+      :image-src="getphotoSrc(photo)"
       :video-src="photo.videoSrc"
       :blurhash="photo.blurhash"
       :alt="photo.alt || `Photo ${photo.id}`"
-      :width="photo.width || itemWidth"
-      :height="photo.height || itemHeight"
+      :width="itemWidth"
+      :height="itemHeight"
       :object-fit="objectFit"
     />
   </div>

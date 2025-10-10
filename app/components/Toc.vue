@@ -13,7 +13,7 @@ defineProps<{
     <li v-for="link in links" :key="link.id" :class="`pl-${link.depth * 4}`">
       <a
         :href="`#${link.id}`" class="text op-50 trans"
-        :class="highlights.includes(link.id) ? 'op-100!' : ''"
+        :class="highlights.includes(link.id) ? 'op-100! font-semibold text-blue-400 dark:text-blue-300' : ''"
         hover="underline op-100"
         @click="proseHeadingClick($event, link.id)"
       >{{ link.text }}</a>
