@@ -61,7 +61,7 @@ onMounted(() => {
     <Toc
       v-if="post" peer-hover="op-100"
       hover="op-100!"
-      class="pf right-10 top-40 op-80 trans bg-white/80 dark:bg-dark-700/80 backdrop-blur-md rounded-lg px-4 py-3 shadow-lg border border-gray-200/50 dark:border-gray-700/50"
+      class="hidden lg:block pf right-10 top-40 op-80 trans bg-white/80 dark:bg-dark-700/80 backdrop-blur-md rounded-lg px-4 py-3 shadow-lg border border-gray-200/50 dark:border-gray-700/50"
       :links="post.body.toc?.links ?? []"
       :highlights="activeToc"
     />

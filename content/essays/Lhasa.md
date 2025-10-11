@@ -2,7 +2,7 @@
 title: 关于拉萨
 date: 2025-10-09 13:38:30
 description: 关于我的拉萨
-draft: true
+draft: false
 tags:
   - 随笔
   - 旅行
@@ -13,7 +13,7 @@ lang: zh-cn
 
 ### 一、初见拉萨
 
-2025年9月30日，我踏上了前往拉萨的旅程。作为一个向往高原风光和藏文化的人，拉萨无疑是我心中的圣地。飞机降落在拉萨贡嘎机场时，迎面而来的高原气息让我感到既兴奋又紧张。空气中弥漫着一股淡淡的草香，天空湛蓝得让人心旷神怡。
+2025年9月30日，我踏上了前往<ruby>拉萨<rp>(</rp><rt>Lhasa</rt><rp>)</rp></ruby>的旅程。这是我第一次来到西藏，心中充满了期待和好奇。飞机降落在拉萨贡嘎机场时，迎接我的是高原特有的清新空气和壮丽的自然景观。
 
 ### 二、拉萨夜记：巷弄里的“西藏老鬼”
 
@@ -62,6 +62,18 @@ objectFit: cover
 ### 准备篇：从拉萨到冈仁波齐
 
 经历了两天的修正，我们网上的转山小队也终于在10月2日集合完毕——思思姐、阿章、阿璇和我。思思姐是个重装大佬，去过好多徒步的地方；阿章和阿璇是较为年起，俩人都很健谈，之前也有过徒步的经验，相比之下我就是纯小白，啥徒步经历都没有，担心被拉爆的一天😅，这次是从拉萨坐车到定日，然后凌晨3点开始，准备一天完成徒步转山。
+::PhotoListWrapper
+---
+
+data: '[{"id":1325,"imageSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106831991.HEIC","height":3024,"width":4032,"videoSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106832533.MOV","blurhash":"UWIX?I-;WBjb?ctRkBxt.9ogRjj[~qxuayWV","alt":"西藏自治区日喀则市昂仁县达居乡桑嘎村"},{"id":1387,"imageSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106863117.HEIC","height":3024,"width":4032,"videoSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106863913.MOV","blurhash":"UFDcN]%K0MNHEoWC%0xa9HRk-os:~UxZM}NG","alt":"西藏自治区日喀则市仲巴县拉让乡凯运汽修"},{"id":1329,"imageSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106872213.HEIC","height":3024,"width":4032,"videoSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106872648.MOV","blurhash":"UME3C#aex[xu?wWVozozRPj[RjWBIUMxRjRj","alt":"西藏自治区日喀则市仲巴县帕羊镇四川新津饭店"},{"id":1331,"imageSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106883799.HEIC","height":3024,"width":4032,"videoSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106884356.MOV","blurhash":"UGBp|qIU%NtSX=9Gayt68^WAs+RjxvxutSNH","alt":"西藏自治区阿里地区普兰县霍尔镇中骏石油集团马攸桥加油站(阿里第一站)"},{"id":1333,"imageSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106893587.HEIC","height":3024,"width":4032,"videoSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106894236.MOV","blurhash":"U8CQ7Itoo#xv0ItTt8WFm6RjNIax#3V?W9ad","alt":"西藏自治区阿里地区普兰县霍尔镇219国道"},{"id":1335,"imageSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106905316.HEIC","height":3024,"width":4032,"videoSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106905798.MOV","blurhash":"UfCQonV]t7j?cbozR*ayD+WXayj[xDjHoekC","alt":"西藏自治区阿里地区普兰县霍尔镇219国道"},{"id":1337,"imageSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106913389.HEIC","height":3024,"width":4032,"videoSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106913901.MOV","blurhash":"UcGIyGozRkt6_4WBWBj[WAM|WBjsRkM|Rkof","alt":"西藏自治区阿里地区普兰县霍尔镇219国道"},{"id":1339,"imageSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106922116.HEIC","height":3024,"width":4032,"videoSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106922754.MOV","blurhash":"U8EM8w^k9F0L$,DP9FWB?I$kRj~qnmr?DjNH","alt":"西藏自治区阿里地区普兰县巴嘎镇西藏阿里冈底斯藏医教学院"}]'
+columns: 3
+gap: 16
+itemWidth: 300
+itemHeight: 300
+objectFit: cover
+---
+
+::
 
 ### 止热寺的岔路口：迷茫里的“再试试”
 
@@ -72,7 +84,7 @@ objectFit: cover
 ::PhotoListWrapper
 ---
 
-data: '[{"id":1341,"imageSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106940483.HEIC","height":3024,"width":4032,"videoSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106940906.MOV","blurhash":"L496]x9a00_4=^Vr4.o}01?I.9D%","alt":"西藏自治区阿里地区普兰县巴嘎镇冈仁波齐峰景区"}]'
+data: '[{"id":1341,"height":3024,"width":4032,"alt":"西藏自治区阿里地区普兰县巴嘎镇冈仁波齐峰景区","blurhash":"U69%nvR:03%L02~o~oM}%Kt7jvWCxYE2oe?F","imageSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106940483.HEIC","videoSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106940906.MOV"},{"id":1343,"height":3024,"width":4032,"alt":"西藏自治区阿里地区普兰县巴嘎镇冈仁波齐峰景区","blurhash":"U57nBz~Cnn.8re?Hx[bdxDj]ShNGtQjFsCxZ","imageSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106949380.HEIC","videoSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106949920.MOV"},{"id":1345,"height":3024,"width":4032,"alt":"西藏自治区阿里地区普兰县巴嘎镇乌京扑隆","blurhash":"U57nBz~Cnn.8re?Hx[bdxDj]ShNGtQjFsCxZ","imageSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106964933.HEIC","videoSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106965436.MOV"},{"id":1347,"height":3024,"width":4032,"alt":"西藏自治区阿里地区普兰县巴嘎镇乌京扑隆","blurhash":"U39@n-_ND%-=waRiM{f500Mxx]MxRNf6ozoe","imageSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106973081.HEIC","videoSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106973656.MOV"},{"id":1349,"height":4284,"width":5712,"alt":"西藏自治区阿里地区普兰县巴嘎镇竹龙松多","blurhash":"U39@n-_ND%-=waRiM{f500Mxx]MxRNf6ozoe","imageSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106984150.HEIC","videoSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106984693.MOV"},{"id":1351,"height":4284,"width":5712,"alt":"西藏自治区阿里地区普兰县巴嘎镇竹龙松多","blurhash":"UvBXQcoeWVax%%ogayj@o#o#oeogRikDofof","imageSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106991999.HEIC","videoSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106992568.MOV"},{"id":1353,"height":4284,"width":5712,"alt":"西藏自治区阿里地区普兰县巴嘎镇辣曲","blurhash":"UbCQP$w=n#t8yGeRoHogk[ROadkDo%RiWAay","imageSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760106999945.HEIC","videoSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760107000503.MOV"},{"id":1357,"height":4284,"width":5712,"alt":"西藏自治区阿里地区普兰县巴嘎镇冈仁波齐朝圣客栈","blurhash":"UUCGilI9nzs:OxV=e,WW4?%LWCWBt1f-o$ad","imageSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760107021610.HEIC","videoSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760107022276.MOV"},{"id":1359,"height":4284,"width":5712,"alt":"西藏自治区阿里地区普兰县巴嘎镇冈仁波齐朝圣客栈","blurhash":"Ud9*l{XBV@jXOetRogj]skRjozohRNoeaeae","imageSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760107035442.HEIC","videoSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760107036066.MOV"},{"id":1361,"height":4284,"width":5712,"alt":"西藏自治区阿里地区普兰县巴嘎镇冈仁波齐朝圣客栈","blurhash":"Ua9@}IXBRPaxKBt8ogogoMado#WYROWAj[oI","imageSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760107044109.HEIC","videoSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760107044756.MOV"},{"id":1363,"height":4284,"width":5712,"alt":"西藏自治区阿里地区普兰县巴嘎镇冈仁波齐朝圣客栈","blurhash":"UV9bL;kZWBf,T5t7kDkCR2WAofjYt7a}Rja#","imageSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760107054819.HEIC","videoSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760107055399.MOV"},{"id":1365,"height":4284,"width":5712,"alt":"西藏自治区阿里地区普兰县巴嘎镇冈仁波齐朝圣客栈","blurhash":"UWB;64N$V?j?KBkFs.flM{xYt8W?nzjDRljs","imageSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760107067469.HEIC","videoSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760107068108.MOV"},{"id":1367,"height":4284,"width":5712,"alt":"西藏自治区阿里地区普兰县巴嘎镇竹马隆巴","blurhash":"UQB|gZITskkC5et6WBfPRoxwW?jXs%R;o#a#","imageSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760107078609.HEIC","videoSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760107079273.MOV"}]'
 columns: 3
 gap: 16
 itemWidth: 300
@@ -98,17 +110,56 @@ objectFit: cover
 
 路上遇到两位藏民阿姨，她们没穿专业的徒步装备，踩着普通的胶鞋，背着普通的布包，却走得又快又稳。我试着跟在她们身后，学她们“小步快频”的节奏：不追求一步迈多远，只保证每一步都扎实。说不清到底学到了什么，可某一刻忽然发现，自己的呼吸和步伐居然对上了——吸气时抬步，呼气时落脚，后背的汗好像都干得快了些，连之前一直发紧的双腿也轻快了许多。
 
+::PhotoListWrapper
+---
+
+data: '[{"id":1369,"height":4284,"width":5712,"alt":"西藏自治区阿里地区普兰县巴嘎镇","blurhash":"UrBE2yWBV?t9XroJjrbJkYRjkDadadjYo#jX","imageSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760107087872.HEIC","videoSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760107088530.MOV"}]'
+columns: 3
+gap: 16
+itemWidth: 300
+itemHeight: 300
+objectFit: cover
+---
+
+::
+
 ### 往生石前的释然：原来我能走到这里
 
 就这么走一阵歇一阵，再抬头时，眼前忽然开阔起来——原来已经到了垭口。掏出手机看了眼消息，阿章他们说如果中文点还到不了垭口就尽量不要上了，我心里一阵窃喜，原来我好像赶上他们了，我一点点的，不看距离，跟着自己心跳的节奏，慢慢的，一步一步的前行。
 
 直到看见那块贴满照片的往生石，不敢相信自己真的走到了这里。我在石头旁站了很久，看别人往石墙上贴照片，风把一些松动的照片吹得晃来晃去，有的已经掉在了地上。我没准备要贴的照片，倒也不觉得遗憾，只是对着石头默默祈求家人平安，然后转身继续往上。
 
+::PhotoListWrapper
+---
+
+data: '[{"id":1369,"height":3024,"width":4032,"alt":"西藏自治区阿里地区普兰县巴嘎镇","blurhash":"UHA1I~r;o$WrAhR*WBogxUogngoIaIoJWrRj","imageSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760107123594.HEIC","videoSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760107124065.MOV"},{"id":1369,"height":3024,"width":4032,"alt":"西藏自治区阿里地区普兰县巴嘎镇","blurhash":"UVBq0%NMtot7b~ogS*aeS*ofa#jEt8WEnzad","imageSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760107133426.HEIC","videoSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760107134049.MOV"}]'
+columns: 3
+gap: 16
+itemWidth: 300
+itemHeight: 300
+objectFit: cover
+---
+
+::
+
 到了一处山顶，看见有人在东西，烟裹着不知名的味飘过来，我心里咯噔一下——不会是天葬吧？忐忑地路过时瞟了一眼，才发现是藏族同胞在祈福。卖纪念奖牌的大叔站在最高点，金属奖牌在阳光下闪着光，正面刻着冈仁波齐的轮廓。我问了问价格，果断买了一块——算是给这段咬牙坚持的自己，一个小小的认可，大叔还给我拍了好几张照片，我看着自己也有了"登顶多少多少m"的人生照片，心里满是欢喜。
 
 ### 慈悲湖后的考验：20公里的“意外”
 
 从最高点往下走，一眼就看到了慈悲湖——之前在网上看博主的视频，总以为这里就是终点。走到湖边时，看着碧绿的湖水映着冈仁波齐的倒影，连风都带着温柔的味道，心里满是释然，脚步也慢了下来。我没什么高反经验，也说不清高反到底是什么感觉，只知道自己一直控制着呼吸节奏，没头晕，没恶心，连那瓶氧气都没拆开过。
+
+::PhotoListWrapper
+---
+
+data: '[{"id":1384,"height":4284,"width":5712,"alt":"西藏自治区阿里地区普兰县巴嘎镇卓玛拉垭口","blurhash":"UDCsmxtTt7t6A1%io4RPIEXVTJj?.Ax^Rkax","imageSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760107182218.HEIC","videoSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760107182913.MOV"},{"id":1386,"height":3024,"width":4032,"alt":"西藏自治区阿里地区普兰县巴嘎镇","blurhash":"UDCsmxtTt7t6A1%io4RPIEXVTJj?.Ax^Rkax","imageSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760107191809.HEIC","videoSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760107192448.MOV"}]'
+columns: 3
+gap: 16
+itemWidth: 300
+itemHeight: 300
+objectFit: cover
+---
+
+::
 
 可我没想到，慈悲湖之后的路，才是真正的考验。我以为下撤的路会像景区那样铺着水泥路，甚至能遇到摆渡车，结果走了半天，只有坑坑洼洼的土路，连个车影都没见着。有的路段太陡，只能扶着旁边的灌木往下挪，两脚的脚踝被背包带磨破了皮，每走一步都疼得抽气。好不容易到了山脚（后来才知道那是“不动地钉”补给点），我赶紧问旁边的大哥有没有专车，大哥笑着拍了拍我的肩膀：“你都走到这了，还怕最后20多公里？”我想想也是，揉了揉脚踝，又接着往前走。
 
@@ -125,6 +176,18 @@ objectFit: cover
 ### 没走完的4公里，也是收获
 
 这时候肚子饿得咕咕叫，正好看见路边有个亮着灯的店铺，进去吃了碗肉面汤下肚，才稍微缓过来些。可出来一看，天已经没有什么亮光了，月亮躲在云后面，根本分不清哪条是路。想打车，可路上连车灯都见不着，我站在岔路口犯愁时，远处传来脚步声，看见两个人也往这边走，我心里一松，赶紧跟了上去。走到一处满是碎石的地方，看着不像路，我们居然同时开口问：“是走这边吗？”说完都笑了，跟着他们一起，才算找对了方向。那段路特别偏，走了好久都没遇到人，手机上的公里数总在“剩余7公里，8公里”徘徊，明明感觉走了很远，数字却没怎么变，心里的焦虑又开始冒头。
+::PhotoListWrapper
+---
+
+data: '[{"id":1388,"height":3024,"width":4032,"alt":"西藏自治区阿里地区普兰县巴嘎镇普兰县尊追普寺","blurhash":"UCG@}Sa0vLp0DgE2-A%0~Ds7Egoz#6o#kWV@","imageSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760107201073.HEIC","videoSrc":"https://lpalette.oss-accelerate.aliyuncs.com/nestTest/1/1760107201698.MOV"}]'
+columns: 3
+gap: 16
+itemWidth: 300
+itemHeight: 300
+objectFit: cover
+---
+
+::
 
 直到遇到一波徒步的队伍，有七八个人，队伍变大了些，心里才踏实点。走到“剩余6公里”时，前面忽然出现了一段小坡——还是山路，我当时就懵了，我以为最后一段是水泥路，怎么会是这样？瞬间有点绝望。前面的大哥说“走到4公里就可以搭车了，我已经订好车了。”我赶紧问了一下我可不可以一起，大哥同意了。这时候阿章发消息问我到哪了，说他也走不动了，我告诉他这边4公里处有车，可他比我快1公里，车没法回头接，他只好说再坚持坚持。
 

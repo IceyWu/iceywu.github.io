@@ -61,7 +61,6 @@ function getphotoSrc(data: any) {
 <style scoped>
 .photo-list {
   width: 100%;
-  padding: 1rem;
 }
 
 /* 响应式布局 */
