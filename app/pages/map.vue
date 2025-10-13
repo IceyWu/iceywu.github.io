@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { customDestr, to } from '@iceywu/utils'
+import { to } from '@iceywu/utils'
 import MapboxLanguage from '@mapbox/mapbox-gl-language'
 import TWEEN from '@tweenjs/tween.js'
 import mapboxgl from 'mapbox-gl'
 import { THREE, Threebox } from 'threebox-plugin'
-import { createVNode, render } from 'vue'
-import MapPop from '@/components/Mappop.vue'
+import { ViewerPro } from 'viewer-pro'
 
 import 'mapbox-gl/dist/mapbox-gl.css'
+// import 'viewer-pro/dist/ViewerPro.css'
 
 definePageMeta({
   layout: 'map',
@@ -90,6 +90,7 @@ function draw2(tb: any, startPoint: any, endPoint: any) {
 }
 
 function addLineLayer(map: any, mbxContext: any) {
+  return
   const tb = new Threebox(
     map,
     mbxContext,
@@ -150,69 +151,29 @@ async function getData() {
     baseApi: 'https://test.wktest.cn:3001',
     // baseApi: 'http://localhost:3001',
     page: 1,
-    size: 200,
+    size: -1,
     userId: 1,
-    exif: true,
+    includeExif: false,
+    filterEmptyLocation: true,
   }
-  const API = `${params.baseApi}/api/topic?page=${params.page}&size=${params.size}&sort=desc,createdAt&userId=${params.userId}&exif=${params.exif}`
+  const API = `${params.baseApi}/api/file/user/files?page=${params.page}&size=${params.size}&sort=desc,createdAt&userId=${params.userId}&includeExif=${params.includeExif}&filterEmptyLocation=${params.filterEmptyLocation}`
   const [err, res] = await to($fetch<any>(API))
   if (res) {
     const { code, result = [] } = res || {}
     if (code === 200 && result) {
       const { data = [] } = result
       dataList.value = data
-
-      getImgsInfo()
+      dataList.value.forEach((item: any) => {
+        const { lng, lat } = item
+        if (lng && lat) {
+          addMarker([lng, lat], item, true)
+        }
+      })
     }
   }
   if (err)
     getDataLoading.value = false
   getDataLoading.value = false
-}
-function parseDMS(dms: string) {
-  const dmsPattern = /(-?\d+)deg (\d+)' (-?\d+\.\d+)"/
-  const match = dms.match(dmsPattern)
-
-  if (match) {
-    const degrees = Number.parseInt(match[1], 10)
-    const minutes = Number.parseInt(match[2], 10)
-    const seconds = Number.parseFloat(match[3])
-
-    const decimalDegrees = degrees + minutes / 60 + seconds / 3600
-
-    return decimalDegrees
-  }
-  else {
-    // throw new Error('Invalid DMS format')
-    return 0
-  }
-}
-function getImgsInfo() {
-  dataList.value.forEach((item: any) => {
-    item.fileList.forEach((file: any) => {
-      const exifInfo = customDestr(file.exif, { customVal: {} }) || {}
-      file.exif = exifInfo || {}
-
-      const { GPSLatitude, GPSLongitude, GPSLatitudeRef, GPSLongitudeRef }
-        = exifInfo as any
-      if (GPSLatitude?.value && GPSLongitude?.value) {
-        let lat = parseDMS(GPSLatitude.value)
-        let lng = parseDMS(GPSLongitude.value)
-        const latRef = GPSLatitudeRef
-        const lngRef = GPSLongitudeRef
-        if (latRef === 'S') {
-          lat = -lat
-        }
-        if (lngRef === 'W') {
-          lng = -lng
-        }
-        file.lat = lat
-        file.lng = lng
-
-        addMarker([lng, lat], file, true)
-      }
-    })
-  })
 }
 
 // 初始化生命周期
@@ -271,7 +232,7 @@ function init() {
     style: mapStyle.value,
     ...start.value,
     minZoom: 1,
-    maxZoom: 17,
+    maxZoom: 20,
   })
   map.addControl(new MapboxLanguage({ defaultLanguage: 'zh-Hans' }))
   // ### 添加导航控制条
@@ -343,81 +304,58 @@ function addMarker(lnglat: number[] | any, data?: any, isSingle?: boolean) {
     dot.style.backgroundImage = `url(${cover?.preSrc})`
     new mapboxgl.Marker(dot).setLngLat(lnglat).addTo(map)
     dot.addEventListener('click', () => {
-      addPop(lnglat, data, isSingle)
+      // addPop(lnglat, data, isSingle)
+      const viewerPro = new ViewerPro({
+        images: [
+          {
+            src: data?.url,
+            thumbnail: `${data?.url}?x-oss-process=image/resize,m_lfit,h_100,w_100`,
+            title: '',
+          },
+        ],
+      })
+      viewerPro.open(0)
     })
   }
 }
 // 传入坐标，添加弹窗pop
-const popObj = ref()
-function addPop(lnglat: number[] | any, data?: any, isSingle?: boolean) {
-  if (!data)
-    return
-
-  if (popObj.value)
-    popObj.value.remove()
-
-  const el = document.createElement('div')
-  el.id = 'markerId'
-  el.style.width = `${32}px`
-  el.style.height = `${32}px`
-  const LngLat = lnglat
-  const elpopup = document.createElement('div')
-  const vNodePopup = createVNode(MapPop, {
-    data,
-    isSingle,
-    onClosePop: () => {
-      if (popObj.value)
-        popObj.value.remove()
-    },
-  })
-  render(vNodePopup, elpopup)
-
-  const option = {
-    closeOnClick: false,
-    closeButton: false,
-    anchor: 'bottom',
-    offset: [0, -20],
-  } as any
-
-  const popups = new mapboxgl.Popup(option)
-    .setLngLat(LngLat)
-    .setMaxWidth('300px')
-    .setDOMContent(elpopup)
-    .addTo(map)
-  popObj.value = popups
-}
-// 绘制圆形区域的函数
-// const hasAddLayer = ref(false)
-// function drawCircle(center: number[]) {
-//   // const radius = 8477.70727135986 / 1000 // 半径
-//   const radius = 8477.70727135986 / 100
-//   const options = {
-//     steps: 64,
-//     units: 'kilometers',
-//   } as any
-//   const circle = turf_circle(center, radius, options)
-
-//   if (hasAddLayer.value) {
-//     // 修改addSource
-//     map.getSource('circle').setData(circle)
+// const popObj = ref()
+// function addPop(lnglat: number[] | any, data?: any, isSingle?: boolean) {
+//   if (!data)
 //     return
-//   }
-//   else {
-//     map.addSource('circle', {
-//       type: 'geojson',
-//       data: circle,
-//     })
-//   }
-//   map.addLayer({
-//     id: 'circleLine',
-//     type: 'line',
-//     source: 'circle',
-//     paint: {
-//       'line-color': '#000',
-//       'line-width': 3,
+
+//   if (popObj.value)
+//     popObj.value.remove()
+
+//   const el = document.createElement('div')
+//   el.id = 'markerId'
+//   el.style.width = `${32}px`
+//   el.style.height = `${32}px`
+//   const LngLat = lnglat
+//   const elpopup = document.createElement('div')
+//   const vNodePopup = createVNode(MapPop, {
+//     data,
+//     isSingle,
+//     onClosePop: () => {
+//       if (popObj.value)
+//         popObj.value.remove()
 //     },
 //   })
-//   hasAddLayer.value = true
+//   render(vNodePopup, elpopup)
+
+//   const option = {
+//     closeOnClick: false,
+//     closeButton: false,
+//     anchor: 'bottom',
+//     offset: [0, -20],
+//   } as any
+
+//   const popups = new mapboxgl.Popup(option)
+//     .setLngLat(LngLat)
+//     .setMaxWidth('300px')
+//     .setDOMContent(elpopup)
+//     .addTo(map)
+//   popObj.value = popups
 // }
 </script>
 

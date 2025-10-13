@@ -47,6 +47,7 @@
     "threebox-plugin": "^2.2.7",
     "unsplash-js": "^7.0.20",
     "v-viewer": "^3.0.22",
+    "viewer-pro": "^0.0.21",
     "vue-flow-layout": "^0.2.0"
   },
   "devDependencies": {

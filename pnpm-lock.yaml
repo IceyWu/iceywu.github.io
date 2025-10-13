@@ -58,6 +58,9 @@ importers:
       v-viewer:
         specifier: ^3.0.22
         version: 3.0.22(viewerjs@1.11.7)(vue@3.5.22(typescript@5.9.3))
+      viewer-pro:
+        specifier: ^0.0.21
+        version: 0.0.21
       vue-flow-layout:
         specifier: ^0.2.0
         version: 0.2.0
@@ -5961,6 +5964,9 @@ packages:
 
   vfile@6.0.3:
     resolution: {integrity: sha512-KzIbH/9tXat2u30jf+smMwFCsno4wHVdNmzFyL+T/L3UGqqk6JKfVqOFOZEpZSHADH1k40ab6NUIXZq422ov3Q==}
+
+  viewer-pro@0.0.21:
+    resolution: {integrity: sha512-cOlwPI8E12Ds9Om7F34gJIew8LnB0qyB3qncWil0bsbKful+Zg05z4NJt/iyrezadJoj0rORTRU6cHc+sqtIKg==}
 
   viewerjs@1.11.7:
     resolution: {integrity: sha512-0JuVqOmL5v1jmEAlG5EBDR3XquxY8DWFQbFMprOXgaBB0F7Q/X9xWdEaQc59D8xzwkdUgXEMSSknTpriq95igg==}
@@ -13139,6 +13145,10 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
+
+  viewer-pro@0.0.21:
+    dependencies:
+      tslib: 2.8.1
 
   viewerjs@1.11.7: {}
 
