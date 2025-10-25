@@ -84,7 +84,7 @@ function initLivePhoto() {
       container: containerRef.value,
       width: props.width,
       height: props.height,
-      autoplay: false,
+      autoplay: true,
       lazyLoadVideo: true,
       imageCustomization: {
         styles: {
