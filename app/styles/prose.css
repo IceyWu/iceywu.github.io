@@ -1,4 +1,8 @@
 :is([prose=""], .prose) {
+  /* 允许文本内容可以被选中 */
+  -webkit-user-select: text;
+  user-select: text;
+
   a {
     text-decoration: none !important;
   }

@@ -84,7 +84,8 @@ function initLivePhoto() {
       container: containerRef.value,
       width: props.width,
       height: props.height,
-      autoplay: true,
+      autoplay: false,
+      staticBadgeIcon: true,
       lazyLoadVideo: true,
       imageCustomization: {
         styles: {

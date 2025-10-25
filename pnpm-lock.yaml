@@ -38,8 +38,8 @@ importers:
         specifier: ^1.11.18
         version: 1.11.18
       live-photo:
-        specifier: ^0.0.47
-        version: 0.0.47
+        specifier: ^0.0.48
+        version: 0.0.48
       mapbox-gl:
         specifier: ^3.16.0
         version: 3.16.0
@@ -4061,8 +4061,8 @@ packages:
     resolution: {integrity: sha512-ME4Fb83LgEgwNw96RKNvKV4VTLuXfoKudAmm2lP8Kk87KaMK0/Xrx/aAkMWmT8mDb+3MlFDspfbCs7adjRxA2g==}
     engines: {node: '>=20.0.0'}
 
-  live-photo@0.0.47:
-    resolution: {integrity: sha512-49QuTXFO3y0eOiELk6BGy5D/svO/oAAAOzzfEzWFlHy57zVXWFYCseix1QSebEpKeWnsG7N79XcpDkcSVZN/WA==}
+  live-photo@0.0.48:
+    resolution: {integrity: sha512-XXD5mCSHshrpVYObJig9TPwlCXV/798Me7t97B66zVehrlkIMfBQJn157jJbnS9SHQ28+CgD8KEdL5WPe+/org==}
     engines: {node: '>=18.0.0'}
 
   loader-runner@4.3.0:
@@ -10643,7 +10643,7 @@ snapshots:
       rfdc: 1.4.1
       wrap-ansi: 9.0.0
 
-  live-photo@0.0.47:
+  live-photo@0.0.48:
     dependencies:
       tslib: 2.8.1
 

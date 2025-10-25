@@ -40,7 +40,7 @@
     "better-sqlite3": "^12.4.1",
     "blurhash": "^2.0.5",
     "dayjs": "^1.11.18",
-    "live-photo": "^0.0.47",
+    "live-photo": "^0.0.48",
     "mapbox-gl": "^3.16.0",
     "shiki": "3.13.0",
     "svg-animate-web": "^0.1.0",
