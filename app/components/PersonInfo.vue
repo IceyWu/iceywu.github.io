@@ -24,22 +24,102 @@ const userInfo = computed(() => {
     }
   )
 })
+
+// 段落引用
+const paragraphRefs = ref<HTMLElement[]>([])
+const linkRefs = ref<HTMLElement[]>([])
+const contactRef = ref<HTMLElement | null>(null)
+const containerRef = ref<HTMLElement | null>(null)
+
+// 使用动画 composables
+const { animate: animateParagraphs } = useTextAnimation(paragraphRefs, {
+  type: 'stagger',
+  stagger: 0.12,
+})
+
+// 收集段落引用
+function setParagraphRef(el: any, index: number) {
+  if (el) {
+    paragraphRefs.value[index] = el
+  }
+}
+
+// 收集链接引用
+function setLinkRef(el: any, index: number) {
+  if (el?.$el || el) {
+    linkRefs.value[index] = el.$el || el
+  }
+}
+
+// Contact Me 引用
+function setContactRef(el: any) {
+  if (el) {
+    contactRef.value = el
+  }
+}
+
+// 初始化动画
+onMounted(() => {
+  const { $gsap } = useNuxtApp()
+  const { reducedMotion } = useReducedMotion()
+
+  nextTick(() => {
+    // 段落入场动画
+    animateParagraphs()
+
+    // 链接悬停效果
+    if (!reducedMotion.value && linkRefs.value.length > 0) {
+      linkRefs.value.forEach((link) => {
+        if (!link)
+          return
+
+        link.addEventListener('mouseenter', () => {
+          $gsap.to(link, {
+            scale: 1.02,
+            duration: 0.2,
+            ease: 'power1.out',
+          })
+        })
+
+        link.addEventListener('mouseleave', () => {
+          $gsap.to(link, {
+            scale: 1,
+            duration: 0.2,
+            ease: 'power1.out',
+          })
+        })
+      })
+    }
+
+    // Contact Me 脉冲动画
+    if (!reducedMotion.value && contactRef.value) {
+      $gsap.to(contactRef.value, {
+        scale: 1.03,
+        duration: 1.5,
+        ease: 'power1.inOut',
+        repeat: -1,
+        yoyo: true,
+      })
+    }
+  })
+})
 </script>
 
 <template>
-  <div prose ma c-primary:75>
+  <div ref="containerRef" prose ma c-primary:75 class="person-info">
     <h1 fsc gap-5>
       <UserAvatar />
     </h1>
     <section>
-      <p>
+      <p :ref="(el) => setParagraphRef(el, 0)" class="animate-paragraph">
         I'm
         <strong>
           <a
+            :ref="(el) => setLinkRef(el, 0)"
             trans
             linear-text
             shape-bl
-            class="c-context::#C084FC font-italic"
+            class="c-context::#C084FC font-italic info-link"
             :from="isDark ? '#4facfe' : '#e0c3fc'"
             :to="isDark ? '#00f2fe' : '#8ec5fc'"
             href="https://github.com/IceyWu"
@@ -47,54 +127,45 @@ const userInfo = computed(() => {
           >{{ userInfo?.name }}</a></strong>, a Front-end developer and Open source
         <strong class="text-class"> enthusiast</strong>
       </p>
-      <p>
+      <p :ref="(el) => setParagraphRef(el, 1)" class="animate-paragraph">
         I dream of traveling the world and filling up my
         <strong>
           <a
+            :ref="(el) => setLinkRef(el, 1)"
             trans
             linear-text
             shape-bl
-            class="c-context::#C084FC font-italic"
+            class="c-context::#C084FC font-italic info-link"
             :from="isDark ? '#4facfe' : '#e0c3fc'"
             :to="isDark ? '#00f2fe' : '#8ec5fc'"
             href="/map"
           >Map</a></strong>.
       </p>
-      <p>
+      <p :ref="(el) => setParagraphRef(el, 2)" class="animate-paragraph">
         Team member and Creator of
         <strong>
           <a
+            :ref="(el) => setLinkRef(el, 2)"
             trans
             linear-text
             shape-bl
-            class="c-context::#C084FC"
+            class="c-context::#C084FC info-link"
             from="#ACC1EE"
             to="#C084FC"
             href="https://github.com/Life-Palette"
             target="_blank"
           >Life Palette</a></strong>
-        <!-- <a
-        trans
-        linear-text
-        shape-bl
-        class="c-context::#C084FC"
-        from="#ACC1EE"
-        to="#C084FC"
-        href="http://47.108.192.147:10086/#/index"
-        target="_blank"
-        ><strong>Go de</strong></a
-      > -->
-        <!-- <i i-fluent-emoji-sparkles ml-1 /> -->
         <br>
       </p>
-      <p>
+      <p :ref="(el) => setParagraphRef(el, 3)" class="animate-paragraph">
         In the community, I am an active ecological contributor to
         <i i-logos-element w-1.1em h-1.1em mr-1 />
         <a
+          :ref="(el) => setLinkRef(el, 3)"
           trans
           linear-text
           shape-bottom-right
-          class="c-context::#bd34fe"
+          class="c-context::#bd34fe info-link"
           from="#41d1ff"
           to="#bd34fe"
           href="https://github.com/element-plus/element-plus"
@@ -102,17 +173,20 @@ const userInfo = computed(() => {
         >Element Plus</a>,
         <i i-logos-vueuse w-1.1em h-1.1em mr-1 />
         <a
+          :ref="(el) => setLinkRef(el, 4)"
           linkInProse
           o="#64b687"
           href="https://github.com/vueuse/vueuse"
           target="_blank"
+          class="info-link"
         >VueUse</a>,
         <i i-logos-expo-icon w-1.1em h-1.1em mr-1 />
         <a
+          :ref="(el) => setLinkRef(el, 5)"
           trans
           linear-text
           shape-bottom-right
-          class="c-context::#bd34fe"
+          class="c-context::#bd34fe info-link"
           from="#cc208e"
           to="#6713d2"
           href="https://github.com/expo/expo"
@@ -120,28 +194,29 @@ const userInfo = computed(() => {
         >Expo</a>,
         & more.
       </p>
-      <p>
+      <p :ref="(el) => setParagraphRef(el, 4)" class="animate-paragraph">
         I also love photography and capturing beautiful moments.
         I share these photos on my
         <a
+          :ref="(el) => setLinkRef(el, 6)"
           trans
           linear-text
           shape-bottom-right
-          class="c-context::#bd34fe"
+          class="c-context::#bd34fe info-link"
           from="#cc208e"
           to="#6713d2"
           href="http://lpalette.cn/"
           target="_blank"
         ><strong>website</strong></a>
         — welcome to join me!
-        <!-- <i i-fluent-emoji-partying-face /> -->
       </p>
 
-      <p>
+      <p :ref="(el) => setParagraphRef(el, 5)" class="animate-paragraph">
         <a
+          :ref="setContactRef"
           trans
           text-p-r
-          class="group"
+          class="group contact-btn"
           hover-op-75
           :href="`mailto:${userInfo?.email ?? '3128006406@qq.com'}`"
         >
@@ -165,11 +240,13 @@ p {
   line-height: 1.4;
   max-width: 28em;
 }
+
 .text-class {
   position: relative;
 }
+
 .text-class::after {
-  background-image: url("/public/images/line.svg");
+  background-image: url("/images/line.svg");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   content: "";
@@ -179,5 +256,19 @@ p {
   left: 0;
   bottom: -0.3em;
   width: 100%;
+}
+
+.animate-paragraph {
+  will-change: transform, opacity;
+}
+
+.info-link {
+  will-change: transform;
+  display: inline-block;
+}
+
+.contact-btn {
+  will-change: transform;
+  display: inline-block;
 }
 </style>

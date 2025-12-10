@@ -85,8 +85,10 @@ export default defineUsefulConfig<UsefulTheme>({
   ],
   theme: {
     font: {
-      dank: 'dank',
-      dm: 'DM Sans',
+      'dank': 'dank',
+      'dm': 'DM Sans',
+      'sketch': 'Caveat, "Ma Shan Zheng", "ZCOOL XiaoWei", cursive',
+      'sketch-cn': '"Ma Shan Zheng", "ZCOOL XiaoWei", Caveat, cursive',
     },
     colors: {
       context: 'rgba(var(--c-context),%alpha)',

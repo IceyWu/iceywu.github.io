@@ -1,6 +1,18 @@
 <script setup lang="ts">
 import SetSvgAnimation from 'svg-animate-web'
 
+const props = withDefaults(defineProps<{
+  size?: string | number
+}>(), {
+  size: '5rem',
+})
+
+const sizeStyle = computed(() => {
+  if (typeof props.size === 'number')
+    return `${props.size}px`
+  return props.size
+})
+
 const svgRef = ref<HTMLElement>()
 onMounted(() => {
   setSVGAnim()
@@ -30,7 +42,7 @@ function setSVGAnim() {
 <template>
   <svg
     ref="svgRef"
-    class="w-20 h-auto"
+    :style="{ width: sizeStyle, height: 'auto' }"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="543.535 363.549 714.421 294.549"
   >

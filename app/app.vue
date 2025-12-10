@@ -31,6 +31,10 @@ useHead({
   charset: 'utf-8',
   viewport: 'width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0',
 })
+
+// 页面过渡动画
+const { getTransitionHooks } = usePageTransition()
+const transitionHooks = getTransitionHooks()
 </script>
 
 <template>
@@ -39,6 +43,29 @@ useHead({
     color="repeating-linear-gradient(to right,rgba(192,132,252,1) 0%,rgba(248,113,113,1) 50%,rgba(45,212,191,1) 100%)"
   />
   <NuxtLayout>
-    <NuxtPage />
+    <NuxtPage
+      :transition="{
+        name: 'page',
+        mode: 'out-in',
+        ...transitionHooks,
+      }"
+    />
   </NuxtLayout>
 </template>
+
+<style>
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+</style>

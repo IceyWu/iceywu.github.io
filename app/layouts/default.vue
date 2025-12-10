@@ -1,19 +1,12 @@
+<script setup>
+const route = useRoute()
+const isHome = computed(() => route.path === '/')
+</script>
+
 <template>
-  <NavHeader />
-  <main px-10 box-border flex="~ col 1">
-    <!-- <router-view v-slot="{ Component, route }">
-        <transition
-          enter-active-class="animate-fade-in animate-duration-500"
-          leave-active-class="animate-fade-out animate-duration-500"
-          mode="out-in"
-        >
-          <keep-alive>
-            <component :is="Component" :key="route.name" />
-          </keep-alive>
-        </transition>
-      </router-view> -->
+  <NavHeader v-if="!isHome" />
+  <main :class="isHome ? '' : 'px-10 box-border'" flex="~ col 1">
     <slot />
   </main>
-  <!-- <NavFooter /> -->
-  <Bg />
+  <Bg v-if="!isHome" />
 </template>
