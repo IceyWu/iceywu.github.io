@@ -1,25 +1,26 @@
 <script setup lang="ts">
 definePageMeta({
-  layout: 'map',
-})
+	layout: "map",
+});
 
-const iframeRef = ref<HTMLIFrameElement | null>(null)
-const baseUrl = 'https://lpalette.cn/map/iLlQQhGlOPh3gsUPFKkoVhFX2Al7fA3IEjczQohgA7c'
+const iframeRef = ref<HTMLIFrameElement | null>(null);
+const baseUrl =
+	"https://lpalette.cn/map/iLlQQhGlOPh3gsUPFKkoVhFX2Al7fA3IEjczQohgA7c";
 
 // 客户端挂载后获取正确的主题
-const iframeSrc = ref('')
+const iframeSrc = ref("");
 onMounted(() => {
-  const theme = isDark.value ? 'dark' : 'light'
-  iframeSrc.value = `${baseUrl}?theme=${theme}`
-})
+	const theme = isDark.value ? "dark" : "light";
+	iframeSrc.value = `${baseUrl}?theme=${theme}`;
+});
 
 // 监听主题变化，通知 iframe
 watch(isDark, (dark) => {
-  iframeRef.value?.contentWindow?.postMessage(
-    { type: 'theme-change', theme: dark ? 'dark' : 'light' },
-    '*',
-  )
-})
+	iframeRef.value?.contentWindow?.postMessage(
+		{ type: "theme-change", theme: dark ? "dark" : "light" },
+		"*",
+	);
+});
 </script>
 
 <template>

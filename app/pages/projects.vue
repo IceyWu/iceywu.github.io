@@ -1,51 +1,58 @@
 <script lang='ts' setup>
-import type { Repo } from '~/types'
-import { useTitle } from '@vueuse/core'
+import { useTitle } from "@vueuse/core";
+import type { Repo } from "~/types";
 
-useTitle('Projects | IceyWu')
+useTitle("Projects | IceyWu");
 useHead({
-  title: 'Projects | IceyWu',
-  meta: [
-    {
-      hid: 'description',
-      name: 'description',
-      content: 'List of projects that I am proud of.',
-    },
-    {
-      hid: 'keywords',
-      name: 'keywords',
-      content: 'projects, github, open source, vue, nuxt, node, javascript, typescript',
-    },
-  ],
-})
+	title: "Projects | IceyWu",
+	meta: [
+		{
+			hid: "description",
+			name: "description",
+			content: "List of projects that I am proud of.",
+		},
+		{
+			hid: "keywords",
+			name: "keywords",
+			content:
+				"projects, github, open source, vue, nuxt, node, javascript, typescript",
+		},
+	],
+});
 function filterRepos(repos: Repo[], key: string) {
-  return repos.filter(repo => repo.topics && repo.topics.includes(key)).sort((a, b) => {
-    return a.stargazers_count > b.stargazers_count ? -1 : 1
-  })
+	return repos
+		.filter((repo) => repo.topics?.includes(key))
+		.sort((a, b) => {
+			return a.stargazers_count > b.stargazers_count ? -1 : 1;
+		});
 }
 // const { data, status } = useFetch('/api/repos')
-const data: any = ref([])
-const status = ref('pending')
+const data: any = ref([]);
+const status = ref("pending");
 async function getData() {
-  status.value = 'pending'
-  const data = await $fetch<Repo[]>('https://api.github.com/users/iceywu/repos?per_page=100&type=owner&sort=updated')
+	status.value = "pending";
+	const data = await $fetch<Repo[]>(
+		"https://api.github.com/users/iceywu/repos?per_page=100&type=owner&sort=updated",
+	);
 
-  const publicRepos = data.filter(repo => !repo.private && !repo.archived)
-  const publicAndNotForkRepos = publicRepos.filter(repo => !repo.fork)
+	const publicRepos = data.filter((repo) => !repo.private && !repo.archived);
+	const publicAndNotForkRepos = publicRepos.filter((repo) => !repo.fork);
 
-  const repoGroups: Record<string, Repo[]> = {
-    'Templates': filterRepos(publicAndNotForkRepos, 'template'),
-    'Vite Ecosystem': filterRepos(publicAndNotForkRepos, 'vite'),
-    'Utils': filterRepos(publicAndNotForkRepos, 'util'),
-    'UnoCSS': filterRepos(publicRepos, 'unocss'),
-    'All': publicAndNotForkRepos,
-  }
-  status.value = 'success'
-  return Object.fromEntries(Object.entries(repoGroups).filter(([_, repos]) => repos.length > 0))
+	const repoGroups: Record<string, Repo[]> = {
+		Templates: filterRepos(publicAndNotForkRepos, "template"),
+		"Vite Ecosystem": filterRepos(publicAndNotForkRepos, "vite"),
+		Utils: filterRepos(publicAndNotForkRepos, "util"),
+		UnoCSS: filterRepos(publicRepos, "unocss"),
+		All: publicAndNotForkRepos,
+	};
+	status.value = "success";
+	return Object.fromEntries(
+		Object.entries(repoGroups).filter(([_, repos]) => repos.length > 0),
+	);
 }
 onMounted(async () => {
-  data.value = await getData()
-})
+	data.value = await getData();
+});
 </script>
 
 <template>

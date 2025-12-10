@@ -1,65 +1,79 @@
 <script lang="ts" setup>
 const { data: essays } = await useAsyncData(() => {
-  return queryCollection('essays')
-    .select('title', 'description', 'path', 'id', 'date', 'tags', 'lang', 'rawbody', 'draft')
-    .order('date', 'DESC')
-    .all()
-})
+	return queryCollection("essays")
+		.select(
+			"title",
+			"description",
+			"path",
+			"id",
+			"date",
+			"tags",
+			"lang",
+			"rawbody",
+			"draft",
+		)
+		.order("date", "DESC")
+		.all();
+});
 
 // 过滤掉草稿文章(仅在生产环境)
 const filteredEssays = computed(() => {
-  if (import.meta.env.DEV) {
-    // 开发环境显示所有文章(包括草稿)
-    return essays.value
-  }
-  // 生产环境过滤掉草稿
-  return essays.value?.filter(essay => !essay.draft) || []
-})
+	if (import.meta.env.DEV) {
+		// 开发环境显示所有文章(包括草稿)
+		return essays.value;
+	}
+	// 生产环境过滤掉草稿
+	return essays.value?.filter((essay) => !essay.draft) || [];
+});
 
 function calculateReadingTime(text: string): number {
-  const wordsPerMinute = 200
-  const words = text.split(/\s/g).length
-  return Math.ceil(words / wordsPerMinute)
+	const wordsPerMinute = 200;
+	const words = text.split(/\s/g).length;
+	return Math.ceil(words / wordsPerMinute);
 }
 
-const route = useRoute()
-const tags = ref(new Set<string>(route.query.tags ? route.query.tags.split(',') : []))
+const route = useRoute();
+const tags = ref(
+	new Set<string>(route.query.tags ? route.query.tags.split(",") : []),
+);
 
 function toggleTag(tag: string) {
-  if (tags.value.has(tag)) {
-    tags.value.delete(tag)
-  }
-  else {
-    tags.value.add(tag)
-  }
+	if (tags.value.has(tag)) {
+		tags.value.delete(tag);
+	} else {
+		tags.value.add(tag);
+	}
 }
 
 const sortedPosts = computed(() => {
-  if (tags.value.size === 0) {
-    if (typeof window !== 'undefined') {
-      window.history.replaceState(null, '', '/essays')
-    }
-    return filteredEssays.value
-  }
-  else {
-    if (typeof window !== 'undefined') {
-      window.history.replaceState(null, '', `/essays?tags=${Array.from(tags.value).join(',')}`)
-    }
+	if (tags.value.size === 0) {
+		if (typeof window !== "undefined") {
+			window.history.replaceState(null, "", "/essays");
+		}
+		return filteredEssays.value;
+	} else {
+		if (typeof window !== "undefined") {
+			window.history.replaceState(
+				null,
+				"",
+				`/essays?tags=${Array.from(tags.value).join(",")}`,
+			);
+		}
 
-    return [...filteredEssays.value].sort((a, b) => {
-      const aHasTag = a.tags.some(tag => tags.value.has(tag))
-      const bHasTag = b.tags.some(tag => tags.value.has(tag))
+		return [...filteredEssays.value].sort((a, b) => {
+			const aHasTag = a.tags.some((tag) => tags.value.has(tag));
+			const bHasTag = b.tags.some((tag) => tags.value.has(tag));
 
-      if (aHasTag && !bHasTag) {
-        return -1
-      }
-      if (!aHasTag && bHasTag) {
-        return 1
-      }
-      return 0
-    })
-  }
-})
+			if (aHasTag && !bHasTag) {
+				return -1;
+			}
+			if (!aHasTag && bHasTag) {
+				return 1;
+			}
+			return 0;
+		});
+	}
+});
 </script>
 
 <template>

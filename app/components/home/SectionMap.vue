@@ -1,28 +1,30 @@
 <script setup lang="ts">
 interface TravelStats {
-  totalCities: number
-  totalPhotos: number
-  totalCountries: number
-  topCities: Array<{ city: string, country: string, photoCount: number }>
+	totalCities: number;
+	totalPhotos: number;
+	totalCountries: number;
+	topCities: Array<{ city: string; country: string; photoCount: number }>;
 }
 
-const stats = ref<TravelStats | null>(null)
-const loading = ref(true)
+const stats = ref<TravelStats | null>(null);
+const loading = ref(true);
 
 onMounted(async () => {
-  try {
-    const res = await $fetch<{ result: TravelStats }>('https://test.wktest.cn:3001/api/user/1/travel-stats')
-    stats.value = res.result
-  }
-  catch {
-    // Failed
-  }
-  finally {
-    loading.value = false
-  }
-})
+	try {
+		const res = await $fetch<{ result: TravelStats }>(
+			"https://test.wktest.cn:3001/api/user/1/travel-stats",
+		);
+		stats.value = res.result;
+	} catch {
+		// Failed
+	} finally {
+		loading.value = false;
+	}
+});
 
-const displayCities = computed(() => stats.value?.topCities?.slice(0, 10) || [])
+const displayCities = computed(
+	() => stats.value?.topCities?.slice(0, 10) || [],
+);
 </script>
 
 <template>

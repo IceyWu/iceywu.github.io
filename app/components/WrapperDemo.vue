@@ -1,41 +1,40 @@
 <script setup lang="ts">
 interface CompType {
-  link: string
-  title: string
-  description: string
-  date: string
-  type: string
+	link: string;
+	title: string;
+	description: string;
+	date: string;
+	type: string;
 }
 interface DataType {
-  comp: CompType
-  link: string
-  date: string
+	comp: CompType;
+	link: string;
+	date: string;
 }
 interface Props {
-  data: DataType | undefined
-  // desc?: string
-  // lottieJsonData: Record<string, any>
+	data: DataType | undefined;
+	// desc?: string
+	// lottieJsonData: Record<string, any>
 }
-const props = defineProps<Props>()
+const props = defineProps<Props>();
 
-const { comp, date, link } = props.data as DataType
-const { title, type } = comp || {}
+const { comp, date, link } = props.data as DataType;
+const { title, type } = comp || {};
 
 function getImageUrl() {
-  if (type.includes('gif'))
-    return import(`../../content/demos/${title}.gif`)
-  else return import(`../../content/demos/${title}.png`)
+	if (type.includes("gif")) return import(`../../content/demos/${title}.gif`);
+	else return import(`../../content/demos/${title}.png`);
 }
-const coverModule = ref()
-const loading = ref(true)
+const coverModule = ref();
+const loading = ref(true);
 async function getImgData() {
-  loading.value = true
-  coverModule.value = await getImageUrl()
-  loading.value = false
+	loading.value = true;
+	coverModule.value = await getImageUrl();
+	loading.value = false;
 }
 onMounted(() => {
-  getImgData()
-})
+	getImgData();
+});
 </script>
 
 <template>

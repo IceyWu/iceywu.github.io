@@ -1,19 +1,23 @@
 <script setup lang="ts">
-import { computed, useRuntimeConfig } from '#imports'
-import { proseHeadingClick } from '~/utils'
+import { computed, useRuntimeConfig } from "#imports";
+import { proseHeadingClick } from "~/utils";
 
 // @unocss-skip-start
 const props = defineProps<{
-  id?: string
-  tag: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
-}>()
+	id?: string;
+	tag: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+}>();
 // @unocss-skip-end
 
-const { headings } = useRuntimeConfig().public.mdc
-const generate = computed(() => props.id && (
-  (typeof headings?.anchorLinks === 'boolean' && headings?.anchorLinks === true)
-  || (typeof headings?.anchorLinks === 'object' && headings?.anchorLinks?.[props.tag])),
-)
+const { headings } = useRuntimeConfig().public.mdc;
+const generate = computed(
+	() =>
+		props.id &&
+		((typeof headings?.anchorLinks === "boolean" &&
+			headings?.anchorLinks === true) ||
+			(typeof headings?.anchorLinks === "object" &&
+				headings?.anchorLinks?.[props.tag])),
+);
 </script>
 
 <template>

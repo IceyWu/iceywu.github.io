@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import DarkModeIcon from './nav/DarkModeIcon.vue'
-import LightModeIcon from './nav/LightModeIcon.vue'
+import DarkModeIcon from "./nav/DarkModeIcon.vue";
+import LightModeIcon from "./nav/LightModeIcon.vue";
 
-const buttonRef = ref<HTMLElement | null>(null)
+const buttonRef = ref<HTMLElement | null>(null);
 
 // 简单切换主题
 function handleClick() {
-  isDark.value = !isDark.value
+	isDark.value = !isDark.value;
 }
 </script>
 

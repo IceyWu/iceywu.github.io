@@ -1,31 +1,40 @@
 <script setup lang="ts">
 // 获取 demos 数据
-const { data: demosData } = await useAsyncData('homeDemos', () => {
-  return queryCollection('demos')
-    .select('title', 'description', 'path', 'date', 'link')
-    .order('date', 'DESC')
-    .limit(4)
-    .all()
-})
+const { data: demosData } = await useAsyncData("homeDemos", () => {
+	return queryCollection("demos")
+		.select("title", "description", "path", "date", "link")
+		.order("date", "DESC")
+		.limit(4)
+		.all();
+});
 
-const displayDemos = computed(() => demosData.value || [])
+const displayDemos = computed(() => demosData.value || []);
 
 // 随机浮动形状
-const shapes = ref<Array<{ id: number, x: number, y: number, size: number, rotation: number, type: string }>>([])
+const shapes = ref<
+	Array<{
+		id: number;
+		x: number;
+		y: number;
+		size: number;
+		rotation: number;
+		type: string;
+	}>
+>([]);
 
 onMounted(() => {
-  const types = ['circle', 'square', 'triangle', 'line']
-  for (let i = 0; i < 12; i++) {
-    shapes.value.push({
-      id: i,
-      x: Math.random() * 80 + 10,
-      y: Math.random() * 80 + 10,
-      size: Math.random() * 30 + 15,
-      rotation: Math.random() * 360,
-      type: types[Math.floor(Math.random() * types.length)]!,
-    })
-  }
-})
+	const types = ["circle", "square", "triangle", "line"];
+	for (let i = 0; i < 12; i++) {
+		shapes.value.push({
+			id: i,
+			x: Math.random() * 80 + 10,
+			y: Math.random() * 80 + 10,
+			size: Math.random() * 30 + 15,
+			rotation: Math.random() * 360,
+			type: types[Math.floor(Math.random() * types.length)]!,
+		});
+	}
+});
 </script>
 
 <template>

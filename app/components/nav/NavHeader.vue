@@ -1,41 +1,41 @@
 <script lang="ts" setup>
-import SetSvgAnimation from 'svg-animate-web'
-import GithubIcon from './GithubIcon.vue'
+import SetSvgAnimation from "svg-animate-web";
+import GithubIcon from "./GithubIcon.vue";
 
 interface Menu {
-  icon?: string
-  path: string
-  text?: string
+	icon?: string;
+	path: string;
+	text?: string;
 }
 
 const routes = reactive<Menu[]>([
-  { path: '/posts', icon: 'i-custom-post', text: 'Posts' },
-  { path: '/essays', icon: 'i-carbon-pen', text: 'Essays' },
-  { path: '/projects', icon: 'i-custom-package', text: 'Projects' },
-  // { path: '/talks', icon: 'i-custom-ppt' },
-  // { path: '/images', icon: 'i-ri-image-line' },
-  { path: '/map', icon: 'i-carbon-map', text: 'Map' },
-  { path: '/demos', icon: 'i-carbon-demo', text: 'Demos' },
-])
+	{ path: "/posts", icon: "i-custom-post", text: "Posts" },
+	{ path: "/essays", icon: "i-carbon-pen", text: "Essays" },
+	{ path: "/projects", icon: "i-custom-package", text: "Projects" },
+	// { path: '/talks', icon: 'i-custom-ppt' },
+	// { path: '/images', icon: 'i-ri-image-line' },
+	{ path: "/map", icon: "i-carbon-map", text: "Map" },
+	{ path: "/demos", icon: "i-carbon-demo", text: "Demos" },
+]);
 
-const route = useRoute()
-const router = useRouter()
-const inHome = computed(() => route.path === '/')
+const route = useRoute();
+const router = useRouter();
+const inHome = computed(() => route.path === "/");
 function goHome() {
-  router.replace('/')
+	router.replace("/");
 }
 function svgRef(data: any) {
-  if (data) {
-    const color = isDark.value ? '#fff' : '#333'
-    SetSvgAnimation(data, {
-      duration: 2,
-      fill: 'transparent',
-      // fillBase: color,
-      stroke: color,
-      strokeWidth: 0.7,
-      count: 1,
-    })
-  }
+	if (data) {
+		const color = isDark.value ? "#fff" : "#333";
+		SetSvgAnimation(data, {
+			duration: 2,
+			fill: "transparent",
+			// fillBase: color,
+			stroke: color,
+			strokeWidth: 0.7,
+			count: 1,
+		});
+	}
 }
 </script>
 

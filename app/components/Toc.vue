@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import type { TocLink } from '@nuxt/content'
-import { proseHeadingClick } from '~/utils'
+import type { TocLink } from "@nuxt/content";
+import { proseHeadingClick } from "~/utils";
 
 defineProps<{
-  links: TocLink[]
-  highlights: string[]
-}>()
+	links: TocLink[];
+	highlights: string[];
+}>();
 </script>
 
 <template>

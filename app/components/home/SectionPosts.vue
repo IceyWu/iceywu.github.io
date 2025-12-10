@@ -1,12 +1,12 @@
 <script setup lang="ts">
-const { data: postsData } = await useAsyncData('homePosts', () => {
-  return queryCollection('posts')
-    .select('title', 'path', 'date', 'description')
-    .order('date', 'DESC')
-    .limit(5)
-    .all()
-})
-const posts = computed(() => postsData.value || [])
+const { data: postsData } = await useAsyncData("homePosts", () => {
+	return queryCollection("posts")
+		.select("title", "path", "date", "description")
+		.order("date", "DESC")
+		.limit(5)
+		.all();
+});
+const posts = computed(() => postsData.value || []);
 </script>
 
 <template>

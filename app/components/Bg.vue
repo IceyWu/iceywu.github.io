@@ -1,50 +1,48 @@
 <script setup lang="ts">
-const distance = ref(200)
+const distance = ref(200);
 
 function generateRandomColor() {
-  const r = Math.floor(Math.random() * 255)
-  const g = Math.floor(Math.random() * 255)
-  const b = Math.floor(Math.random() * 255)
-  const a = (Math.random() * 0.5 + 0.25).toFixed(2)
-  return `rgba(${r},${g},${b},${a})`
+	const r = Math.floor(Math.random() * 255);
+	const g = Math.floor(Math.random() * 255);
+	const b = Math.floor(Math.random() * 255);
+	const a = (Math.random() * 0.5 + 0.25).toFixed(2);
+	return `rgba(${r},${g},${b},${a})`;
 }
 
 function generateRandomCoordinates() {
-  let x = 0
-  let y = 0
+	let x = 0;
+	let y = 0;
 
-  if (process.client) {
-    x = Math.floor(Math.random() * (window.innerWidth - distance.value * 2) + distance.value)
-    y = Math.floor(Math.random() * window.innerHeight * 2)
-  }
-  return { x, y }
+	if (process.client) {
+		x = Math.floor(
+			Math.random() * (window.innerWidth - distance.value * 2) + distance.value,
+		);
+		y = Math.floor(Math.random() * window.innerHeight * 2);
+	}
+	return { x, y };
 }
 
 function generateStyle(count = 40, duration = 100) {
-  const style = []
-  for (let i = 0; i < count; i++) {
-    const { x, y } = generateRandomCoordinates()
-    const color = generateRandomColor()
-    style.push(`${x}px ${y}px ${color} `)
-  }
-  return {
-    boxShadow: style.join(','),
-    animation: `animStar ${duration}s linear infinite`,
-  }
+	const style = [];
+	for (let i = 0; i < count; i++) {
+		const { x, y } = generateRandomCoordinates();
+		const color = generateRandomColor();
+		style.push(`${x}px ${y}px ${color} `);
+	}
+	return {
+		boxShadow: style.join(","),
+		animation: `animStar ${duration}s linear infinite`,
+	};
 }
 
-const styles = ref([
-  generateStyle(40),
-  generateStyle(50),
-  generateStyle(60),
-])
+const styles = ref([generateStyle(40), generateStyle(50), generateStyle(60)]);
 const afterStyles = ref([
-  generateStyle(40),
-  generateStyle(50),
-  generateStyle(60),
-])
-const afterStyle_1_boxShadow = computed(() => afterStyles.value[0].boxShadow)
-const afterStyle_1_animate = computed(() => afterStyles.value[0].animation)
+	generateStyle(40),
+	generateStyle(50),
+	generateStyle(60),
+]);
+const afterStyle_1_boxShadow = computed(() => afterStyles.value[0].boxShadow);
+const afterStyle_1_animate = computed(() => afterStyles.value[0].animation);
 </script>
 
 <template>

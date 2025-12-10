@@ -1,22 +1,25 @@
 <script setup lang="ts">
 defineProps<{
-  userInfo: {
-    avatar_url: string
-    name: string
-    html_url: string
-  }
-}>()
+	userInfo: {
+		avatar_url: string;
+		name: string;
+		html_url: string;
+	};
+}>();
 
-const skills = ['Vue', 'React', 'TypeScript', 'Node.js', 'Nuxt', 'GSAP']
-const currentTime = ref('')
+const skills = ["Vue", "React", "TypeScript", "Node.js", "Nuxt", "GSAP"];
+const currentTime = ref("");
 
 onMounted(() => {
-  const updateTime = () => {
-    currentTime.value = new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })
-  }
-  updateTime()
-  setInterval(updateTime, 1000)
-})
+	const updateTime = () => {
+		currentTime.value = new Date().toLocaleTimeString("zh-CN", {
+			hour: "2-digit",
+			minute: "2-digit",
+		});
+	};
+	updateTime();
+	setInterval(updateTime, 1000);
+});
 </script>
 
 <template>

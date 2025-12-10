@@ -1,25 +1,25 @@
 <script setup lang="ts">
-import SetSvgAnimation from 'svg-animate-web'
+import SetSvgAnimation from "svg-animate-web";
 
-onMounted(() => {})
+onMounted(() => {});
 function svgRef(data: any, config: any) {
-  if (data) {
-    const color = isDark.value ? '#fff' : '#333'
-    SetSvgAnimation(data, {
-      duration: 1,
-      fill: 'transparent',
-      stroke: color,
-      strokeWidth: 7,
-      count: 1,
-      renderMode: 'fill',
-      ...config,
-      pathOptions: {
-        stroke: color,
-        fill: color,
-        strokeWidth: 1,
-      },
-    })
-  }
+	if (data) {
+		const color = isDark.value ? "#fff" : "#333";
+		SetSvgAnimation(data, {
+			duration: 1,
+			fill: "transparent",
+			stroke: color,
+			strokeWidth: 7,
+			count: 1,
+			renderMode: "fill",
+			...config,
+			pathOptions: {
+				stroke: color,
+				fill: color,
+				strokeWidth: 1,
+			},
+		});
+	}
 }
 </script>
 

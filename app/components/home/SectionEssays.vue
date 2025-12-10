@@ -1,24 +1,24 @@
 <script setup lang="ts">
-const { data: essaysData } = await useAsyncData('homeEssays', () => {
-  return queryCollection('essays')
-    .select('title', 'path', 'date')
-    .order('date', 'DESC')
-    .limit(3)
-    .all()
-})
-const allEssays = computed(() => essaysData.value || [])
+const { data: essaysData } = await useAsyncData("homeEssays", () => {
+	return queryCollection("essays")
+		.select("title", "path", "date")
+		.order("date", "DESC")
+		.limit(3)
+		.all();
+});
+const allEssays = computed(() => essaysData.value || []);
 
 const quotes = [
-  { text: '不问过往，不惧将来' },
-  { text: '生活不止眼前的代码' },
-  { text: '保持好奇，持续创造' },
-]
-const currentQuote = ref(0)
+	{ text: "不问过往，不惧将来" },
+	{ text: "生活不止眼前的代码" },
+	{ text: "保持好奇，持续创造" },
+];
+const currentQuote = ref(0);
 onMounted(() => {
-  setInterval(() => {
-    currentQuote.value = (currentQuote.value + 1) % quotes.length
-  }, 5000)
-})
+	setInterval(() => {
+		currentQuote.value = (currentQuote.value + 1) % quotes.length;
+	}, 5000);
+});
 </script>
 
 <template>

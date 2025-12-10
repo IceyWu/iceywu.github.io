@@ -1,151 +1,147 @@
 <script lang="ts" setup>
-import { decode } from 'blurhash'
-import { LivePhotoViewer } from 'live-photo'
+import { decode } from "blurhash";
+import { LivePhotoViewer } from "live-photo";
 
 // Props interface
 interface PhotoItemProps {
-  blurhash?: string
-  imageSrc: string
-  videoSrc?: string
-  alt?: string
-  width?: number | string
-  height?: number | string
-  objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down'
+	blurhash?: string;
+	imageSrc: string;
+	videoSrc?: string;
+	alt?: string;
+	width?: number | string;
+	height?: number | string;
+	objectFit?: "cover" | "contain" | "fill" | "none" | "scale-down";
 }
 
 const props = withDefaults(defineProps<PhotoItemProps>(), {
-  alt: 'Photo',
-  width: 300,
-  height: 300,
-  objectFit: 'cover',
-})
+	alt: "Photo",
+	width: 300,
+	height: 300,
+	objectFit: "cover",
+});
 
 // 判断是否是实况照片(有视频源)
-const isLivePhoto = computed(() => !!props.videoSrc)
+const isLivePhoto = computed(() => !!props.videoSrc);
 
 // Refs
-const containerRef = ref<HTMLElement | null>(null)
-const placeholderSrc = ref<string>()
-const isLoaded = ref(false)
-const livePhotoViewer = ref<any>(null)
+const containerRef = ref<HTMLElement | null>(null);
+const placeholderSrc = ref<string>();
+const isLoaded = ref(false);
+const livePhotoViewer = ref<any>(null);
 
 // 生成 blurhash 占位图
 function getDataUrlFromArr(arr: Uint8ClampedArray, w: number, h: number) {
-  if (typeof w === 'undefined' || typeof h === 'undefined')
-    w = h = Math.sqrt(arr.length / 4)
+	if (typeof w === "undefined" || typeof h === "undefined")
+		w = h = Math.sqrt(arr.length / 4);
 
-  const canvas = document.createElement('canvas')
-  const ctx = canvas.getContext('2d')!
+	const canvas = document.createElement("canvas");
+	const ctx = canvas.getContext("2d")!;
 
-  canvas.width = w
-  canvas.height = h
+	canvas.width = w;
+	canvas.height = h;
 
-  const imgData = ctx.createImageData(w, h)
-  imgData.data.set(arr)
-  ctx.putImageData(imgData, 0, 0)
+	const imgData = ctx.createImageData(w, h);
+	imgData.data.set(arr);
+	ctx.putImageData(imgData, 0, 0);
 
-  return canvas.toDataURL()
+	return canvas.toDataURL();
 }
 
 // 初始化 blurhash
 function initBlurhash() {
-  if (props.blurhash) {
-    const pixels = decode(props.blurhash, 32, 32)
-    placeholderSrc.value = getDataUrlFromArr(pixels, 32, 32)
-  }
+	if (props.blurhash) {
+		const pixels = decode(props.blurhash, 32, 32);
+		placeholderSrc.value = getDataUrlFromArr(pixels, 32, 32);
+	}
 }
 
 // 初始化普通图片
 function initNormalImage() {
-  const img = document.createElement('img')
-  img.onload = () => {
-    isLoaded.value = true
-  }
-  img.onerror = () => {
-    isLoaded.value = true
-  }
-  img.src = props.imageSrc
+	const img = document.createElement("img");
+	img.onload = () => {
+		isLoaded.value = true;
+	};
+	img.onerror = () => {
+		isLoaded.value = true;
+	};
+	img.src = props.imageSrc;
 
-  // 回退超时
-  setTimeout(() => {
-    isLoaded.value = true
-  }, 3000)
+	// 回退超时
+	setTimeout(() => {
+		isLoaded.value = true;
+	}, 3000);
 }
 
 // 初始化 LivePhoto
 function initLivePhoto() {
-  if (!containerRef.value || !props.videoSrc)
-    return
+	if (!containerRef.value || !props.videoSrc) return;
 
-  try {
-    livePhotoViewer.value = new LivePhotoViewer({
-      photoSrc: props.imageSrc,
-      videoSrc: props.videoSrc,
-      container: containerRef.value,
-      width: props.width,
-      height: props.height,
-      autoplay: false,
-      staticBadgeIcon: true,
-      lazyLoadVideo: true,
-      imageCustomization: {
-        styles: {
-          objectFit: props.objectFit,
-          borderRadius: '8px',
-        },
-        attributes: {
-          alt: props.alt,
-          loading: 'lazy',
-        },
-      },
-      videoCustomization: {
-        styles: {
-          objectFit: props.objectFit,
-          borderRadius: '8px',
-        },
-      },
-      onPhotoLoad: () => {
-        isLoaded.value = true
-      },
-      onError: (e) => {
-        console.error('LivePhoto加载失败:', e)
-        isLoaded.value = true
-      },
-    })
-  }
-  catch (error) {
-    console.error('LivePhoto初始化失败:', error)
-    isLoaded.value = true
-  }
+	try {
+		livePhotoViewer.value = new LivePhotoViewer({
+			photoSrc: props.imageSrc,
+			videoSrc: props.videoSrc,
+			container: containerRef.value,
+			width: props.width,
+			height: props.height,
+			autoplay: false,
+			staticBadgeIcon: true,
+			lazyLoadVideo: true,
+			imageCustomization: {
+				styles: {
+					objectFit: props.objectFit,
+					borderRadius: "8px",
+				},
+				attributes: {
+					alt: props.alt,
+					loading: "lazy",
+				},
+			},
+			videoCustomization: {
+				styles: {
+					objectFit: props.objectFit,
+					borderRadius: "8px",
+				},
+			},
+			onPhotoLoad: () => {
+				isLoaded.value = true;
+			},
+			onError: (e) => {
+				console.error("LivePhoto加载失败:", e);
+				isLoaded.value = true;
+			},
+		});
+	} catch (error) {
+		console.error("LivePhoto初始化失败:", error);
+		isLoaded.value = true;
+	}
 }
 
 // 显示的图片 URL
 const displayUrl = computed(() => {
-  if (isLoaded.value || !placeholderSrc.value)
-    return props.imageSrc
-  return placeholderSrc.value
-})
+	if (isLoaded.value || !placeholderSrc.value) return props.imageSrc;
+	return placeholderSrc.value;
+});
 
 onMounted(() => {
-  initBlurhash()
+	initBlurhash();
 
-  if (isLivePhoto.value) {
-    // 实况照片
-    nextTick(() => {
-      initLivePhoto()
-    })
-  }
-  else {
-    // 普通图片
-    initNormalImage()
-  }
-})
+	if (isLivePhoto.value) {
+		// 实况照片
+		nextTick(() => {
+			initLivePhoto();
+		});
+	} else {
+		// 普通图片
+		initNormalImage();
+	}
+});
 
 onBeforeUnmount(() => {
-  // 清理 LivePhoto 实例
-  if (livePhotoViewer.value) {
-    livePhotoViewer.value = null
-  }
-})
+	// 清理 LivePhoto 实例
+	if (livePhotoViewer.value) {
+		livePhotoViewer.value = null;
+	}
+});
 </script>
 
 <template>

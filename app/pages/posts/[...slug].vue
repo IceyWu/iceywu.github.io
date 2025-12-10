@@ -1,51 +1,48 @@
 <script lang="ts" setup>
-import type { TocLink } from '@nuxt/content'
+import type { TocLink } from "@nuxt/content";
 
-const route = useRoute()
+const route = useRoute();
 const { data: post } = await useAsyncData(() => {
-  return queryCollection('posts')
-    .path(route.path)
-    .first()
-})
-const ids = computed(() => getIds(post.value?.body.toc?.links ?? []))
-const activeToc = ref<string[]>([])
+	return queryCollection("posts").path(route.path).first();
+});
+const ids = computed(() => getIds(post.value?.body.toc?.links ?? []));
+const activeToc = ref<string[]>([]);
 
-useSeoMeta(post.value?.seo ?? {})
+useSeoMeta(post.value?.seo ?? {});
 
 function getIds(links: TocLink[]): string[] {
-  return links.reduce((acc, link) => {
-    acc.push(link.id)
-    if (link.children) {
-      acc.push(...getIds(link.children))
-    }
-    return acc
-  }, [] as string[])
+	return links.reduce((acc, link) => {
+		acc.push(link.id);
+		if (link.children) {
+			acc.push(...getIds(link.children));
+		}
+		return acc;
+	}, [] as string[]);
 }
 
 function isElementInViewport(selector: string): boolean {
-  const element = document.querySelector(selector)
-  if (!element)
-    return false
+	const element = document.querySelector(selector);
+	if (!element) return false;
 
-  const rect = element.getBoundingClientRect()
-  return (
-    rect.top >= 0
-    && rect.left >= 0
-    && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight)
-    && rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-  )
+	const rect = element.getBoundingClientRect();
+	return (
+		rect.top >= 0 &&
+		rect.left >= 0 &&
+		rect.bottom <=
+			(window.innerHeight || document.documentElement.clientHeight) &&
+		rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+	);
 }
 
 function handleScroll() {
-  const _ids = ids.value.filter(id => isElementInViewport(`#${id}`))
-  if (_ids.length)
-    activeToc.value = _ids
+	const _ids = ids.value.filter((id) => isElementInViewport(`#${id}`));
+	if (_ids.length) activeToc.value = _ids;
 }
 
 onMounted(() => {
-  handleScroll()
-  useEventListener('scroll', handleScroll)
-})
+	handleScroll();
+	useEventListener("scroll", handleScroll);
+});
 </script>
 
 <template>

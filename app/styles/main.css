@@ -1,30 +1,30 @@
 /* 手绘风格字体 - Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=ZCOOL+XiaoWei&family=Ma+Shan+Zheng&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=ZCOOL+XiaoWei&family=Ma+Shan+Zheng&display=swap");
 
 html,
 body,
 #__nuxt {
-  min-height: 100%;
+	min-height: 100%;
 }
 
 body {
-  --uno: text-basecolor bg-basecolor scroll-none font-dm;
-  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgZmlsbD0ibm9uZSIgdmlld0JveD0iMCAwIDMwIDMwIj4KICA8Y2lyY2xlIGN4PSIxNSIgY3k9IjE1IiByPSIxIiBmaWxsPSIjY2NjIi8+Cjwvc3ZnPg==');
-  background-repeat: repeat;
-  background-size: 30px 30px;
-  /* 防止 iOS 浏览器长按空白处触发默认选中 */
-  -webkit-user-select: none;
-  user-select: none;
-  -webkit-touch-callout: none;
+	--uno: text-basecolor bg-basecolor scroll-none font-dm;
+	background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgZmlsbD0ibm9uZSIgdmlld0JveD0iMCAwIDMwIDMwIj4KICA8Y2lyY2xlIGN4PSIxNSIgY3k9IjE1IiByPSIxIiBmaWxsPSIjY2NjIi8+Cjwvc3ZnPg==");
+	background-repeat: repeat;
+	background-size: 30px 30px;
+	/* 防止 iOS 浏览器长按空白处触发默认选中 */
+	-webkit-user-select: none;
+	user-select: none;
+	-webkit-touch-callout: none;
 }
 
 .dark body {
-  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgZmlsbD0ibm9uZSIgdmlld0JveD0iMCAwIDMwIDMwIj4KICA8Y2lyY2xlIGN4PSIxNSIgY3k9IjE1IiByPSIxIiBmaWxsPSIjNDQ0Ii8+Cjwvc3ZnPg==');
-  background-size: 30px 30px;
+	background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgZmlsbD0ibm9uZSIgdmlld0JveD0iMCAwIDMwIDMwIj4KICA8Y2lyY2xlIGN4PSIxNSIgY3k9IjE1IiByPSIxIiBmaWxsPSIjNDQ0Ii8+Cjwvc3ZnPg==");
+	background-size: 30px 30px;
 }
 
-#__nuxt{
-  --uno: min-h-screen flex flex-col font-dm;
+#__nuxt {
+	--uno: min-h-screen flex flex-col font-dm;
 }
 
 /* 允许这些元素的文本可以被选中 */
@@ -33,29 +33,46 @@ textarea,
 pre,
 code,
 p,
-h1, h2, h3, h4, h5, h6,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
 a,
 li,
-td, th,
+td,
+th,
 [contenteditable="true"] {
-  -webkit-user-select: text;
-  user-select: text;
+	-webkit-user-select: text;
+	user-select: text;
 }
 
 @keyframes animStar {
-  from {
-    transform: translateY(0);
-  }
+	from {
+		transform: translateY(0);
+	}
 
-  to {
-    transform: translateY(-2000px);
-  }
+	to {
+		transform: translateY(-2000px);
+	}
 }
 
 .bg-stars {
-  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+	clip-path: polygon(
+		50% 0%,
+		61% 35%,
+		98% 35%,
+		68% 57%,
+		79% 91%,
+		50% 70%,
+		21% 91%,
+		32% 57%,
+		2% 35%,
+		39% 35%
+	);
 }
 
 @view-transition {
-  navigation: auto; /* enabled! */
+	navigation: auto; /* enabled! */
 }

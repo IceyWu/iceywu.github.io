@@ -1,40 +1,39 @@
 <script setup>
-const ogUrl = 'https://iceywu.github.io/'
-const ogImage = `${ogUrl}og.png#1`
-const title = 'IceyWu.me'
-const description = 'Regardless of the past, do not ask the future.'
+const ogUrl = "https://iceywu.github.io/";
+const ogImage = `${ogUrl}og.png#1`;
+const title = "IceyWu.me";
+const description = "Regardless of the past, do not ask the future.";
 
 useHead({
-  title: 'IceyWu',
-  link: [
-    { rel: 'icon', type: 'image/x-icon', href: '/avatar.png' },
-  ],
-  meta: [
-    { name: 'author', content: 'IceyWu' },
-    { hid: 'description', name: 'description', content: 'IceyWu\' Portfolio' },
-    { hid: 'keywords', name: 'keywords', content: 'IceyWu, Blog, Portfolio' },
+	title: "IceyWu",
+	link: [{ rel: "icon", type: "image/x-icon", href: "/avatar.png" }],
+	meta: [
+		{ name: "author", content: "IceyWu" },
+		{ hid: "description", name: "description", content: "IceyWu' Portfolio" },
+		{ hid: "keywords", name: "keywords", content: "IceyWu, Blog, Portfolio" },
 
-    { property: 'og:type', content: 'website' },
-    { name: 'og:title', content: title },
-    { name: 'og:description', content: description },
-    { property: 'og:image', content: ogImage },
-    { name: 'twitter:title', content: title },
-    { name: 'twitter:card', content: 'summary_large_image' },
-    { name: 'twitter:image', content: ogImage },
-    { name: 'twitter:site', content: '@IceyWu_zyyv' },
-    { name: 'twitter:url', content: ogUrl },
+		{ property: "og:type", content: "website" },
+		{ name: "og:title", content: title },
+		{ name: "og:description", content: description },
+		{ property: "og:image", content: ogImage },
+		{ name: "twitter:title", content: title },
+		{ name: "twitter:card", content: "summary_large_image" },
+		{ name: "twitter:image", content: ogImage },
+		{ name: "twitter:site", content: "@IceyWu_zyyv" },
+		{ name: "twitter:url", content: ogUrl },
 
-    { 'http-equiv': 'pragma', 'content': 'no-cache' },
-    { 'http-equiv': 'cache-control', 'content': 'no-cache' },
-    { 'http-equiv': 'expires', 'content': '0' },
-  ],
-  charset: 'utf-8',
-  viewport: 'width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0',
-})
+		{ "http-equiv": "pragma", content: "no-cache" },
+		{ "http-equiv": "cache-control", content: "no-cache" },
+		{ "http-equiv": "expires", content: "0" },
+	],
+	charset: "utf-8",
+	viewport:
+		"width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0",
+});
 
 // 页面过渡动画
-const { getTransitionHooks } = usePageTransition()
-const transitionHooks = getTransitionHooks()
+const { getTransitionHooks } = usePageTransition();
+const transitionHooks = getTransitionHooks();
 </script>
 
 <template>

@@ -1,41 +1,42 @@
 <script setup lang="ts">
-import SetSvgAnimation from 'svg-animate-web'
+import SetSvgAnimation from "svg-animate-web";
 
-const props = withDefaults(defineProps<{
-  size?: string | number
-}>(), {
-  size: '5rem',
-})
+const props = withDefaults(
+	defineProps<{
+		size?: string | number;
+	}>(),
+	{
+		size: "5rem",
+	},
+);
 
 const sizeStyle = computed(() => {
-  if (typeof props.size === 'number')
-    return `${props.size}px`
-  return props.size
-})
+	if (typeof props.size === "number") return `${props.size}px`;
+	return props.size;
+});
 
-const svgRef = ref<HTMLElement>()
+const svgRef = ref<HTMLElement>();
 onMounted(() => {
-  setSVGAnim()
-})
+	setSVGAnim();
+});
 
 const isDark = useDark({
-  onChanged() {
-    nextTick(() => {
-      if (svgRef.value)
-        setSVGAnim()
-    })
-  },
-})
+	onChanged() {
+		nextTick(() => {
+			if (svgRef.value) setSVGAnim();
+		});
+	},
+});
 function setSVGAnim() {
-  const color = isDark.value ? '#fff' : '#333'
-  SetSvgAnimation(svgRef.value, {
-    duration: 5,
-    count: 1,
-    fill: 'transparent',
-    fillBase: color,
-    stroke: color,
-    strokeWidth: 12,
-  })
+	const color = isDark.value ? "#fff" : "#333";
+	SetSvgAnimation(svgRef.value, {
+		duration: 5,
+		count: 1,
+		fill: "transparent",
+		fillBase: color,
+		stroke: color,
+		strokeWidth: 12,
+	});
 }
 </script>
 

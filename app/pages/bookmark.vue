@@ -1,7 +1,7 @@
 <script lang='ts' setup>
 useHead({
-  title: 'Bookmark | IceyWu',
-})
+	title: "Bookmark | IceyWu",
+});
 </script>
 
 <template>

@@ -1,30 +1,29 @@
 <script setup lang="ts">
-import type { Repo } from '~/types'
+import type { Repo } from "~/types";
 
-const projects = ref<Repo[]>([])
-const loading = ref(true)
+const projects = ref<Repo[]>([]);
+const loading = ref(true);
 
 onMounted(async () => {
-  try {
-    const data = await $fetch<Repo[]>('https://api.github.com/users/iceywu/repos?per_page=100&type=owner&sort=updated')
-    const publicRepos = data
-      .filter(repo => !repo.private && !repo.archived && !repo.fork)
-      .sort((a, b) => b.stargazers_count - a.stargazers_count)
-      .slice(0, 6)
-    projects.value = publicRepos
-  }
-  catch {
-    // Failed to fetch
-  }
-  finally {
-    loading.value = false
-  }
-})
+	try {
+		const data = await $fetch<Repo[]>(
+			"https://api.github.com/users/iceywu/repos?per_page=100&type=owner&sort=updated",
+		);
+		const publicRepos = data
+			.filter((repo) => !repo.private && !repo.archived && !repo.fork)
+			.sort((a, b) => b.stargazers_count - a.stargazers_count)
+			.slice(0, 6);
+		projects.value = publicRepos;
+	} catch {
+		// Failed to fetch
+	} finally {
+		loading.value = false;
+	}
+});
 
 function formatStars(count: number) {
-  if (count >= 1000)
-    return `${(count / 1000).toFixed(1)}k`
-  return String(count)
+	if (count >= 1000) return `${(count / 1000).toFixed(1)}k`;
+	return String(count);
 }
 </script>
 
