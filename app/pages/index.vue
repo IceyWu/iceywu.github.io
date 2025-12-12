@@ -178,6 +178,11 @@ onUnmounted(() => {
 
 <template>
   <div ref="containerRef" class="fullpage">
+    <!-- 3D 艺术场景 -->
+    <ClientOnly>
+      <ThreeArtScene :current-section="currentIndex" />
+    </ClientOnly>
+
     <!-- 手绘背景装饰 -->
     <div class="sketch-bg">
       <svg class="sketch-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
