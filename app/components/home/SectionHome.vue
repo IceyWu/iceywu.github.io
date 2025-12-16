@@ -7,7 +7,16 @@ defineProps<{
 	};
 }>();
 
-const skills = ["Vue", "React", "TypeScript", "Node.js", "Nuxt", "GSAP"];
+const skills = [
+	"Vue",
+	"React",
+	"TypeScript",
+	"Python",
+	"Swift",
+	"Node.js",
+	"Nuxt",
+	"Nest",
+];
 const currentTime = ref("");
 
 onMounted(() => {
