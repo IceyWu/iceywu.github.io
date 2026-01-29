@@ -140,8 +140,8 @@ const statsData = computed(() => [
               </p>
               <p>
                 业余 coding 开发
-                <a href="https://lpalette.cn" target="_blank" title="访问 Life Palatte 官网" class="relative inline-flex items-center group">
-                  <span class="border-b border-dashed border-current opacity-80 group-hover:opacity-100 transition-opacity">「Life Palatte」</span>
+                <a href="https://lpalette.cn" target="_blank" title="访问 Life Palette 官网" class="relative inline-flex items-center group">
+                  <span class="border-b border-dashed border-current opacity-80 group-hover:opacity-100 transition-opacity">「Life Palette」</span>
                   <svg class="w-3 h-3 ml-0.5 opacity-50 group-hover:opacity-90 transition-opacity" viewBox="0 0 12 12" fill="none">
                     <path d="M3 3 L9 3 L9 9 M9 3 L3 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                   </svg>
