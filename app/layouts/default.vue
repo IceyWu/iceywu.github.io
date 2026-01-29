@@ -5,7 +5,7 @@ const isHome = computed(() => route.path === "/");
 
 <template>
   <NavHeader v-if="!isHome" />
-  <main :class="isHome ? '' : 'px-10 box-border'" flex="~ col 1">
+  <main>
     <slot />
   </main>
   <Bg v-if="!isHome" />

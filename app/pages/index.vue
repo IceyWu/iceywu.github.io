@@ -1,445 +1,302 @@
 <script lang="ts" setup>
-useHead({ title: "IceyWu" });
+import GithubIcon from "~/components/nav/GithubIcon.vue";
 
-const { data: userData } = await useFetch("/api/user");
+useHead({
+	title: "IceyWu - You only live once | 一期一会",
+	link: [
+		{
+			rel: "stylesheet",
+			href: "https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.1.0/style.css",
+		},
+		{
+			rel: "stylesheet",
+			href: "https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap",
+		},
+	],
+});
+
+const githubUser = ref<any>(null);
+const languageStats = ref<Record<string, number>>({});
+const totalStars = ref(0);
+
+onMounted(async () => {
+	try {
+		const [userRes, reposRes] = await Promise.all([
+			fetch("https://api.github.com/users/iceywu"),
+			fetch(
+				"https://api.github.com/users/iceywu/repos?per_page=100&sort=updated",
+			),
+		]);
+
+		githubUser.value = await userRes.json();
+		const repos = await reposRes.json();
+
+		const langCount: Record<string, number> = {};
+		let stars = 0;
+
+		for (const repo of repos) {
+			if (repo.language) {
+				langCount[repo.language] = (langCount[repo.language] || 0) + 1;
+			}
+			stars += repo.stargazers_count || 0;
+		}
+
+		totalStars.value = stars;
+		languageStats.value = Object.fromEntries(
+			Object.entries(langCount)
+				.sort((a, b) => b[1] - a[1])
+				.slice(0, 6),
+		);
+	} catch (error) {
+		console.error("Failed to fetch GitHub data:", error);
+	}
+});
+
 const userInfo = computed(() => ({
-	avatar_url:
-		userData.value?.avatar_url ||
-		"https://avatars.githubusercontent.com/u/66096254?v=4",
-	name: userData.value?.name || userData.value?.login || "Icey Wu",
-	html_url: userData.value?.html_url || "https://github.com/IceyWu",
+	avatar: githubUser.value?.avatar_url || "",
+	repos: githubUser.value?.public_repos || 0,
+	createdAt: githubUser.value?.created_at
+		? new Date(githubUser.value.created_at).getFullYear()
+		: 2020,
 }));
 
-const { $gsap } = useNuxtApp();
+const codingYears = computed(
+	() => new Date().getFullYear() - userInfo.value.createdAt,
+);
 
-// 状态
-const currentIndex = ref(0);
-const isAnimating = ref(false);
-const containerRef = ref<HTMLElement | null>(null);
-const sections = ["home", "posts", "essays", "projects", "map", "demos"];
-const sectionNames = ["首页", "文章", "随笔", "项目", "足迹", "实验"];
-
-// 随机动画效果
-const transitionEffects = [
-	// 墨水晕染效果
-	{
-		out: { opacity: 0, scale: 0.8, filter: "blur(20px)", rotation: -5 },
-		in: { opacity: 0, scale: 1.2, filter: "blur(30px)", rotation: 5 },
-	},
-	// 纸张翻页效果
-	{
-		out: { opacity: 0, x: -100, rotationY: -15, filter: "blur(5px)" },
-		in: { opacity: 0, x: 100, rotationY: 15, filter: "blur(5px)" },
-	},
-	// 涟漪扩散效果
-	{
-		out: { opacity: 0, scale: 0.5, filter: "blur(15px)" },
-		in: { opacity: 0, scale: 1.5, filter: "blur(25px)" },
-	},
+const navLinks = [
+	{ to: "/posts", label: "Posts", title: "技术博客" },
+	{ to: "/essays", label: "Essays", title: "随笔" },
+	{ to: "/projects", label: "Projects", title: "开源项目" },
+	{ to: "/demos", label: "Demos", title: "产品展示" },
+	{ to: "/map", label: "Map", title: "旅行地图" },
 ];
 
-// 切换动画
-function goToSection(index: number) {
-	if (
-		index < 0 ||
-		index >= sections.length ||
-		isAnimating.value ||
-		index === currentIndex.value
-	)
-		return;
-	isAnimating.value = true;
+const techPositions = [
+	{ left: 10, top: 10, rotate: -8 },
+	{ left: 60, top: 20, rotate: 5 },
+	{ left: 5, top: 50, rotate: -3 },
+	{ left: 70, top: 60, rotate: 7 },
+	{ left: 20, top: 80, rotate: -5 },
+	{ left: 50, top: 90, rotate: 3 },
+];
 
-	const currentEl = document.querySelector(
-		`.section-${sections[currentIndex.value]}`,
-	);
-	const nextEl = document.querySelector(`.section-${sections[index]}`);
-	const effect =
-		transitionEffects[Math.floor(Math.random() * transitionEffects.length)]!;
-
-	// 绘制手绘线条动画
-	drawTransitionLine();
-
-	$gsap.to(currentEl, {
-		...effect.out,
-		duration: 0.5,
-		ease: "power3.in",
-	});
-
-	setTimeout(() => {
-		currentIndex.value = index;
-		$gsap.fromTo(
-			nextEl,
-			{ ...effect.in },
-			{
-				opacity: 1,
-				scale: 1,
-				x: 0,
-				rotation: 0,
-				rotationY: 0,
-				filter: "blur(0px)",
-				duration: 0.6,
-				ease: "power3.out",
-				onComplete: () => {
-					isAnimating.value = false;
-				},
-			},
-		);
-	}, 400);
-}
-
-// 手绘线条过渡动画
-function drawTransitionLine() {
-	const svg = document.querySelector(".transition-line") as SVGElement;
-	if (!svg) return;
-
-	const path = svg.querySelector("path") as SVGPathElement;
-	if (!path) return;
-
-	// 随机生成手绘风格路径
-	const points = [];
-	const segments = 8;
-	for (let i = 0; i <= segments; i++) {
-		const x = (i / segments) * 100;
-		const y = 50 + (Math.random() - 0.5) * 40;
-		points.push(`${i === 0 ? "M" : "L"}${x},${y}`);
-	}
-	path.setAttribute("d", points.join(" "));
-
-	const length = path.getTotalLength();
-	path.style.strokeDasharray = `${length}`;
-	path.style.strokeDashoffset = `${length}`;
-
-	$gsap.to(path, {
-		strokeDashoffset: 0,
-		duration: 0.8,
-		ease: "power2.inOut",
-		onComplete: () => {
-			$gsap.to(path, {
-				opacity: 0,
-				duration: 0.3,
-				onComplete: () => {
-					path.style.opacity = "1";
-					path.style.strokeDashoffset = `${length}`;
-				},
-			});
-		},
-	});
-}
-
-// 事件处理
-let lastScrollTime = 0;
-function handleWheel(e: WheelEvent) {
-	e.preventDefault();
-	if (Date.now() - lastScrollTime < 1200 || isAnimating.value) return;
-	lastScrollTime = Date.now();
-	goToSection(currentIndex.value + (e.deltaY > 0 ? 1 : -1));
-}
-
-let touchStartY = 0;
-function handleTouchStart(e: TouchEvent) {
-	touchStartY = e.touches[0]?.clientY ?? 0;
-}
-function handleTouchEnd(e: TouchEvent) {
-	if (isAnimating.value) return;
-	const diff = touchStartY - (e.changedTouches[0]?.clientY ?? 0);
-	if (Math.abs(diff) > 50)
-		goToSection(currentIndex.value + (diff > 0 ? 1 : -1));
-}
-
-function handleKeydown(e: KeyboardEvent) {
-	if (isAnimating.value) return;
-	if (["ArrowDown", "ArrowRight", " "].includes(e.key)) {
-		e.preventDefault();
-		goToSection(currentIndex.value + 1);
-	} else if (["ArrowUp", "ArrowLeft"].includes(e.key)) {
-		e.preventDefault();
-		goToSection(currentIndex.value - 1);
-	}
-}
-
-onMounted(() => {
-	containerRef.value?.addEventListener("wheel", handleWheel, {
-		passive: false,
-	});
-	containerRef.value?.addEventListener("touchstart", handleTouchStart, {
-		passive: true,
-	});
-	containerRef.value?.addEventListener("touchend", handleTouchEnd, {
-		passive: true,
-	});
-	window.addEventListener("keydown", handleKeydown);
-});
-
-onUnmounted(() => {
-	containerRef.value?.removeEventListener("wheel", handleWheel);
-	window.removeEventListener("keydown", handleKeydown);
-});
+const statsData = computed(() => [
+	{ value: codingYears.value, label: "YEARS" },
+	{ value: userInfo.value.repos, label: "REPOS" },
+	{ value: totalStars.value, label: "STARS" },
+]);
 </script>
 
 <template>
-  <div ref="containerRef" class="fullpage">
-    <!-- 3D 艺术场景 -->
-    <ClientOnly>
-      <ThreeArtScene :current-section="currentIndex" />
-    </ClientOnly>
-
-    <!-- 手绘背景装饰 -->
-    <div class="sketch-bg">
-      <svg class="sketch-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <path d="M0,20 Q30,25 50,20 T100,22" class="sketch-line line-1" />
-        <path d="M0,50 Q25,45 50,52 T100,48" class="sketch-line line-2" />
-        <path d="M0,80 Q35,78 60,82 T100,79" class="sketch-line line-3" />
-      </svg>
+  <div class="min-h-screen bg-white dark:bg-black text-black dark:text-white relative flex items-center justify-center py-8 md:py-0">
+    
+    <!-- 主容器 -->
+    <div class="max-w-6xl w-full px-6 md:px-16">
+      
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center">
+        
+        <!-- 左侧：名字 + You only live once + 介绍 -->
+        <div class="md:col-span-5 order-2 md:order-1">
+          <div class="mb-3 md:mb-4 relative group">
+            <Logo size="12rem" :stroke-width="8" class="md:w-80 w-60" />
+            <!-- 手绘下划线 - 双层 -->
+            <svg class="absolute -bottom-2 left-0 w-full h-4 opacity-15" viewBox="0 0 200 12" preserveAspectRatio="none">
+              <path class="draw-path" d="M0 5 Q50 2, 100 6 T200 5" stroke="currentColor" stroke-width="1" fill="none"/>
+              <path class="draw-path" d="M5 9 Q55 7, 105 10 T205 9" stroke="currentColor" stroke-width="0.5" fill="none" stroke-dasharray="3 2"/>
+            </svg>
+          </div>
+          
+          <div class="mb-2 md:mb-3">
+            <p class="font-sketch text-2xl md:text-4xl leading-tight opacity-80 dark:opacity-95">
+              You<br>
+              <span class="inline-block ml-4 md:ml-6">only</span><br>
+              <span class="inline-block ml-8 md:ml-12">live</span><br>
+              <span class="inline-block ml-12 md:ml-18">once</span>
+            </p>
+            <p class="font-sketch-cn text-xs md:text-sm opacity-30 dark:opacity-60 mt-1.5 md:mt-2 ml-12 md:ml-18">一期一会</p>
+          </div>
+          
+          <!-- 个人介绍 -->
+          <div class="mb-3 md:mb-4 max-w-md relative">
+            <!-- 手绘引号 -->
+            <svg class="absolute -left-6 top-0 w-5 h-5 opacity-15 dark:opacity-30" viewBox="0 0 20 20">
+              <path d="M3 8 Q2 5, 5 4 Q8 5, 7 8 L3 15" stroke="currentColor" stroke-width="1" fill="none"/>
+              <path d="M12 8 Q11 5, 14 4 Q17 5, 16 8 L12 15" stroke="currentColor" stroke-width="1" fill="none"/>
+            </svg>
+            <p class="font-sketch text-sm md:text-base leading-relaxed opacity-60 dark:opacity-85 mb-2 md:mb-2.5">
+              Full-Stack Developer & Digital Artisan
+            </p>
+            <div class="font-sketch-cn text-sm md:text-base leading-loose opacity-50 dark:opacity-75 space-y-2.5">
+              <p>
+                你好，我是 
+                <a href="https://github.com/iceywu" target="_blank" title="访问我的 GitHub 主页" class="relative inline-flex items-center group">
+                  <span class="border-b border-dashed border-current opacity-80 group-hover:opacity-100 transition-opacity">IceyWu</span>
+                  <svg class="w-3 h-3 ml-0.5 opacity-50 group-hover:opacity-90 transition-opacity" viewBox="0 0 12 12" fill="none">
+                    <path d="M3 3 L9 3 L9 9 M9 3 L3 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </a>
+                ，前端开发 / 全栈工程师，开源爱好者，徒步 & 摄影爱好者，自然系生活践行者。
+              </p>
+              <p>
+                业余 coding 开发
+                <a href="https://lpalette.cn" target="_blank" title="访问 Life Palatte 官网" class="relative inline-flex items-center group">
+                  <span class="border-b border-dashed border-current opacity-80 group-hover:opacity-100 transition-opacity">「Life Palatte」</span>
+                  <svg class="w-3 h-3 ml-0.5 opacity-50 group-hover:opacity-90 transition-opacity" viewBox="0 0 12 12" fill="none">
+                    <path d="M3 3 L9 3 L9 9 M9 3 L3 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </a>
+                ，帮你留存每一段旅途足迹！微信小程序搜「拾色 life」即可体验，期待和你一起记录走过的风景～
+              </p>
+            </div>
+          </div>
+          
+          <!-- 数据 -->
+          <div class="flex gap-6 md:gap-8 relative">
+            <!-- 手绘连接线 -->
+            <svg class="absolute -top-4 left-0 w-full h-2 opacity-10 dark:opacity-25" viewBox="0 0 300 8" preserveAspectRatio="none">
+              <path class="draw-path" d="M0 4 L100 4 M120 4 L200 4 M220 4 L300 4" stroke="currentColor" stroke-width="0.5" stroke-dasharray="2 3"/>
+            </svg>
+            <div v-for="stat in statsData" :key="stat.label" class="relative group">
+              <div class="font-sketch text-4xl md:text-5xl leading-none opacity-90 group-hover:opacity-100 transition-opacity">{{ stat.value }}</div>
+              <div class="font-sketch-cn text-xs opacity-30 dark:opacity-60 mt-1">{{ stat.label }}</div>
+              <svg class="absolute -top-2 -right-2 w-2 h-2 opacity-0 group-hover:opacity-50 dark:group-hover:opacity-50 transition-opacity" viewBox="0 0 8 8">
+                <circle cx="4" cy="4" r="2" fill="currentColor"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 中间：头像 + 技术栈 -->
+        <div class="md:col-span-4 flex flex-col items-center gap-4 md:gap-6 order-1 md:order-2 relative">
+          <!-- 装饰性手绘星星 - 增强动画 -->
+          <svg class="absolute -top-4 -left-4 w-6 h-6 opacity-15 animate-pulse" viewBox="0 0 24 24" style="animation-duration: 3s;">
+            <path class="draw-path" d="M12 2 L14 10 L22 12 L14 14 L12 22 L10 14 L2 12 L10 10 Z" stroke="currentColor" stroke-width="1" fill="none"/>
+          </svg>
+          <svg class="absolute -bottom-4 -right-4 w-5 h-5 opacity-15 animate-pulse" viewBox="0 0 20 20" style="animation-duration: 4s;">
+            <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1" fill="none"/>
+            <circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="1" fill="none"/>
+          </svg>
+          <!-- 额外装饰 -->
+          <svg class="absolute top-1/2 -left-8 w-4 h-4 opacity-10 hidden md:block" viewBox="0 0 16 16">
+            <path d="M2 8 L8 2 L14 8 L8 14 Z" stroke="currentColor" stroke-width="0.5" fill="none"/>
+          </svg>
+          <svg class="absolute top-1/3 -right-8 w-3 h-3 opacity-10 hidden md:block" viewBox="0 0 12 12">
+            <rect x="2" y="2" width="8" height="8" stroke="currentColor" stroke-width="0.5" fill="none" transform="rotate(45 6 6)"/>
+          </svg>
+          
+          <!-- 头像 -->
+          <div class="relative w-40 h-40 md:w-48 md:h-48 group">
+            <svg class="absolute inset-0 w-full h-full opacity-8 group-hover:opacity-12 transition-opacity" viewBox="0 0 100 100" fill="none">
+              <circle class="draw-path" cx="50" cy="50" r="48" stroke="currentColor" stroke-width="0.5"/>
+              <circle class="draw-path" cx="50" cy="50" r="45" stroke="currentColor" stroke-width="0.3"/>
+              <circle class="draw-path" cx="50" cy="50" r="42" stroke="currentColor" stroke-width="0.2"/>
+            </svg>
+            <UserAvatar size="w-40 h-40 md:w-48 md:h-48" class="transition-transform group-hover:scale-105" />
+          </div>
+          
+          <!-- 技术栈 - 环绕 -->
+          <div class="relative w-full h-16 md:h-32">
+            <span 
+              v-for="(lang, index) in Object.keys(languageStats)" 
+              :key="lang"
+              class="absolute font-sketch text-xs md:text-base opacity-50 hover:opacity-80 transition-all cursor-default hover:scale-110"
+              :style="{
+                left: techPositions[index]?.left + '%',
+                top: techPositions[index]?.top + '%',
+                transform: `rotate(${techPositions[index]?.rotate}deg)`
+              }"
+            >
+              {{ lang }}
+            </span>
+          </div>
+        </div>
+        
+        <!-- 右侧：导航 + 语录 -->
+        <div class="md:col-span-3 relative order-3">
+          <!-- 装饰性箭头 -->
+          <svg class="absolute -left-8 top-1/2 -translate-y-1/2 w-4 h-20 opacity-10 hidden md:block" viewBox="0 0 20 100">
+            <path class="draw-path" d="M10 10 L10 90 M10 90 L5 85 M10 90 L15 85" stroke="currentColor" stroke-width="1" fill="none"/>
+          </svg>
+          
+          <!-- 导航 -->
+          <nav class="flex flex-wrap gap-4 md:gap-0 md:flex-col md:space-y-4 mb-8 md:mb-10">
+            <NuxtLink 
+              v-for="link in navLinks" 
+              :key="link.to"
+              :to="link.to"
+              :title="link.title"
+              class="font-sketch text-xl md:text-2xl opacity-30 dark:opacity-70 hover:opacity-100 md:hover:ml-2 transition-all relative group"
+            >
+              {{ link.label }}
+              <svg class="absolute -left-4 top-1/2 -translate-y-1/2 w-2.5 h-2.5 opacity-0 group-hover:opacity-30 dark:group-hover:opacity-60 transition-opacity hidden md:block" viewBox="0 0 8 8">
+                <circle cx="4" cy="4" r="3" stroke="currentColor" stroke-width="1" fill="none"/>
+              </svg>
+            </NuxtLink>
+          </nav>
+          
+          <!-- 语录 -->
+          <div class="relative pt-4 md:pt-5">
+            <!-- 手绘分割线 -->
+            <svg class="absolute top-0 left-0 w-full h-1 opacity-10 dark:opacity-25" viewBox="0 0 200 4" preserveAspectRatio="none">
+              <path class="draw-path" d="M0 2 Q10 1, 20 2 T40 2 Q50 3, 60 2 T80 2 Q90 1, 100 2 T120 2 Q130 3, 140 2 T160 2 Q170 1, 180 2 T200 2" stroke="currentColor" stroke-width="0.5" fill="none"/>
+            </svg>
+            <!-- 小装饰 -->
+            <svg class="absolute -top-1 left-0 w-3 h-3 opacity-10 dark:opacity-25" viewBox="0 0 12 12">
+              <circle cx="6" cy="6" r="4" stroke="currentColor" stroke-width="0.5" fill="none"/>
+            </svg>
+            <p class="font-sketch text-sm md:text-base opacity-50 dark:opacity-50 leading-relaxed hover:opacity-40 dark:hover:opacity-70 transition-opacity" title="生命流经你，而非流向你">
+              La vie coule<br>à travers toi,<br>pas vers toi
+            </p>
+            <p class="font-sketch-cn text-xs md:text-sm opacity-15 dark:opacity-40 mt-2" title="You Only Live Once - 人生只有一次">YOLO</p>
+          </div>
+        </div>
+        
+      </div>
     </div>
 
-    <!-- 过渡线条动画 -->
-    <svg class="transition-line" viewBox="0 0 100 100" preserveAspectRatio="none">
-      <path d="M0,50 L100,50" fill="none" stroke="currentColor" stroke-width="2" />
+    <!-- 工具栏 -->
+    <div class="fixed top-4 right-4 md:top-6 md:right-6 flex flex-col gap-3 md:gap-4 z-50">
+      <a href="https://github.com/iceywu" target="_blank" title="访问我的 GitHub" class="opacity-90 hover:opacity-100 transition-opacity">
+        <GithubIcon />
+      </a>
+      <div title="切换深色/浅色模式" class="opacity-90 hover:opacity-100 transition-opacity">
+        <DrakToggle />
+      </div>
+    </div>
+
+    <!-- 背景装饰 - 增强层次感 -->
+    <svg class="fixed inset-0 w-full h-full pointer-events-none opacity-2 z-0" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <!-- 主圆环 -->
+      <circle class="draw-path" cx="50" cy="50" r="45" stroke="currentColor" stroke-width="0.05" fill="none"/>
+      <circle class="draw-path" cx="50" cy="50" r="35" stroke="currentColor" stroke-width="0.03" fill="none"/>
+      <!-- 手绘十字 -->
+      <path class="draw-path" d="M50 10 L50 90 M10 50 L90 50" stroke="currentColor" stroke-width="0.02" stroke-dasharray="2 4" opacity="0.5"/>
+      <!-- 角落装饰 - 增强 -->
+      <path class="draw-path" d="M5 5 Q10 5, 10 10 M5 5 L8 8" stroke="currentColor" stroke-width="0.05" fill="none"/>
+      <path class="draw-path" d="M95 5 Q90 5, 90 10 M95 5 L92 8" stroke="currentColor" stroke-width="0.05" fill="none"/>
+      <path class="draw-path" d="M5 95 Q10 95, 10 90 M5 95 L8 92" stroke="currentColor" stroke-width="0.05" fill="none"/>
+      <path class="draw-path" d="M95 95 Q90 95, 90 90 M95 95 L92 92" stroke="currentColor" stroke-width="0.05" fill="none"/>
+      <!-- 额外细节 -->
+      <circle cx="20" cy="20" r="2" stroke="currentColor" stroke-width="0.03" fill="none" opacity="0.3"/>
+      <circle cx="80" cy="20" r="2" stroke="currentColor" stroke-width="0.03" fill="none" opacity="0.3"/>
+      <circle cx="20" cy="80" r="2" stroke="currentColor" stroke-width="0.03" fill="none" opacity="0.3"/>
+      <circle cx="80" cy="80" r="2" stroke="currentColor" stroke-width="0.03" fill="none" opacity="0.3"/>
     </svg>
 
-    <!-- 暗色切换 -->
-    <div class="dark-toggle">
-      <DrakToggle />
-    </div>
-
-    <!-- 导航指示器 - 手绘风格 -->
-    <div class="nav-indicator">
-      <button
-        v-for="(s, i) in sections"
-        :key="s"
-        :class="{ active: currentIndex === i }"
-        :title="sectionNames[i]"
-        @click="goToSection(i)"
-      >
-        <svg class="indicator-sketch" viewBox="0 0 30 30">
-          <circle
-            cx="15"
-            cy="15"
-            r="8"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-            :stroke-dasharray="currentIndex === i ? '0' : '3 2'"
-          />
-          <circle
-            v-if="currentIndex === i"
-            cx="15"
-            cy="15"
-            r="4"
-            fill="currentColor"
-          />
-        </svg>
-      </button>
-    </div>
-
-    <!-- 各板块 -->
-    <section v-show="currentIndex === 0" class="section section-home">
-      <HomeSectionHome :user-info="userInfo" />
-    </section>
-
-    <section v-show="currentIndex === 1" class="section section-posts">
-      <ClientOnly>
-        <HomeSectionPosts />
-      </ClientOnly>
-    </section>
-
-    <section v-show="currentIndex === 2" class="section section-essays">
-      <ClientOnly>
-        <HomeSectionEssays />
-      </ClientOnly>
-    </section>
-
-    <section v-show="currentIndex === 3" class="section section-projects">
-      <ClientOnly>
-        <HomeSectionProjects />
-      </ClientOnly>
-    </section>
-
-    <section v-show="currentIndex === 4" class="section section-map">
-      <ClientOnly>
-        <HomeSectionMap />
-      </ClientOnly>
-    </section>
-
-    <section v-show="currentIndex === 5" class="section section-demos">
-      <ClientOnly>
-        <HomeSectionDemos />
-      </ClientOnly>
-    </section>
-
-    <!-- 页码 - 手绘风格 -->
-    <div class="page-info">
-      <span class="page-num">{{ String(currentIndex + 1).padStart(2, '0') }}</span>
-      <svg class="page-divider" viewBox="0 0 30 20">
-        <path d="M5,10 Q15,5 25,10" fill="none" stroke="currentColor" stroke-width="1" />
-      </svg>
-      <span class="page-total">{{ String(sections.length).padStart(2, '0') }}</span>
-      <span class="page-name">{{ sectionNames[currentIndex] }}</span>
-    </div>
-
-    <!-- 滚动提示 -->
-    <div v-if="currentIndex < sections.length - 1" class="scroll-hint">
-      <svg viewBox="0 0 24 24" class="scroll-icon">
-        <path d="M12,4 L12,16 M8,12 L12,16 L16,12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-      </svg>
-    </div>
   </div>
 </template>
 
 <style scoped>
-.fullpage {
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
+.draw-path {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: draw 3s ease-out forwards;
 }
 
-/* 手绘背景 */
-.sketch-bg {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-}
-.sketch-lines {
-  width: 100%;
-  height: 100%;
-}
-.sketch-line {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 0.1;
-  opacity: 0.05;
-}
-.line-1 { animation: sketch-float 20s ease-in-out infinite; }
-.line-2 { animation: sketch-float 25s ease-in-out infinite reverse; }
-.line-3 { animation: sketch-float 30s ease-in-out infinite; }
-@keyframes sketch-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(10px); }
-}
-
-/* 过渡线条 */
-.transition-line {
-  position: fixed;
-  top: 50%;
-  left: 0;
-  width: 100%;
-  height: 100px;
-  transform: translateY(-50%);
-  pointer-events: none;
-  z-index: 200;
-  opacity: 0.3;
-}
-
-.dark-toggle {
-  position: fixed;
-  top: 2rem;
-  right: 2rem;
-  z-index: 100;
-}
-
-/* 导航指示器 - 手绘风格 */
-.nav-indicator {
-  position: fixed;
-  left: 2rem;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  z-index: 100;
-}
-
-.nav-indicator button {
-  width: 30px;
-  height: 30px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  opacity: 0.3;
-  transition: all 0.3s;
-}
-.nav-indicator button:hover,
-.nav-indicator button.active {
-  opacity: 0.8;
-  transform: scale(1.1);
-}
-.indicator-sketch {
-  width: 100%;
-  height: 100%;
-}
-
-/* 页码信息 */
-.page-info {
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  font-family: Caveat, 'Ma Shan Zheng', cursive;
-  z-index: 100;
-}
-.page-num {
-  font-size: 1.5rem;
-  font-weight: 400;
-  opacity: 0.5;
-}
-.page-divider {
-  width: 30px;
-  height: 20px;
-  opacity: 0.3;
-}
-.page-total {
-  font-size: 1rem;
-  opacity: 0.4;
-}
-.page-name {
-  font-size: 1rem;
-  opacity: 0.4;
-  margin-left: 0.5rem;
-  letter-spacing: 0.1em;
-}
-
-/* 滚动提示 */
-.scroll-hint {
-  position: fixed;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  animation: bounce 2s ease-in-out infinite;
-  opacity: 0.3;
-}
-.scroll-icon {
-  width: 24px;
-  height: 24px;
-}
-@keyframes bounce {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50% { transform: translateX(-50%) translateY(8px); }
-}
-
-/* 通用 section */
-.section {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  z-index: 1;
-  overflow: hidden;
-}
-
-/* 响应式 */
-@media (max-width: 640px) {
-  .nav-indicator { left: 1rem; }
-  .dark-toggle { top: 1rem; right: 1rem; }
-  .page-info { bottom: 1rem; right: 1rem; }
-  .scroll-hint { bottom: 4rem; }
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 </style>

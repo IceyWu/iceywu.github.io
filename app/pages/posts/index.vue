@@ -47,14 +47,18 @@ function toggleTag(tag: string) {
 
 const sortedPosts = computed(() => {
 	if (tags.value.size === 0) {
-		window.history.replaceState(null, "", "/posts");
+		if (import.meta.client) {
+			window.history.replaceState(null, "", "/posts");
+		}
 		return filteredPosts.value;
 	} else {
-		window.history.replaceState(
-			null,
-			"",
-			`/posts?tags=${Array.from(tags.value).join(",")}`,
-		);
+		if (import.meta.client) {
+			window.history.replaceState(
+				null,
+				"",
+				`/posts?tags=${Array.from(tags.value).join(",")}`,
+			);
+		}
 
 		return [...filteredPosts.value].sort((a, b) => {
 			const aHasTag = a.tags.some((tag) => tags.value.has(tag));

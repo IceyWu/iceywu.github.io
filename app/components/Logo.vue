@@ -4,9 +4,11 @@ import SetSvgAnimation from "svg-animate-web";
 const props = withDefaults(
 	defineProps<{
 		size?: string | number;
+		strokeWidth?: number;
 	}>(),
 	{
 		size: "5rem",
+		strokeWidth: 12,
 	},
 );
 
@@ -35,7 +37,7 @@ function setSVGAnim() {
 		fill: "transparent",
 		fillBase: color,
 		stroke: color,
-		strokeWidth: 12,
+		strokeWidth: props.strokeWidth,
 	});
 }
 </script>

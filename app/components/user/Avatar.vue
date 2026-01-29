@@ -1,6 +1,15 @@
 <script lang="ts" setup>
 const route = useRoute();
-const inHome = computed(() => route.path === "/");
+
+const props = withDefaults(
+	defineProps<{
+		size?: string;
+	}>(),
+	{
+		size: "w-10",
+	},
+);
+
 const { data } = await useFetch("/api/user");
 const user = computed(() => {
 	return (
@@ -35,7 +44,7 @@ const user = computed(() => {
       :src="user!.avatar_url"
       blurhash="LYN0}600~q%LIT9Ft7IoIV-;-pxu"
       alt="Avatar"
-      :class="inHome ? 'w-30' : 'w-10'"
+      :class="props.size"
       aspect-square
       rd="[62%_47%_82%_35%/45%_45%_80%_66%]"
       will-change="border-radius,transform,opacity"
