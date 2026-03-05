@@ -2,6 +2,17 @@
 import { to } from "@iceywu/utils";
 import { breakpointsTailwind } from "@vueuse/core";
 
+useHead({
+	title: "Demos",
+	meta: [
+		{
+			hid: "description",
+			name: "description",
+			content: "产品演示 - 项目与工具的在线展示",
+		},
+	],
+});
+
 const [_, { data }] = await to(
 	useAsyncData(() => {
 		return queryCollection("demos").all();

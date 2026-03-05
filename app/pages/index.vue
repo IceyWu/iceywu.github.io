@@ -4,6 +4,14 @@ import GithubIcon from "~/components/nav/GithubIcon.vue";
 useHead({
 	title: "IceyWu - 全栈开发者 | You only live once",
 	titleTemplate: "%s",
+	meta: [
+		{
+			hid: "description",
+			name: "description",
+			content:
+				"IceyWu 的个人网站。全栈开发者，热爱开源，专注于 Vue、Nuxt、TypeScript 等前端技术，分享技术博客、开源项目与生活随笔。",
+		},
+	],
 	link: [
 		{
 			rel: "stylesheet",
