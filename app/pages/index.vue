@@ -2,7 +2,8 @@
 import GithubIcon from "~/components/nav/GithubIcon.vue";
 
 useHead({
-	title: "IceyWu - You only live once | 一期一会",
+	title: "IceyWu - 全栈开发者 | You only live once",
+	titleTemplate: "%s",
 	link: [
 		{
 			rel: "stylesheet",
@@ -115,7 +116,7 @@ const statsData = computed(() => [
               <span class="inline-block ml-8 md:ml-12">live</span><br>
               <span class="inline-block ml-12 md:ml-18">once</span>
             </p>
-            <p class="font-sketch-cn text-xs md:text-sm opacity-30 dark:opacity-60 mt-1.5 md:mt-2 ml-12 md:ml-18">一期一会</p>
+            <p class="font-sketch-cn text-xs md:text-sm opacity-30 dark:opacity-60 mt-1.5 md:mt-2 ml-12 md:ml-18">向阳而生</p>
           </div>
           
           <!-- 个人介绍 -->

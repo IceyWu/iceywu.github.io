@@ -1,4 +1,15 @@
 <script lang="ts" setup>
+useHead({
+	title: "Blog",
+	meta: [
+		{
+			hid: "description",
+			name: "description",
+			content: "技术博客 - 分享前端开发、Vue、Nuxt、TypeScript 等技术文章",
+		},
+	],
+});
+
 const { data: posts } = await useAsyncData(() => {
 	return queryCollection("posts")
 		.select(

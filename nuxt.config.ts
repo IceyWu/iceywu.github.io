@@ -7,9 +7,15 @@ export default defineNuxtConfig({
 		"@vueuse/nuxt",
 		"@unocss/nuxt",
 		"@nuxt/content",
+		"@nuxtjs/sitemap",
 		// '@nuxtjs/color-mode',
 		// '@vite-pwa/nuxt',
 	],
+
+	sitemap: {
+		siteUrl: "https://iceywu.cn",
+		exclude: ["/api/**"],
+	} as any,
 
 	experimental: {
 		viewTransition: true,

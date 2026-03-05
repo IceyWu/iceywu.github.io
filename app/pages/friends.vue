@@ -3,7 +3,7 @@ import { useTitle } from "@vueuse/core";
 
 useTitle("Friends | IceyWu");
 useHead({
-	title: "Friends | IceyWu",
+	title: "Friends",
 	meta: [
 		{
 			hid: "description",

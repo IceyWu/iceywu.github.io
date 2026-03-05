@@ -4,7 +4,7 @@ import type { Repo } from "~/types";
 
 useTitle("Projects | IceyWu");
 useHead({
-	title: "Projects | IceyWu",
+	title: "Projects",
 	meta: [
 		{
 			hid: "description",

@@ -1,4 +1,15 @@
 <script setup lang="ts">
+useHead({
+	title: "Map",
+	meta: [
+		{
+			hid: "description",
+			name: "description",
+			content: "旅行地图 - 记录去过的地方和旅行足迹",
+		},
+	],
+});
+
 definePageMeta({
 	layout: "map",
 });

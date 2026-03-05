@@ -1,4 +1,15 @@
 <script lang="ts" setup>
+useHead({
+	title: "Essays",
+	meta: [
+		{
+			hid: "description",
+			name: "description",
+			content: "随笔 - 生活感悟、旅行记录与思考",
+		},
+	],
+});
+
 const { data: essays } = await useAsyncData(() => {
 	return queryCollection("essays")
 		.select(
