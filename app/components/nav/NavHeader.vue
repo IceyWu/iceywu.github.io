@@ -16,6 +16,7 @@ const routes = reactive<Menu[]>([
 	// { path: '/images', icon: 'i-ri-image-line' },
 	{ path: "/map", icon: "i-carbon-map", text: "Map" },
 	{ path: "/demos", icon: "i-carbon-demo", text: "Demos" },
+	{ path: "/friends", icon: "i-carbon-friendship", text: "Friends" },
 ]);
 
 const route = useRoute();

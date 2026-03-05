@@ -70,6 +70,7 @@ const navLinks = [
 	{ to: "/projects", label: "Projects", title: "开源项目" },
 	{ to: "/demos", label: "Demos", title: "产品展示" },
 	{ to: "/map", label: "Map", title: "旅行地图" },
+	{ to: "/friends", label: "Friends", title: "友情链接" },
 ];
 
 const techPositions = [
