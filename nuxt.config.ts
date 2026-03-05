@@ -12,10 +12,14 @@ export default defineNuxtConfig({
 		// '@vite-pwa/nuxt',
 	],
 
+	site: {
+		url: "https://iceywu.cn",
+		name: "IceyWu",
+	},
+
 	sitemap: {
-		siteUrl: "https://iceywu.cn",
 		exclude: ["/api/**"],
-	} as any,
+	},
 
 	experimental: {
 		viewTransition: true,
