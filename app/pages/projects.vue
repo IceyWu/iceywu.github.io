@@ -40,7 +40,10 @@ const { data, status } = await useFetch<Record<string, Repo[]>>("/api/repos", {
 
 const { data: contributions } = await useFetch<ContributedRepo[]>(
 	"/api/contributions",
-	{ default: () => [] },
+	{
+		default: () => [],
+		transform: (data) => data.sort((a, b) => b.stars - a.stars),
+	},
 );
 </script>
 
@@ -58,15 +61,6 @@ const { data: contributions } = await useFetch<ContributedRepo[]>(
       </template>
 
       <template v-else-if="status === 'success'">
-        <div v-for="(repos, key) in data" :key="key">
-          <h4 mb-2>
-            {{ key }}
-          </h4>
-          <div grid="~ cols-1 md:cols-2 gap-4">
-            <RepoCard v-for="repo in repos" :key="repo.id" :repo="repo" />
-          </div>
-        </div>
-
         <div v-if="contributions && contributions.length > 0">
           <h4 mb-2>
             Contributed To
@@ -97,6 +91,15 @@ const { data: contributions } = await useFetch<ContributedRepo[]>(
                 </span>
               </div>
             </a>
+          </div>
+        </div>
+
+        <div v-for="(repos, key) in data" :key="key">
+          <h4 mb-2>
+            {{ key }}
+          </h4>
+          <div grid="~ cols-1 md:cols-2 gap-4">
+            <RepoCard v-for="repo in repos" :key="repo.id" :repo="repo" />
           </div>
         </div>
       </template>
