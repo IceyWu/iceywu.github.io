@@ -94,10 +94,6 @@ useHead({
 		},
 	],
 });
-
-// 页面过渡动画
-const { getTransitionHooks } = usePageTransition();
-const transitionHooks = getTransitionHooks();
 </script>
 
 <template>
@@ -110,7 +106,6 @@ const transitionHooks = getTransitionHooks();
       :transition="{
         name: 'page',
         mode: 'out-in',
-        ...transitionHooks,
       }"
     />
   </NuxtLayout>

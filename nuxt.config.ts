@@ -56,6 +56,10 @@ export default defineNuxtConfig({
 		},
 	},
 
+	runtimeConfig: {
+		githubToken: process.env.MY_TOKEN,
+	},
+
 	vite: {
 		define: {
 			"import.meta.env.__BUILD_TIME__": JSON.stringify(

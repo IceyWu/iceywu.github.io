@@ -24,48 +24,34 @@ useHead({
 	],
 });
 
-const githubUser = ref<any>(null);
-const languageStats = ref<Record<string, number>>({});
-const totalStars = ref(0);
+type HomeGithubStats = {
+	avatar: string;
+	createdAt: string;
+	languageStats: Record<string, number>;
+	repos: number;
+	totalStars: number;
+};
 
-onMounted(async () => {
-	try {
-		const [userRes, reposRes] = await Promise.all([
-			fetch("https://api.github.com/users/iceywu"),
-			fetch(
-				"https://api.github.com/users/iceywu/repos?per_page=100&sort=updated",
-			),
-		]);
+const { data: githubStats } = await useFetch<HomeGithubStats>(
+	"/api/lang-stats",
+	{
+		default: () => ({
+			avatar: "",
+			createdAt: "2020-01-01T00:00:00.000Z",
+			languageStats: {},
+			repos: 0,
+			totalStars: 0,
+		}),
+	},
+);
 
-		githubUser.value = await userRes.json();
-		const repos = await reposRes.json();
-
-		const langCount: Record<string, number> = {};
-		let stars = 0;
-
-		for (const repo of repos) {
-			if (repo.language) {
-				langCount[repo.language] = (langCount[repo.language] || 0) + 1;
-			}
-			stars += repo.stargazers_count || 0;
-		}
-
-		totalStars.value = stars;
-		languageStats.value = Object.fromEntries(
-			Object.entries(langCount)
-				.sort((a, b) => b[1] - a[1])
-				.slice(0, 6),
-		);
-	} catch (error) {
-		console.error("Failed to fetch GitHub data:", error);
-	}
-});
+const languageStats = computed(() => githubStats.value?.languageStats || {});
 
 const userInfo = computed(() => ({
-	avatar: githubUser.value?.avatar_url || "",
-	repos: githubUser.value?.public_repos || 0,
-	createdAt: githubUser.value?.created_at
-		? new Date(githubUser.value.created_at).getFullYear()
+	avatar: githubStats.value?.avatar || "",
+	repos: githubStats.value?.repos || 0,
+	createdAt: githubStats.value?.createdAt
+		? new Date(githubStats.value.createdAt).getFullYear()
 		: 2020,
 }));
 
@@ -94,7 +80,7 @@ const techPositions = [
 const statsData = computed(() => [
 	{ value: codingYears.value, label: "YEARS" },
 	{ value: userInfo.value.repos, label: "REPOS" },
-	{ value: totalStars.value, label: "STARS" },
+	{ value: githubStats.value?.totalStars || 0, label: "STARS" },
 ]);
 </script>
 
