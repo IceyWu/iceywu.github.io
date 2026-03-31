@@ -185,26 +185,27 @@ watch(
   <div mxa w="full max-7xl" px-3 sm:px-4 lg:px-6>
     <PageHeader title="Projects" description="List of projects (maintained or created) that I am proud of." />
     <div my-6 flex="~ col lg:row" items-start gap-6 lg:gap-8>
-      <aside class="w-full sticky top-16 z-20 -mx-3 px-3 py-2 bg-white/86 dark:bg-dark-900/86 backdrop-blur-md border-y border-black/6 dark:border-white/8 overflow-x-auto overflow-y-hidden lg:static lg:z-auto lg:mx-0 lg:w-54 lg:shrink-0 lg:max-h-[calc(100vh-8rem)] lg:border-y-0 lg:bg-transparent lg:p-0 lg:backdrop-blur-none lg:overflow-visible">
-        <nav flex="~ row lg:col" gap-2 whitespace-nowrap min-w-max lg:min-w-0>
+      <aside class="w-full lg:w-54 lg:shrink-0 lg:sticky lg:top-28 lg:max-h-[calc(100vh-8rem)] lg:pr-2">
+        <div class="border border-black/8 rounded-2xl p-3 dark:border-white/10 lg:border-0 lg:rounded-none lg:p-0">
+          <div class="px-1 pb-2 text-[11px] tracking-[0.22em] op-35 uppercase lg:hidden">
+            Explore
+          </div>
+          <nav class="grid grid-cols-2 gap-2 lg:flex lg:flex-col">
           <a
             v-for="section in projectSections"
             :key="section.id"
             :href="`#${section.id}`"
-            rounded-lg
-            px-3.5
-            py-2
-            text="xs sm:sm"
+            class="rounded-lg px-3 py-2.5 text-sm decoration-none border border-transparent transition-colors min-w-0"
             decoration-none
-            class="border border-black/8 dark:border-white/10 trans shrink-0"
             :class="activeSection === section.id
-              ? 'bg-black text-white border-black shadow-sm dark:bg-white dark:text-black dark:border-white'
-              : 'op-80 hover:op-100 hover:bg-black/4 dark:hover:bg-white/6'"
+              ? 'bg-black text-white dark:bg-white dark:text-black'
+              : 'op-55 hover:op-100 lg:bg-transparent lg:hover:translate-x-1'"
             @click="goToSection($event, section.id)"
           >
-            {{ section.title }}
+            <span class="block truncate text-center lg:text-left">{{ section.title }}</span>
           </a>
-        </nav>
+          </nav>
+        </div>
       </aside>
 
       <div flex-1 min-w-0 w-full>
@@ -223,10 +224,10 @@ watch(
               v-for="section in projectSections"
               :id="section.id"
               :key="section.id"
-              scroll-mt-34 lg:scroll-mt-28
+              scroll-mt-30 lg:scroll-mt-28
               class="space-y-3"
             >
-              <h4 mb-2 text-base sm:text-lg>
+              <h4 mb-2 text-base sm:text-lg class="tracking-[0.01em]">
                 {{ section.title }}
               </h4>
               <div class="grid grid-cols-1 gap-3.5 sm:gap-4 md:grid-cols-2">
