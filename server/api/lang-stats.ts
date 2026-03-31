@@ -1,17 +1,4 @@
-type GithubUser = {
-	avatar_url?: string;
-	created_at?: string;
-	public_repos?: number;
-};
-
-type GithubRepo = {
-	archived?: boolean;
-	fork?: boolean;
-	language?: string | null;
-	name: string;
-	private?: boolean;
-	stargazers_count?: number;
-};
+import { useOctokit } from "../utils/github";
 
 type GithubStatsResponse = {
 	avatar: string;
@@ -21,9 +8,44 @@ type GithubStatsResponse = {
 	totalStars: number;
 };
 
-const GITHUB_API_BASE = "https://api.github.com";
+type GithubLanguageEdge = {
+	node?: {
+		name?: string | null;
+	} | null;
+	size?: number | null;
+};
+
+type GithubLanguageRepo = {
+	isArchived?: boolean | null;
+	primaryLanguage?: {
+		name?: string | null;
+	} | null;
+	languages?: {
+		edges?: Array<GithubLanguageEdge | null> | null;
+	} | null;
+};
+
+type GithubGraphqlResponse = {
+	user: {
+		avatarUrl?: string | null;
+		createdAt?: string | null;
+		repositories: {
+			totalCount?: number | null;
+			nodes?: Array<{
+				stargazerCount?: number | null;
+			} | null> | null;
+		};
+		languageRepositories: {
+			nodes?: Array<GithubLanguageRepo | null> | null;
+		};
+	} | null;
+};
+
+const GITHUB_USERNAME = "iceywu";
 const GITHUB_CACHE_TTL = 60 * 60 * 1000;
+const GITHUB_GRAPHQL_REPO_LIMIT = 100;
 const GITHUB_LANGUAGE_REPO_LIMIT = 12;
+const GITHUB_LANGUAGE_LIMIT_PER_REPO = 10;
 const EXCLUDED_LANGUAGES = new Set([
 	"CSS",
 	"HTML",
@@ -47,78 +69,108 @@ function getFallbackStats(): GithubStatsResponse {
 	};
 }
 
-function getGithubHeaders(token?: string) {
-	return {
-		Accept: "application/vnd.github+json",
-		...(token ? { Authorization: `Bearer ${token}` } : {}),
-	};
-}
-
-async function githubFetch<T>(path: string, token?: string) {
-	return await $fetch<T>(`${GITHUB_API_BASE}${path}`, {
-		headers: getGithubHeaders(token),
-	});
-}
-
 async function fetchGithubStats(token?: string): Promise<GithubStatsResponse> {
-	const [user, repos] = await Promise.all([
-		githubFetch<GithubUser>("/users/iceywu", token),
-		githubFetch<GithubRepo[]>(
-			"/users/iceywu/repos?per_page=100&type=owner&sort=updated",
-			token,
-		),
-	]);
+	const octokit = useOctokit(token);
+	const result = await octokit.graphql<GithubGraphqlResponse>(
+		`
+      query GithubStats($login: String!, $allRepoLimit: Int!, $repoLimit: Int!, $languageLimit: Int!) {
+        user(login: $login) {
+          avatarUrl
+          createdAt
+          repositories(
+            privacy: PUBLIC
+            ownerAffiliations: OWNER
+            first: $allRepoLimit
+            orderBy: { field: UPDATED_AT, direction: DESC }
+          ) {
+            totalCount
+            nodes {
+              stargazerCount
+            }
+          }
+          languageRepositories: repositories(
+            privacy: PUBLIC
+            ownerAffiliations: OWNER
+            isFork: false
+            first: $repoLimit
+            orderBy: { field: UPDATED_AT, direction: DESC }
+          ) {
+            nodes {
+              isArchived
+              primaryLanguage {
+                name
+              }
+              languages(first: $languageLimit, orderBy: { field: SIZE, direction: DESC }) {
+                edges {
+                  size
+                  node {
+                    name
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    `,
+		{
+			allRepoLimit: GITHUB_GRAPHQL_REPO_LIMIT,
+			languageLimit: GITHUB_LANGUAGE_LIMIT_PER_REPO,
+			login: GITHUB_USERNAME,
+			repoLimit: GITHUB_LANGUAGE_REPO_LIMIT,
+		},
+	);
 
-	let totalStars = 0;
-	for (const repo of repos) {
-		totalStars += repo.stargazers_count || 0;
+	const user = result.user;
+
+	if (!user) {
+		throw new Error("GitHub user not found");
 	}
 
-	const candidates = repos
-		.filter((repo) => !repo.private && !repo.archived && !repo.fork)
-		.slice(0, GITHUB_LANGUAGE_REPO_LIMIT);
+	let totalStars = 0;
+	for (const repo of user.repositories.nodes || []) {
+		totalStars += repo?.stargazerCount || 0;
+	}
 
-	const languageResults = await Promise.allSettled(
-		candidates.map((repo) =>
-			githubFetch<Record<string, number>>(
-				`/repos/iceywu/${repo.name}/languages`,
-				token,
-			),
-		),
+	const candidates = (user.languageRepositories.nodes || []).filter(
+		(repo): repo is GithubLanguageRepo => Boolean(repo) && !repo.isArchived,
 	);
 
 	const byteCount: Record<string, number> = {};
-	for (const result of languageResults) {
-		if (result.status === "fulfilled") {
-			for (const [lang, bytes] of Object.entries(result.value)) {
-				if (EXCLUDED_LANGUAGES.has(lang)) {
-					continue;
-				}
+	for (const repo of candidates) {
+		for (const edge of repo.languages?.edges || []) {
+			const lang = edge?.node?.name;
+			const bytes = edge?.size;
 
-				byteCount[lang] = (byteCount[lang] || 0) + bytes;
+			if (!lang || typeof bytes !== "number" || EXCLUDED_LANGUAGES.has(lang)) {
+				continue;
 			}
+
+			byteCount[lang] = (byteCount[lang] || 0) + bytes;
 		}
 	}
 
 	if (Object.keys(byteCount).length === 0) {
 		for (const repo of candidates) {
-			if (!repo.language || EXCLUDED_LANGUAGES.has(repo.language)) {
+			const primaryLanguage = repo.primaryLanguage?.name;
+
+			if (!primaryLanguage || EXCLUDED_LANGUAGES.has(primaryLanguage)) {
 				continue;
 			}
 
-			byteCount[repo.language] = (byteCount[repo.language] || 0) + 1;
+			byteCount[primaryLanguage] = (byteCount[primaryLanguage] || 0) + 1;
 		}
 	}
 
 	return {
-		avatar: user.avatar_url || "",
-		createdAt: user.created_at || "2020-01-01T00:00:00.000Z",
+		avatar: user.avatarUrl || "",
+		createdAt: user.createdAt || "2020-01-01T00:00:00.000Z",
 		languageStats: Object.fromEntries(
 			Object.entries(byteCount)
 				.sort((a, b) => b[1] - a[1])
 				.slice(0, 6),
 		),
-		repos: user.public_repos || 0,
+		repos: user.repositories.totalCount || 0,
 		totalStars,
 	};
 }

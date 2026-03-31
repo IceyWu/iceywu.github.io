@@ -1,13 +1,29 @@
 import type { Repo } from "~/types";
-// import { useOctokit } from '../utils/github'
+import { useOctokit } from "../utils/github";
+
+const CACHE_TTL = 60 * 60 * 1000;
+let cachedData: Record<string, Repo[]> | null = null;
+let cachedAt = 0;
 
 export default defineEventHandler(async () => {
-	// const { data } = await useOctokit().request('GET /user/repos', { per_page: 100 })
-	const data = await $fetch<Repo[]>(
-		"https://api.github.com/users/iceywu/repos?per_page=100&type=owner&sort=updated",
-	);
+	const now = Date.now();
+	if (cachedData && now - cachedAt < CACHE_TTL) {
+		return cachedData;
+	}
 
-	const publicRepos = data.filter((repo) => !repo.private && !repo.archived);
+	const config = useRuntimeConfig();
+	const octokit = useOctokit(config.githubToken);
+
+	const { data } = await octokit.request("GET /users/{username}/repos", {
+		username: "iceywu",
+		per_page: 100,
+		type: "owner",
+		sort: "updated",
+	});
+
+	const publicRepos = (data as Repo[]).filter(
+		(repo) => !repo.private && !repo.archived,
+	);
 	const publicAndNotForkRepos = publicRepos.filter((repo) => !repo.fork);
 
 	const repoGroups: Record<string, Repo[]> = {
@@ -18,9 +34,12 @@ export default defineEventHandler(async () => {
 		All: publicAndNotForkRepos,
 	};
 
-	return Object.fromEntries(
+	cachedData = Object.fromEntries(
 		Object.entries(repoGroups).filter(([_, repos]) => repos.length > 0),
 	);
+	cachedAt = now;
+
+	return cachedData;
 });
 
 function filterRepos(repos: Repo[], key: string) {

@@ -1,25 +1,17 @@
 <script setup lang="ts">
 import type { Repo } from "~/types";
 
-const projects = ref<Repo[]>([]);
-const loading = ref(true);
+const { data: repoGroups, status } = await useFetch<Record<string, Repo[]>>(
+	"/api/repos",
+	{ default: () => ({}) },
+);
 
-onMounted(async () => {
-	try {
-		const data = await $fetch<Repo[]>(
-			"https://api.github.com/users/iceywu/repos?per_page=100&type=owner&sort=updated",
-		);
-		const publicRepos = data
-			.filter((repo) => !repo.private && !repo.archived && !repo.fork)
-			.sort((a, b) => b.stargazers_count - a.stargazers_count)
-			.slice(0, 6);
-		projects.value = publicRepos;
-	} catch {
-		// Failed to fetch
-	} finally {
-		loading.value = false;
-	}
+const projects = computed(() => {
+	const all = repoGroups.value?.All || [];
+	return all.slice(0, 6);
 });
+
+const loading = computed(() => status.value === "pending");
 
 function formatStars(count: number) {
 	if (count >= 1000) return `${(count / 1000).toFixed(1)}k`;
