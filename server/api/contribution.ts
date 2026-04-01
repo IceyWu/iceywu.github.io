@@ -2,7 +2,7 @@ import type { ContributeData } from "~/types";
 // import { useOctokit } from '../utils/github'
 
 export default defineEventHandler(async (event) => {
-	const { name, year } = getQuery(event);
+	const { name = "iceywu", year = "last" } = getQuery(event);
 	const API = `https://github-contributions-api.jogruber.de/v4/${name}?y=${year}`;
 	return $fetch<ContributeData>(API);
 	// const { name, year } = getQuery(event)
