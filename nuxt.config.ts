@@ -79,9 +79,17 @@ export default defineNuxtConfig({
 	//   },
 	// },
 	nitro: {
+		preset: "github-pages",
 		prerender: {
 			crawlLinks: false,
-			routes: ["/"],
+			routes: [
+				"/",
+				"/api/repos",
+				"/api/contributions",
+				"/api/contribution",
+				"/api/lang-stats",
+				"/api/user",
+			],
 		},
 	},
 
