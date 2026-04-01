@@ -168,7 +168,7 @@ async function fetchGithubStats(token?: string): Promise<GithubStatsResponse> {
 		languageStats: Object.fromEntries(
 			Object.entries(byteCount)
 				.sort((a, b) => b[1] - a[1])
-				.slice(0, 6),
+				.slice(0, 12),
 		),
 		repos: user.repositories.totalCount || 0,
 		totalStars,

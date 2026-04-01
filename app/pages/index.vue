@@ -45,8 +45,6 @@ const { data: githubStats } = await useFetch<HomeGithubStats>(
 	},
 );
 
-const languageStats = computed(() => githubStats.value?.languageStats || {});
-
 const userInfo = computed(() => ({
 	avatar: githubStats.value?.avatar || "",
 	repos: githubStats.value?.repos || 0,
@@ -66,15 +64,6 @@ const navLinks = [
 	{ to: "/demos", label: "Demos", title: "产品展示" },
 	{ to: "/map", label: "Map", title: "旅行地图" },
 	{ to: "/friends", label: "Friends", title: "友情链接" },
-];
-
-const techPositions = [
-	{ left: 10, top: 10, rotate: -8 },
-	{ left: 60, top: 20, rotate: 5 },
-	{ left: 5, top: 50, rotate: -3 },
-	{ left: 70, top: 60, rotate: 7 },
-	{ left: 20, top: 80, rotate: -5 },
-	{ left: 50, top: 90, rotate: 3 },
 ];
 
 const statsData = computed(() => [
@@ -191,21 +180,8 @@ const statsData = computed(() => [
             <UserAvatar size="w-40 h-40 md:w-48 md:h-48" class="transition-transform group-hover:scale-105" />
           </div>
           
-          <!-- 技术栈 - 环绕 -->
-          <div class="relative w-full h-16 md:h-32">
-            <span 
-              v-for="(lang, index) in Object.keys(languageStats)" 
-              :key="lang"
-              class="absolute font-sketch text-xs md:text-base opacity-50 hover:opacity-80 transition-all cursor-default hover:scale-110"
-              :style="{
-                left: techPositions[index]?.left + '%',
-                top: techPositions[index]?.top + '%',
-                transform: `rotate(${techPositions[index]?.rotate}deg)`
-              }"
-            >
-              {{ lang }}
-            </span>
-          </div>
+          <!-- 技术栈 - 星座图 -->
+          <TechStackBubble />
         </div>
         
         <!-- 右侧：导航 + 语录 -->
@@ -245,6 +221,18 @@ const statsData = computed(() => [
               La vie coule<br>à travers toi,<br>pas vers toi
             </p>
             <p class="font-sketch-cn text-xs md:text-sm opacity-15 dark:opacity-40 mt-2" title="You Only Live Once - 人生只有一次">YOLO</p>
+          </div>
+
+          <!-- 联系方式 -->
+          <div class="mt-4 md:mt-6 flex flex-col gap-1.5">
+            <a href="mailto:3128006406@qq.com" class="flex items-center gap-1.5 font-sketch text-xs md:text-sm opacity-25 dark:opacity-50 hover:opacity-60 dark:hover:opacity-80 transition-opacity" title="发送邮件">
+              <span class="i-carbon-email w-3.5 h-3.5" />
+              <span>3128006406@qq.com</span>
+            </a>
+            <span class="flex items-center gap-1.5 font-sketch text-xs md:text-sm opacity-25 dark:opacity-50 cursor-default" title="微信号">
+              <span class="i-carbon-logo-wechat w-3.5 h-3.5" />
+              <span>restsun</span>
+            </span>
           </div>
         </div>
         
