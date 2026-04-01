@@ -1,4 +1,5 @@
 <script lang='ts' setup>
+import { formatNumber } from "@iceywu/utils";
 import { getLanguageColor } from "~/composables/utils";
 
 defineProps<{
@@ -75,11 +76,11 @@ defineProps<{
         </span>
         <span v-if="repo.stars" fsc gap-1>
           <i i-ri:star-line />
-          {{ repo.stars }}
+          {{ formatNumber(repo.stars) }}
         </span>
         <span v-if="repo.forks" fsc gap-1>
           <i i-carbon:direction-fork />
-          {{ repo.forks }}
+          {{ formatNumber(repo.forks) }}
         </span>
       </p>
     </a>

@@ -69,6 +69,7 @@ export default defineNuxtConfig({
 		},
 		build: {
 			target: "esnext",
+			cssCodeSplit: true,
 		},
 	},
 
@@ -80,6 +81,7 @@ export default defineNuxtConfig({
 	// },
 	nitro: {
 		preset: "github-pages",
+		compressPublicAssets: true,
 		prerender: {
 			crawlLinks: true,
 			routes: [
