@@ -15,8 +15,7 @@ definePageMeta({
 });
 
 const iframeRef = ref<HTMLIFrameElement | null>(null);
-const baseUrl =
-	"https://lpalette.cn/map/iLlQQhGlOPh3gsUPFKkoVhFX2Al7fA3IEjczQohgA7c";
+const baseUrl = "https://lpalette.cn/map/mkIo6X4FryYKOcUzuz4Kew";
 
 // 客户端挂载后获取正确的主题
 const iframeSrc = ref("");
