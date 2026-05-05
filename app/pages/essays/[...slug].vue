@@ -2,13 +2,18 @@
 import type { TocLink } from "@nuxt/content";
 
 const route = useRoute();
-const { data: post } = await useAsyncData(() => {
-	return queryCollection("essays").path(route.path).first();
-});
+const { data: post } = await useAsyncData(
+	`essay:${route.path}`,
+	() => queryCollection("essays").path(route.path).first(),
+	{ watch: [() => route.path] },
+);
 const ids = computed(() => getIds(post.value?.body.toc?.links ?? []));
 const activeToc = ref<string[]>([]);
 
-useSeoMeta(post.value?.seo ?? {});
+useSeoMeta({
+	title: () => post.value?.seo?.title ?? post.value?.title,
+	description: () => post.value?.seo?.description ?? post.value?.description,
+});
 
 function getIds(links: TocLink[]): string[] {
 	return links.reduce((acc, link) => {
