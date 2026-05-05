@@ -1,13 +1,15 @@
 <script lang="ts" setup>
-// 照片数据接口
+// 照片数据接口（对齐后端返回的数据结构）
 export interface PhotoData {
-	id: string | number;
-	imageSrc: string; // 图片源路径
-	videoSrc?: string; // 视频源路径(可选,有此字段则为实况照片)
-	blurhash?: string; // blurhash 值
-	alt?: string; // 图片描述
-	width?: number;
-	height?: number;
+	sec_uid: string;
+	name: string;
+	url: string;
+	width: number;
+	height: number;
+	blurhash?: string;
+	created_at?: string;
+	updated_at?: string;
+	live_photo_video_url?: string;
 }
 
 interface PhotoListProps {
@@ -35,10 +37,9 @@ const gridStyle = computed(() => {
 		gap: `${props.gap}px`,
 	};
 });
-function getphotoSrc(data: any) {
-	const { imageSrc } = data;
 
-	return `${imageSrc}?x-oss-process=image/resize,l_800/format,avif`;
+function getPhotoSrc(photo: PhotoData) {
+	return `${photo.url}?x-oss-process=image/resize,l_800/format,avif`;
 }
 </script>
 
@@ -46,11 +47,11 @@ function getphotoSrc(data: any) {
   <div class="photo-list not-prose" :style="gridStyle">
     <PhotoItem
       v-for="photo in photos"
-      :key="photo.id"
-      :image-src="getphotoSrc(photo)"
-      :video-src="photo.videoSrc"
+      :key="photo.sec_uid"
+      :image-src="getPhotoSrc(photo)"
+      :video-src="photo.live_photo_video_url"
       :blurhash="photo.blurhash"
-      :alt="photo.alt || `Photo ${photo.id}`"
+      :alt="photo.name"
       :width="itemWidth"
       :height="itemHeight"
       :object-fit="objectFit"

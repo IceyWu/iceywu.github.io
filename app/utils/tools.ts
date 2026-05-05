@@ -1,16 +1,16 @@
-import { customDestr, deepClone, getObjVal } from "@iceywu/utils";
+import { customDestr, deepClone, get } from "@iceywu/utils";
 
 // 获取用户头像
 export function getUserAvatar(data: any) {
-	const oldAvatar = getObjVal(data, "avatar");
-	const baseAvatar = getObjVal(data, "avatarInfo.url");
+	const oldAvatar = get(data, "avatar");
+	const baseAvatar = get(data, "avatarInfo.url");
 	return baseAvatar || oldAvatar;
 }
 // 判断是否是苹果拍摄的图片
 export function isIphoneImg(data: any) {
-	const exif = getObjVal(data, "exif", "{}");
+	const exif = get(data, "exif", "{}");
 	const exifData = customDestr(exif, { customVal: {} });
-	return getObjVal(exifData, "Make.value") === "Apple";
+	return get(exifData, "Make.value") === "Apple";
 }
 
 interface ImgAddInfo {
