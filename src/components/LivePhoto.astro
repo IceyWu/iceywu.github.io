@@ -78,8 +78,6 @@ const h = typeof height === "number" ? `${height}px` : height;
       const image = el.dataset.image!;
       const video = el.dataset.video!;
       const fit = (el.dataset.fit || "cover") as any;
-      const width = Number(el.dataset.width) || 320;
-      const height = Number(el.dataset.height) || 420;
 
       // blurhash 占位
       const hash = el.dataset.blurhash;
@@ -97,8 +95,8 @@ const h = typeof height === "number" ? `${height}px` : height;
           photoSrc: image,
           videoSrc: video,
           container: el,
-          width,
-          height,
+          width: "100%",
+          height: "100%",
           autoplay: false,
           staticBadgeIcon: true,
           lazyLoadVideo: true,

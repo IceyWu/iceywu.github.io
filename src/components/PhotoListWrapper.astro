@@ -106,8 +106,6 @@ function getPhotoSrc(photo: PhotoData) {
       const image = el.dataset.image!;
       const video = el.dataset.video!;
       const fit = (el.dataset.fit || "cover") as any;
-      const width = Number(el.dataset.width) || 300;
-      const height = Number(el.dataset.height) || 300;
 
       const hash = el.dataset.blurhash;
       if (hash) {
@@ -124,8 +122,8 @@ function getPhotoSrc(photo: PhotoData) {
           photoSrc: image,
           videoSrc: video,
           container: el,
-          width,
-          height,
+          width: "100%",
+          height: "100%",
           autoplay: false,
           staticBadgeIcon: true,
           lazyLoadVideo: true,
