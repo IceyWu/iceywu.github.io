@@ -1,0 +1,40 @@
+---
+import Layout from "../layouts/Layout.astro";
+import DarkToggle from "../components/DarkToggle.astro";
+---
+
+<Layout title="Map | IceyWu" description="旅行地图 - 记录去过的地方和旅行足迹">
+  <!-- 顶部工具栏 -->
+  <div class="fixed top-4 right-4 z-50 flex items-center gap-4 rounded-full bg-white/60 px-4 py-2 shadow-sm ring-1 ring-black/5 backdrop-blur-lg md:top-6 md:right-6 dark:bg-black/60 dark:ring-white/10">
+    <a href="/" title="返回首页" class="font-sketch text-lg opacity-50 transition-opacity hover:opacity-100">← Home</a>
+    <DarkToggle />
+  </div>
+
+  <div class="fixed inset-0">
+    <iframe
+      id="map-iframe"
+      class="h-full w-full border-none"
+      title="旅行地图"
+    ></iframe>
+  </div>
+</Layout>
+
+<script>
+  const baseUrl = "https://lpalette.cn/map/mkIo6X4FryYKOcUzuz4Kew";
+  const iframe = document.getElementById("map-iframe") as HTMLIFrameElement;
+
+  // 初始化时根据当前主题设置 iframe src
+  function getTheme(): string {
+    return document.documentElement.classList.contains("dark") ? "dark" : "light";
+  }
+
+  iframe.src = `${baseUrl}?theme=${getTheme()}`;
+
+  // 监听主题切换，通知 iframe
+  document.addEventListener("theme-change", () => {
+    iframe.contentWindow?.postMessage(
+      { type: "theme-change", theme: getTheme() },
+      "*"
+    );
+  });
+</script>

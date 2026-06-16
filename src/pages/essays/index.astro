@@ -1,0 +1,104 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import DarkToggle from "../../components/DarkToggle.astro";
+
+const isDev = import.meta.env.DEV;
+
+const all = await getCollection("essays");
+const essays = all
+  .filter((e) => isDev || !e.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const fmtDate = (d: Date) =>
+  d.toLocaleDateString("zh-CN", { year: "numeric", month: "long", day: "numeric" });
+---
+
+<Layout title="Essays | IceyWu" description="随笔 - 旅行、阅读、电影与生活的片刻记录">
+  <!-- 顶部工具栏 -->
+  <div class="fixed top-4 right-4 z-50 flex items-center gap-4 rounded-full bg-white/60 px-4 py-2 shadow-sm ring-1 ring-black/5 backdrop-blur-lg md:top-6 md:right-6 dark:bg-black/60 dark:ring-white/10">
+    <a href="/" title="返回首页" class="font-sketch text-lg opacity-50 transition-opacity hover:opacity-100">← Home</a>
+    <DarkToggle />
+  </div>
+
+  <main class="mx-auto min-h-screen max-w-2xl px-6 py-20 md:py-28">
+    <!-- 标题 -->
+    <header class="mb-16 text-center md:mb-20">
+      <div class="relative inline-block">
+        <h1 class="font-sketch text-5xl opacity-95 md:text-6xl">Essays</h1>
+        <svg class="rough-line pointer-events-none absolute -bottom-2 left-0 h-3 w-full opacity-30" aria-hidden="true"></svg>
+      </div>
+      <p class="mt-5 font-sketch-cn text-base opacity-50">随手记下的片刻、远方与向内的回声。</p>
+    </header>
+
+    <!-- 随笔列表 -->
+    <div>
+      {
+        essays.map((essay, i) => (
+          <>
+            {i > 0 && (
+              <div class="my-14 flex justify-center opacity-25">
+                <svg class="rough-line h-3 w-24" aria-hidden="true"></svg>
+              </div>
+            )}
+
+            <article class="group">
+              <div class="mb-3 flex flex-wrap items-center gap-3 font-sketch text-xs opacity-40">
+                <time>{fmtDate(essay.data.date)}</time>
+                {essay.data.tags.map((tag) => (
+                  <span class="opacity-80">#{tag}</span>
+                ))}
+              </div>
+
+              <a href={`/essays/${essay.id}`} class="relative inline-block">
+                <h2 class="font-sketch text-2xl leading-snug opacity-90 transition-opacity group-hover:opacity-100 md:text-3xl">
+                  {essay.data.title}
+                </h2>
+                <svg class="rough-line pointer-events-none absolute -bottom-1.5 left-0 h-2.5 w-full opacity-0 transition-opacity group-hover:opacity-55" aria-hidden="true"></svg>
+              </a>
+
+              {essay.data.description && (
+                <p class="relative mt-4 pl-8 font-sketch-cn text-base italic leading-loose opacity-65 md:text-lg">
+                  <span class="absolute -top-2 left-0 font-sketch text-5xl leading-none opacity-15">“</span>
+                  {essay.data.description}
+                </p>
+              )}
+            </article>
+          </>
+        ))
+      }
+    </div>
+  </main>
+</Layout>
+
+<script>
+  import rough from "roughjs";
+
+  function drawLine(svg: SVGSVGElement, seed: number) {
+    const w = Math.round(svg.clientWidth);
+    const h = Math.round(svg.clientHeight) || 10;
+    if (!w) return;
+    svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+    svg.innerHTML = "";
+    const rc = rough.svg(svg);
+    const y = Math.round(h / 2);
+    svg.appendChild(
+      rc.line(2, y, w - 2, y, {
+        stroke: "currentColor",
+        strokeWidth: 1.5,
+        roughness: 2.4,
+        bowing: 3,
+        seed,
+      })
+    );
+  }
+
+  function init() {
+    document.querySelectorAll<SVGSVGElement>(".rough-line").forEach((svg, i) => {
+      drawLine(svg, i + 1);
+      new ResizeObserver(() => drawLine(svg, i + 1)).observe(svg);
+    });
+  }
+
+  requestAnimationFrame(() => requestAnimationFrame(init));
+</script>

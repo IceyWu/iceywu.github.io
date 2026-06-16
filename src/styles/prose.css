@@ -1,0 +1,155 @@
+.prose {
+  --prose-fg: 0, 0, 0;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: rgba(var(--prose-fg), 0.82);
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.dark .prose {
+  --prose-fg: 255, 255, 255;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+  font-family: var(--font-sketch);
+  font-weight: 600;
+  line-height: 1.25;
+  color: rgba(var(--prose-fg), 0.95);
+  margin: 2em 0 0.8em;
+}
+
+.prose h1 {
+  font-size: 2.4rem;
+  margin-top: 0;
+}
+.prose h2 {
+  font-size: 1.8rem;
+}
+.prose h3 {
+  font-size: 1.4rem;
+}
+.prose h4 {
+  font-size: 1.15rem;
+}
+
+.prose p {
+  margin: 1.1em 0;
+}
+
+.prose strong {
+  font-weight: 600;
+  color: rgba(var(--prose-fg), 0.95);
+}
+
+/* 正文链接：手绘虚线下划线 */
+.prose :not(h1, h2, h3, h4, h5) > a {
+  display: inline;
+  border-bottom: 1px dashed rgba(var(--prose-fg), 0.45);
+  text-decoration: none;
+  transition: border-bottom-color 0.3s ease;
+}
+.prose :not(h1, h2, h3, h4, h5) > a:hover {
+  border-bottom-color: rgba(var(--prose-fg), 0.8);
+}
+
+.prose ul,
+.prose ol {
+  margin: 1.1em 0;
+  padding-left: 1.4em;
+}
+.prose ul {
+  list-style: none;
+}
+.prose ul > li {
+  position: relative;
+}
+.prose ul > li::before {
+  content: "—";
+  position: absolute;
+  left: -1.4em;
+  opacity: 0.4;
+}
+.prose ol {
+  list-style: decimal;
+}
+.prose li {
+  margin: 0.4em 0;
+}
+
+.prose blockquote {
+  margin: 1.4em 0;
+  padding-left: 1em;
+  border-left: 2px solid rgba(var(--prose-fg), 0.4);
+  font-style: italic;
+  opacity: 0.8;
+}
+
+/* 行内代码 */
+.prose :not(pre) > code {
+  font-family: ui-monospace, "SFMono-Regular", "Menlo", monospace;
+  font-size: 0.85em;
+  padding: 0.1em 0.4em;
+  border-radius: 0.4em;
+  background-color: rgba(var(--prose-fg), 0.06);
+  border: 1px solid rgba(var(--prose-fg), 0.12);
+}
+
+/* 代码块 */
+.prose pre {
+  margin: 1.4em 0;
+  padding: 1.1em 1.3em;
+  border-radius: 0.6em;
+  border: 1px solid rgba(var(--prose-fg), 0.12);
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+.prose pre code {
+  font-family: ui-monospace, "SFMono-Regular", "Menlo", monospace;
+}
+
+/* Shiki 双主题：暗黑模式切换配色 */
+.dark .astro-code,
+.dark .astro-code span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+  text-decoration: var(--shiki-dark-text-decoration) !important;
+}
+
+.prose img {
+  margin: 1.4em auto;
+  border-radius: 0.5em;
+  max-width: 100%;
+}
+
+.prose hr {
+  margin: 2.4em 0;
+  border: none;
+  border-top: 1px dashed rgba(var(--prose-fg), 0.25);
+}
+
+.prose iframe {
+  margin: 1.4em 0;
+  border-radius: 0.5em;
+  border: 1px solid rgba(var(--prose-fg), 0.12);
+  max-width: 100%;
+}
+
+.prose table {
+  width: 100%;
+  margin: 1.4em 0;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.prose th,
+.prose td {
+  padding: 0.5em 0.8em;
+  border: 1px solid rgba(var(--prose-fg), 0.15);
+  text-align: left;
+}

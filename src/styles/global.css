@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+/* 基于 .dark class 的暗黑模式变体 */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* 手绘风格字体 */
+@theme {
+  --font-sketch: "Caveat", "Ma Shan Zheng", "ZCOOL XiaoWei", cursive;
+  --font-sketch-cn: "Ma Shan Zheng", "ZCOOL XiaoWei", "Caveat", cursive;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  /* 点阵纹理背景 - 浅色 */
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgZmlsbD0ibm9uZSIgdmlld0JveD0iMCAwIDMwIDMwIj4KICA8Y2lyY2xlIGN4PSIxNSIgY3k9IjE1IiByPSIxIiBmaWxsPSIjY2NjIi8+Cjwvc3ZnPg==");
+  background-repeat: repeat;
+  background-size: 30px 30px;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.dark body {
+  /* 点阵纹理背景 - 深色 */
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgZmlsbD0ibm9uZSIgdmlld0JveD0iMCAwIDMwIDMwIj4KICA8Y2lyY2xlIGN4PSIxNSIgY3k9IjE1IiByPSIxIiBmaWxsPSIjNDQ0Ii8+Cjwvc3ZnPg==");
+  background-size: 30px 30px;
+}
+
+/* 允许文本元素可被选中 */
+input,
+textarea,
+pre,
+code,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+a,
+li,
+td,
+th,
+[contenteditable="true"] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* 手绘描边动画 */
+.draw-path {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: draw 3s ease-out forwards;
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* 头像有机形状形变动画 */
+.animate-shape {
+  animation: shape 5s linear infinite;
+}
+
+@keyframes shape {
+  0%,
+  100% {
+    border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
+    transform: translate3d(0, 0, 0) rotateZ(0.01deg);
+  }
+  34% {
+    border-radius: 70% 30% 46% 54% / 30% 29% 71% 70%;
+    transform: translate3d(0, 5px, 0) rotateZ(0.01deg);
+  }
+  50% {
+    transform: translate3d(0, 0, 0) rotateZ(0.01deg);
+  }
+  67% {
+    border-radius: 100% 60% 60% 100% / 100% 100% 60% 60%;
+    transform: translate3d(0, -3px, 0) rotateZ(0.01deg);
+  }
+}
+
+/* 暗黑模式切换圆形揭示过渡 */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}

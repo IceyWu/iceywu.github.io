@@ -1,2 +1,5 @@
+overrides:
+  style-to-js: ^1.1.21
 onlyBuiltDependencies:
-  - better-sqlite3
+  - esbuild
+  - sharp

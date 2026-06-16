@@ -1,0 +1,165 @@
+---
+interface PhotoData {
+  sec_uid: string;
+  name: string;
+  url: string;
+  width: number;
+  height: number;
+  blurhash?: string;
+  created_at?: string;
+  updated_at?: string;
+  live_photo_video_url?: string;
+  live_photo_video?: string;
+}
+
+interface Props {
+  data?: string;
+  columns?: number;
+  gap?: number;
+  itemWidth?: number | string;
+  itemHeight?: number | string;
+  objectFit?: "cover" | "contain" | "fill" | "none" | "scale-down";
+}
+
+const {
+  data = "[]",
+  columns = 3,
+  gap = 16,
+  itemWidth = 300,
+  itemHeight = 300,
+  objectFit = "cover",
+} = Astro.props;
+
+let photos: PhotoData[] = [];
+try {
+  photos = JSON.parse(data);
+} catch (e) {
+  console.error("Failed to parse photo data:", e);
+}
+
+function getPhotoSrc(photo: PhotoData) {
+  return `${photo.url}?x-oss-process=image/resize,l_800/format,avif`;
+}
+---
+
+<div
+  class="photo-list not-prose"
+  style={`display:grid;grid-template-columns:repeat(${columns},1fr);gap:${gap}px`}
+>
+  {photos.map((photo) => {
+    const videoSrc = photo.live_photo_video_url || photo.live_photo_video || "";
+    const isLive = Boolean(videoSrc);
+    const src = getPhotoSrc(photo);
+
+    return isLive ? (
+      <div
+        class="photo-item"
+        data-live-photo
+        data-image={src}
+        data-video={videoSrc}
+        data-blurhash={photo.blurhash}
+        data-width={String(itemWidth)}
+        data-height={String(itemHeight)}
+        data-fit={objectFit}
+        style={`width:100%;aspect-ratio:${typeof itemWidth === 'number' && typeof itemHeight === 'number' ? itemWidth/itemHeight : '1'};position:relative;overflow:hidden;border-radius:8px`}
+      />
+    ) : (
+      <div class="photo-item" style={`width:100%;aspect-ratio:${typeof itemWidth === 'number' && typeof itemHeight === 'number' ? itemWidth/itemHeight : '1'};overflow:hidden;border-radius:8px`}>
+        <img
+          src={src}
+          alt={photo.name}
+          loading="lazy"
+          style={`width:100%;height:100%;object-fit:${objectFit};border-radius:8px`}
+        />
+      </div>
+    );
+  })}
+</div>
+
+<script>
+  import { LivePhotoViewer } from "live-photo";
+  import { decode } from "blurhash";
+
+  function blurhashToDataURL(hash: string, w = 32, h = 32): string | undefined {
+    try {
+      const pixels = decode(hash, w, h);
+      const canvas = document.createElement("canvas");
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return undefined;
+      const imgData = ctx.createImageData(w, h);
+      imgData.data.set(pixels);
+      ctx.putImageData(imgData, 0, 0);
+      return canvas.toDataURL();
+    } catch {
+      return undefined;
+    }
+  }
+
+  function initLivePhotos() {
+    const nodes = document.querySelectorAll<HTMLElement>(".photo-list [data-live-photo]");
+    nodes.forEach((el) => {
+      if (el.dataset.inited) return;
+      el.dataset.inited = "1";
+
+      const image = el.dataset.image!;
+      const video = el.dataset.video!;
+      const fit = (el.dataset.fit || "cover") as any;
+      const width = Number(el.dataset.width) || 300;
+      const height = Number(el.dataset.height) || 300;
+
+      const hash = el.dataset.blurhash;
+      if (hash) {
+        const url = blurhashToDataURL(hash);
+        if (url) {
+          const ph = document.createElement("div");
+          ph.style.cssText = `position:absolute;inset:0;background-image:url(${url});background-size:cover;filter:blur(10px);transform:scale(1.1)`;
+          el.appendChild(ph);
+        }
+      }
+
+      try {
+        new LivePhotoViewer({
+          photoSrc: image,
+          videoSrc: video,
+          container: el,
+          width,
+          height,
+          autoplay: false,
+          staticBadgeIcon: true,
+          lazyLoadVideo: true,
+          imageCustomization: {
+            styles: { objectFit: fit, borderRadius: "8px" },
+            attributes: { alt: "Live Photo", loading: "lazy" },
+          },
+          videoCustomization: {
+            styles: { objectFit: fit, borderRadius: "8px" },
+          },
+        });
+      } catch (e) {
+        console.error("LivePhoto 初始化失败:", e);
+      }
+    });
+  }
+
+  initLivePhotos();
+</script>
+
+<style>
+  .photo-list {
+    width: 100%;
+  }
+
+  @media (max-width: 1024px) {
+    .photo-list {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .photo-list {
+      grid-template-columns: repeat(1, 1fr) !important;
+    }
+  }
+</style>

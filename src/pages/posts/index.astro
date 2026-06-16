@@ -1,0 +1,126 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import DarkToggle from "../../components/DarkToggle.astro";
+
+const isDev = import.meta.env.DEV;
+
+const all = await getCollection("posts");
+const posts = all
+  .filter((p) => isDev || !p.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+function readingTime(body: string): number {
+  const cjk = (body.match(/[\u4e00-\u9fa5]/g) || []).length;
+  const words = body
+    .replace(/[\u4e00-\u9fa5]/g, " ")
+    .split(/\s+/)
+    .filter(Boolean).length;
+  return Math.max(1, Math.ceil((cjk + words) / 300));
+}
+
+const fmtDate = (d: Date) =>
+  d.toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" });
+---
+
+<Layout title="Posts | IceyWu" description="技术博客 - 分享前端开发、Vue、Nuxt、TypeScript 等技术文章">
+  <!-- 顶部工具栏 -->
+  <div class="fixed top-4 right-4 z-50 flex items-center gap-4 rounded-full bg-white/60 px-4 py-2 shadow-sm ring-1 ring-black/5 backdrop-blur-lg md:top-6 md:right-6 dark:bg-black/60 dark:ring-white/10">
+    <a href="/" title="返回首页" class="font-sketch text-lg opacity-50 transition-opacity hover:opacity-100">← Home</a>
+    <DarkToggle />
+  </div>
+
+  <main class="mx-auto min-h-screen max-w-4xl px-6 py-20 md:py-28">
+    <!-- 标题 -->
+    <header class="mb-16">
+      <div class="relative inline-block">
+        <h1 class="font-sketch text-5xl opacity-95 md:text-6xl">Posts</h1>
+        <svg class="absolute -bottom-2 left-0 h-4 w-full opacity-25" viewBox="0 0 200 12" preserveAspectRatio="none">
+          <path class="draw-path" d="M0 5 Q50 2, 100 6 T200 5" stroke="currentColor" stroke-width="1.2" fill="none"></path>
+          <path class="draw-path" d="M5 9 Q55 7, 105 10 T205 9" stroke="currentColor" stroke-width="0.6" fill="none" stroke-dasharray="3 2"></path>
+        </svg>
+      </div>
+      <p class="mt-4 font-sketch text-base opacity-50">
+        In the flow of time, seeking resonance with the soul.
+      </p>
+    </header>
+
+    <!-- 手绘卡片网格 -->
+    <ul class="grid grid-cols-1 gap-7 md:grid-cols-2">
+      {
+        posts.map((post, i) => (
+          <li>
+            <a
+              href={`/posts/${post.id}`}
+              class="rough-card group relative block h-full min-h-[10rem] p-7 transition-transform duration-300 hover:-translate-y-1"
+              data-seed={i + 1}
+            >
+              <!-- rough.js 手绘线框 -->
+              <svg class="rough-frame pointer-events-none absolute inset-0 h-full w-full" aria-hidden="true"></svg>
+
+              <div class="relative flex h-full flex-col">
+                <div class="mb-2 flex items-baseline justify-between gap-3">
+                  <span class="font-sketch text-3xl leading-none opacity-20">{String(i + 1).padStart(2, "0")}</span>
+                  <time class="font-sketch text-xs opacity-40">{fmtDate(post.data.date)}</time>
+                </div>
+
+                <h2 class="font-sketch text-xl leading-snug opacity-90 transition-opacity group-hover:opacity-100 md:text-2xl">
+                  {post.data.title}
+                </h2>
+
+                {post.data.description && (
+                  <p class="mt-2 line-clamp-2 font-sketch-cn text-sm leading-relaxed opacity-50">
+                    {post.data.description}
+                  </p>
+                )}
+
+                <div class="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 pt-4 font-sketch text-xs opacity-40">
+                  {post.data.tags.map((tag) => (
+                    <span>#{tag}</span>
+                  ))}
+                  <span class="ml-auto opacity-70">{readingTime(post.body ?? "")} min</span>
+                </div>
+              </div>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </main>
+</Layout>
+
+<script>
+  import rough from "roughjs";
+
+  function drawFrame(card: HTMLElement) {
+    const svg = card.querySelector<SVGSVGElement>(".rough-frame");
+    if (!svg) return;
+    const w = Math.round(card.clientWidth);
+    const h = Math.round(card.clientHeight);
+    if (w === 0 || h === 0) return;
+    svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+    svg.innerHTML = "";
+    const rc = rough.svg(svg);
+    const seed = Number(card.dataset.seed) || 1;
+    const node = rc.rectangle(5, 5, w - 10, h - 10, {
+      stroke: "currentColor",
+      strokeWidth: 1.4,
+      roughness: 2.2,
+      bowing: 2,
+      seed,
+    });
+    svg.appendChild(node);
+  }
+
+  function initRoughCards() {
+    const cards = document.querySelectorAll<HTMLElement>(".rough-card");
+    cards.forEach((card) => {
+      drawFrame(card);
+      const ro = new ResizeObserver(() => drawFrame(card));
+      ro.observe(card);
+    });
+  }
+
+  // 等字体/布局稳定后再绘制，避免尺寸跳动
+  requestAnimationFrame(() => requestAnimationFrame(initRoughCards));
+</script>

@@ -1,0 +1,143 @@
+---
+interface Props {
+  languageStats?: Record<string, number>;
+}
+const { languageStats = {} } = Astro.props;
+---
+
+<div
+  id="tech-constellation"
+  data-stats={JSON.stringify(languageStats)}
+  class="relative mx-auto aspect-square w-full max-w-72 select-none md:max-w-[22rem]"
+>
+</div>
+
+<script>
+  interface Point3D {
+    x: number;
+    y: number;
+    z: number;
+  }
+
+  const container = document.getElementById("tech-constellation");
+  if (container) {
+    const stats: Record<string, number> = JSON.parse(
+      container.dataset.stats || "{}"
+    );
+
+    const total = Object.values(stats).reduce((s, v) => s + v, 0);
+    const languages = total
+      ? Object.entries(stats)
+          .sort((a, b) => b[1] - a[1])
+          .map(([name, bytes]) => ({
+            name,
+            pct: Math.round((bytes / total) * 100),
+          }))
+      : [];
+
+    if (languages.length) {
+      const golden = (1 + Math.sqrt(5)) / 2;
+      let points: Point3D[] = languages.map((_, i) => {
+        const n = languages.length;
+        const theta = Math.acos(1 - (2 * (i + 0.5)) / n);
+        const phi = (2 * Math.PI * i) / golden;
+        return {
+          x: Math.sin(theta) * Math.cos(phi),
+          y: Math.sin(theta) * Math.sin(phi),
+          z: Math.cos(theta),
+        };
+      });
+
+      // 预先创建 DOM 节点
+      const nodes = languages.map((lang) => {
+        const wrap = document.createElement("div");
+        wrap.className =
+          "absolute flex flex-col items-center cursor-default";
+        const circle = document.createElement("div");
+        circle.className =
+          "flex items-center justify-center rounded-full border border-black/10 bg-black/3 transition-colors duration-300 dark:border-white/15 dark:bg-white/5";
+        const abbr = document.createElement("span");
+        abbr.className = "font-sketch";
+        abbr.textContent = lang.name.slice(0, 2);
+        circle.appendChild(abbr);
+        const label = document.createElement("span");
+        label.className =
+          "mt-0.5 font-sketch text-[9px] leading-tight whitespace-nowrap md:text-[10px]";
+        label.textContent = lang.name;
+        const pct = document.createElement("span");
+        pct.className = "font-sketch text-[7px] leading-tight md:text-[8px]";
+        pct.textContent = `${lang.pct}%`;
+        wrap.append(circle, label, pct);
+        container.appendChild(wrap);
+        return { wrap, circle, abbr };
+      });
+
+      const maxPct = languages[0].pct;
+      let hovering = false;
+      let offX = 0;
+      let offY = 0;
+
+      function rotX(p: Point3D, a: number): Point3D {
+        const c = Math.cos(a);
+        const s = Math.sin(a);
+        return { x: p.x, y: p.y * c - p.z * s, z: p.y * s + p.z * c };
+      }
+      function rotY(p: Point3D, a: number): Point3D {
+        const c = Math.cos(a);
+        const s = Math.sin(a);
+        return { x: p.x * c - p.z * s, y: p.y, z: p.x * s + p.z * c };
+      }
+
+      function frame() {
+        const sx = hovering ? offX * 0.00004 : 0.003;
+        const sy = hovering ? offY * 0.00004 : 0.001;
+        points = points.map((p) => rotX(rotY(p, sx), sy));
+
+        languages.forEach((lang, i) => {
+          const p = points[i];
+          const node = nodes[i];
+          const depth = (p.z + 1.5) / 2.5;
+          const pctR = lang.pct / Math.max(maxPct, 1);
+          const base = 48 + pctR * 28;
+          const scale = Math.max(0.55, depth);
+          const opacity = Math.max(0.25, (p.z + 1.2) / 2.2);
+          const size = Math.round(base * Math.max(0.65, depth));
+          const x = p.x * 40 + 50;
+          const y = p.y * 38 + 48;
+
+          node.wrap.style.left = `${x}%`;
+          node.wrap.style.top = `${y}%`;
+          node.wrap.style.transform = `translate(-50%,-50%) scale(${scale.toFixed(3)})`;
+          node.wrap.style.zIndex = String(Math.round((p.z + 1) * 50));
+          node.circle.style.width = `${size}px`;
+          node.circle.style.height = `${size}px`;
+          node.circle.style.opacity = String(opacity);
+          node.abbr.style.fontSize = `${Math.round(size * 0.36)}px`;
+        });
+
+        requestAnimationFrame(frame);
+      }
+
+      function onMove(e: MouseEvent | TouchEvent) {
+        const rect = container!.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const pt = "touches" in e ? e.touches[0] : e;
+        if (!pt) return;
+        offX = pt.clientX - cx;
+        offY = pt.clientY - cy;
+      }
+
+      container.addEventListener("mouseenter", () => (hovering = true));
+      container.addEventListener("mouseleave", () => {
+        hovering = false;
+        offX = 0;
+        offY = 0;
+      });
+      container.addEventListener("mousemove", onMove);
+      container.addEventListener("touchmove", onMove, { passive: true });
+
+      requestAnimationFrame(frame);
+    }
+  }
+</script>

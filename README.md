@@ -1,3 +1,3 @@
 # Hi, there 🥳
 
-This is my personal website, build with Nuxt4.
+This is my personal website, build with Astro.

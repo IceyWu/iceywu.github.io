@@ -1,0 +1,120 @@
+---
+interface Props {
+  imageSrc: string;
+  videoSrc?: string;
+  blurhash?: string;
+  alt?: string;
+  width?: number | string;
+  height?: number | string;
+  objectFit?: "cover" | "contain" | "fill" | "none" | "scale-down";
+}
+
+const {
+  imageSrc,
+  videoSrc,
+  blurhash,
+  alt = "Photo",
+  width = 320,
+  height = 420,
+  objectFit = "cover",
+} = Astro.props;
+
+const isLive = Boolean(videoSrc);
+const w = typeof width === "number" ? `${width}px` : width;
+const h = typeof height === "number" ? `${height}px` : height;
+---
+
+{
+  isLive ? (
+    <div
+      class="live-photo not-prose"
+      data-live-photo
+      data-image={imageSrc}
+      data-video={videoSrc}
+      data-blurhash={blurhash}
+      data-width={String(width)}
+      data-height={String(height)}
+      data-fit={objectFit}
+      style={`width:${w};height:${h};position:relative;overflow:hidden;border-radius:8px`}
+    />
+  ) : (
+    <img
+      src={imageSrc}
+      alt={alt}
+      loading="lazy"
+      class="not-prose"
+      style={`width:${w};height:${h};object-fit:${objectFit};border-radius:8px`}
+    />
+  )
+}
+
+<script>
+  import { LivePhotoViewer } from "live-photo";
+  import { decode } from "blurhash";
+
+  function blurhashToDataURL(hash: string, w = 32, h = 32): string | undefined {
+    try {
+      const pixels = decode(hash, w, h);
+      const canvas = document.createElement("canvas");
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return undefined;
+      const imgData = ctx.createImageData(w, h);
+      imgData.data.set(pixels);
+      ctx.putImageData(imgData, 0, 0);
+      return canvas.toDataURL();
+    } catch {
+      return undefined;
+    }
+  }
+
+  function initLivePhotos() {
+    const nodes = document.querySelectorAll<HTMLElement>("[data-live-photo]");
+    nodes.forEach((el) => {
+      if (el.dataset.inited) return;
+      el.dataset.inited = "1";
+
+      const image = el.dataset.image!;
+      const video = el.dataset.video!;
+      const fit = (el.dataset.fit || "cover") as any;
+      const width = Number(el.dataset.width) || 320;
+      const height = Number(el.dataset.height) || 420;
+
+      // blurhash 占位
+      const hash = el.dataset.blurhash;
+      if (hash) {
+        const url = blurhashToDataURL(hash);
+        if (url) {
+          const ph = document.createElement("div");
+          ph.style.cssText = `position:absolute;inset:0;background-image:url(${url});background-size:cover;filter:blur(10px);transform:scale(1.1)`;
+          el.appendChild(ph);
+        }
+      }
+
+      try {
+        new LivePhotoViewer({
+          photoSrc: image,
+          videoSrc: video,
+          container: el,
+          width,
+          height,
+          autoplay: false,
+          staticBadgeIcon: true,
+          lazyLoadVideo: true,
+          imageCustomization: {
+            styles: { objectFit: fit, borderRadius: "8px" },
+            attributes: { alt: "Live Photo", loading: "lazy" },
+          },
+          videoCustomization: {
+            styles: { objectFit: fit, borderRadius: "8px" },
+          },
+        });
+      } catch (e) {
+        console.error("LivePhoto 初始化失败:", e);
+      }
+    });
+  }
+
+  initLivePhotos();
+</script>

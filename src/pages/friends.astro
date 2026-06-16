@@ -1,0 +1,143 @@
+---
+import Layout from "../layouts/Layout.astro";
+import DarkToggle from "../components/DarkToggle.astro";
+
+interface FriendLink {
+  name: string;
+  url: string;
+  avatar: string;
+  desc: string;
+}
+
+const friends: FriendLink[] = [
+  {
+    name: "Giovan",
+    url: "https://www.giovan.cn",
+    avatar: "https://serve.giovan.cn/uploads/1769860396165-143ef0bb240aa25d.jpeg",
+    desc: "万事顺意",
+  },
+];
+---
+
+<Layout title="Friends | IceyWu" description="友情链接 - 一些有趣的朋友们">
+  <div class="fixed top-4 right-4 z-50 flex items-center gap-4 rounded-full bg-white/60 px-4 py-2 shadow-sm ring-1 ring-black/5 backdrop-blur-lg md:top-6 md:right-6 dark:bg-black/60 dark:ring-white/10">
+    <a href="/" class="font-sketch text-lg opacity-50 transition-opacity hover:opacity-100">← Home</a>
+    <DarkToggle />
+  </div>
+
+  <div class="mx-auto max-w-2xl px-6 py-20 md:py-28">
+    <!-- Header -->
+    <header class="mb-16">
+      <div class="relative inline-block pb-4">
+        <h1 class="font-sketch text-4xl opacity-90 md:text-5xl">Friends</h1>
+        <svg class="rough-underline pointer-events-none absolute bottom-0 left-0 h-3 w-full" aria-hidden="true"></svg>
+      </div>
+      <p class="mt-4 font-sketch-cn text-sm opacity-40 md:text-base">
+        一些有趣的朋友们，链接彼此的数字花园。
+      </p>
+    </header>
+
+    <!-- Friends grid -->
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+      {friends.map((friend, index) => (
+        <a
+          href={friend.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="friend-card group relative flex items-center gap-4 border border-dashed border-current/15 p-5 no-underline transition-all hover:border-current/30 hover:bg-black/[0.02] dark:hover:bg-white/[0.02]"
+          style={`animation-delay: ${index * 0.08}s`}
+        >
+          {/* Avatar */}
+          <img
+            src={friend.avatar}
+            alt={friend.name}
+            width="48"
+            height="48"
+            class="h-12 w-12 shrink-0 rounded-full border border-dashed border-current/20 object-cover p-0.5 grayscale-[20%] transition-all group-hover:border-current/40 group-hover:grayscale-0"
+            loading="lazy"
+          />
+
+          {/* Info */}
+          <div class="min-w-0 flex-1">
+            <h3 class="flex items-center gap-1.5 font-sketch text-lg opacity-80 group-hover:opacity-100">
+              {friend.name}
+              <svg class="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-50" viewBox="0 0 12 12" fill="none">
+                <path d="M3 3 L9 3 L9 9 M9 3 L3 9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+              </svg>
+            </h3>
+            <p class="truncate font-sketch-cn text-sm opacity-40">{friend.desc}</p>
+          </div>
+
+          {/* Decorative curve */}
+          <svg class="absolute bottom-0 right-0 h-5 w-20 opacity-[0.08]" viewBox="0 0 120 20">
+            <path d="M5,15 Q30,5 60,10 T115,8" fill="none" stroke="currentColor" stroke-width="0.8" />
+          </svg>
+        </a>
+      ))}
+    </div>
+
+    <!-- Apply section -->
+    <div class="mt-14 text-center">
+      <svg class="mx-auto mb-5 h-3 w-full opacity-10" viewBox="0 0 200 12" preserveAspectRatio="none">
+        <path d="M0 6 Q50 3, 100 6 T200 6" stroke="currentColor" stroke-width="0.8" fill="none" stroke-dasharray="4 3" />
+      </svg>
+      <p class="font-sketch-cn text-sm opacity-45">
+        想要交换友链？欢迎通过
+        <a
+          href="https://github.com/iceywu"
+          target="_blank"
+          rel="noopener"
+          class="inline-flex items-center gap-0.5 border-b border-dashed border-current opacity-80 transition-opacity hover:opacity-100"
+        >
+          GitHub
+          <svg class="h-2.5 w-2.5 opacity-50" viewBox="0 0 12 12" fill="none">
+            <path d="M3 3 L9 3 L9 9 M9 3 L3 9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+          </svg>
+        </a>
+        联系我 ✉
+      </p>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .friend-card {
+    animation: fadeIn 0.5s ease-out both;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<script>
+  import rough from "roughjs";
+
+  function drawUnderline(svg: SVGSVGElement, seed: number) {
+    const w = Math.round(svg.clientWidth);
+    const h = Math.round(svg.clientHeight) || 12;
+    if (!w) return;
+    svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+    svg.innerHTML = "";
+    const rc = rough.svg(svg);
+    const y = Math.round(h / 2);
+    svg.appendChild(
+      rc.line(2, y, w - 2, y, {
+        stroke: "currentColor",
+        strokeWidth: 1.5,
+        roughness: 2.4,
+        bowing: 3,
+        seed,
+      })
+    );
+  }
+
+  function init() {
+    document.querySelectorAll<SVGSVGElement>(".rough-underline").forEach((svg, i) => {
+      drawUnderline(svg, i + 77);
+      new ResizeObserver(() => drawUnderline(svg, i + 77)).observe(svg);
+    });
+  }
+
+  requestAnimationFrame(() => requestAnimationFrame(init));
+</script>
