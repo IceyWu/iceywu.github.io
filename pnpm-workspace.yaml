@@ -1,5 +1,5 @@
-overrides:
-  style-to-js: ^1.1.21
-onlyBuiltDependencies:
-  - esbuild
-  - sharp
+allowBuilds:
+  esbuild: false
+  sharp: false
+minimumReleaseAgeExclude:
+  - astro@6.4.7
