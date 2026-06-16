@@ -51,6 +51,16 @@ function getPhotoSrc(photo: PhotoData) {
     const isLive = Boolean(videoSrc);
     const src = getPhotoSrc(photo);
 
+    // 每张图按自身数据的宽高比；缺失时回退到 itemWidth/itemHeight
+    const fallback =
+      typeof itemWidth === "number" && typeof itemHeight === "number"
+        ? itemWidth / itemHeight
+        : 1;
+    const aspect =
+      photo.width > 0 && photo.height > 0
+        ? photo.width / photo.height
+        : fallback;
+
     return isLive ? (
       <div
         class="photo-item"
@@ -58,13 +68,11 @@ function getPhotoSrc(photo: PhotoData) {
         data-image={src}
         data-video={videoSrc}
         data-blurhash={photo.blurhash}
-        data-width={String(itemWidth)}
-        data-height={String(itemHeight)}
         data-fit={objectFit}
-        style={`width:100%;aspect-ratio:${typeof itemWidth === 'number' && typeof itemHeight === 'number' ? itemWidth/itemHeight : '1'};position:relative;overflow:hidden;border-radius:8px`}
+        style={`width:100%;aspect-ratio:${aspect};position:relative;overflow:hidden;border-radius:8px`}
       />
     ) : (
-      <div class="photo-item" style={`width:100%;aspect-ratio:${typeof itemWidth === 'number' && typeof itemHeight === 'number' ? itemWidth/itemHeight : '1'};overflow:hidden;border-radius:8px`}>
+      <div class="photo-item" style={`width:100%;aspect-ratio:${aspect};overflow:hidden;border-radius:8px`}>
         <img
           src={src}
           alt={photo.name}
