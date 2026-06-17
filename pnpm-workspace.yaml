@@ -3,3 +3,4 @@ allowBuilds:
   sharp: false
 minimumReleaseAgeExclude:
   - astro@6.4.7
+  - live-photo@0.1.0
