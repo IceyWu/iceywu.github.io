@@ -98,8 +98,11 @@ const h = typeof height === "number" ? `${height}px` : height;
           width: "100%",
           height: "100%",
           autoplay: false,
-          staticBadgeIcon: true,
           lazyLoadVideo: true,
+          // 持久化：偏好(autoplay/muted)存入 localStorage 并跨同源标签页同步
+          storageKey: "live-photo-prefs",
+          // 同页面多个实例实时共享偏好
+          syncGroup: "live-photo",
           imageCustomization: {
             styles: { objectFit: fit, borderRadius: "8px" },
             attributes: { alt: "Live Photo", loading: "lazy" },

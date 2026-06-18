@@ -22,9 +22,9 @@
     "@astrojs/mdx": "^6.0.3",
     "@astrojs/sitemap": "^3.7.3",
     "@tailwindcss/vite": "^4.3.1",
-    "astro": "^6.4.7",
+    "astro": "^6.4.8",
     "blurhash": "^2.0.5",
-    "live-photo": "^0.1.0",
+    "live-photo": "^0.2.0",
     "roughjs": "^4.6.6",
     "svg-animate-web": "^0.1.0",
     "tailwindcss": "^4.3.1"
