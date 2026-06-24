@@ -6,3 +6,5 @@ minimumReleaseAgeExclude:
   - live-photo@0.1.0
   - astro@6.4.8
   - live-photo@0.2.0
+  - '@astrojs/markdown-satteri@0.3.2'
+  - astro@7.0.2
