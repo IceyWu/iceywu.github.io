@@ -128,6 +128,13 @@
   max-width: 100%;
 }
 
+.prose video:not(.not-prose *) {
+  margin: 1.4em auto;
+  border-radius: 0.5em;
+  max-width: 100%;
+  display: block;
+}
+
 .prose hr {
   margin: 2.4em 0;
   border: none;

@@ -1,0 +1,152 @@
+---
+export interface Props {
+  /** 视频源地址（支持 .mp4 / .webm 等） */
+  src: string;
+  /** 封面图（可选） */
+  poster?: string;
+  /** 宽高比，如 16/9、4/3、21/9。不传则使用原始比例 */
+  aspectRatio?: number;
+  /** 是否自动播放（静音模式下才可自动播放），默认 false */
+  autoplay?: boolean;
+  /** 是否循环播放，默认 false */
+  loop?: boolean;
+  /** 是否静音播放，默认 false */
+  muted?: boolean;
+  /** 是否显示原生控件，默认 true */
+  controls?: boolean;
+  /** 是否在视口内才加载（懒加载），默认 true */
+  lazyLoad?: boolean;
+  /**
+   * 是否显示手绘风格外框。
+   * 如果视频已在 prose 正文中，建议关闭以保持排版一致。
+   */
+  sketchFrame?: boolean;
+}
+
+const {
+  src,
+  poster,
+  aspectRatio,
+  autoplay = false,
+  loop = false,
+  muted = false,
+  controls = true,
+  lazyLoad = true,
+  sketchFrame = false,
+} = Astro.props;
+
+const loadingAttr = lazyLoad ? "lazy" : undefined;
+---
+
+<div
+  class="video-wrapper not-prose"
+  class:sketch-frame={sketchFrame}
+  style={aspectRatio != null ? `aspect-ratio:${aspectRatio}` : undefined}
+>
+  {
+    sketchFrame && (
+      <svg
+        class="rough-video-frame pointer-events-none absolute inset-0 z-10 h-full w-full"
+        aria-hidden="true"
+      />
+    )
+  }
+  <video
+    src={src}
+    poster={poster || undefined}
+    controls={controls}
+    autoplay={autoplay}
+    loop={loop}
+    muted={muted || autoplay}
+    loading={loadingAttr}
+    playsinline
+    preload={lazyLoad ? "none" : "metadata"}
+    style={`width:100%;height:100%;display:block;border-radius:${sketchFrame ? "0" : "8px"};object-fit:contain`}
+  >
+    <p>
+      您的浏览器不支持 HTML5 视频播放。
+      <a href={src}>点击此处下载视频</a>
+    </p>
+  </video>
+</div>
+
+<style>
+  .video-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #000;
+    margin: 1.4em 0;
+  }
+
+  .video-wrapper.sketch-frame {
+    border-radius: 0;
+    background: transparent;
+    padding: 8px;
+  }
+
+  .video-wrapper video {
+    outline: none;
+  }
+
+  /* 手绘外框 */
+  .sketch-frame .rough-video-frame {
+    display: block;
+  }
+</style>
+
+<script>
+  function drawRoughVideoFrames() {
+    const frames =
+      document.querySelectorAll<SVGSVGElement>(".rough-video-frame");
+    frames.forEach((svg) => {
+      if (svg.dataset.drawn) return;
+      svg.dataset.drawn = "1";
+
+      import("roughjs").then(({ default: rough }) => {
+        const rc = rough.svg(svg);
+        const rect = svg.parentElement!.getBoundingClientRect();
+        const w = rect.width;
+        const h = rect.height;
+
+        const node = rc.rectangle(2, 2, w - 4, h - 4, {
+          roughness: 3,
+          strokeWidth: 2,
+          stroke: "var(--prose-fg, #333)",
+          fill: "none",
+          bowing: 2,
+          hachureAngle: 60,
+        });
+        svg.appendChild(node);
+
+        // 左下角小三角（播放图标暗示）
+        const cx = w * 0.5;
+        const cy = h * 0.5;
+        const size = Math.min(w, h) * 0.18;
+        const triangle = rc.linearPath(
+          [
+            [cx - size * 0.4, cy - size * 0.5],
+            [cx + size * 0.6, cy],
+            [cx - size * 0.4, cy + size * 0.5],
+          ],
+          {
+            roughness: 2,
+            strokeWidth: 1.5,
+            stroke: "var(--prose-fg, #333)",
+            fill: "rgba(var(--prose-fg, 0,0,0), 0.1)",
+            bowing: 1.5,
+          },
+        );
+        svg.appendChild(triangle);
+      });
+    });
+  }
+
+  // 初始化 & 监听窗口变化重绘
+  drawRoughVideoFrames();
+  window.addEventListener("resize", drawRoughVideoFrames);
+
+  // Astro 页面切换时重新绘制
+  document.addEventListener("astro:page-load", drawRoughVideoFrames);
+</script>

@@ -1,0 +1,148 @@
+---
+interface VideoData {
+  sec_uid: string;
+  name: string;
+  url: string;
+  width: number;
+  height: number;
+  blurhash?: string;
+  created_at?: string;
+  updated_at?: string;
+  live_photo_video_url?: string;
+}
+
+interface Props {
+  data?: VideoData[];
+  /** 桌面端列数，默认 2。实际列数 = min(columns, 视频数) */
+  columns?: number;
+  /**
+   * 统一宽高比（宽/高），例如 16/9=1.778、4/3=1.333。
+   * 不传则每个视频保留自身原始比例。
+   */
+  aspectRatio?: number;
+  /** 静音播放，默认 true */
+  muted?: boolean;
+  /** 循环播放，默认 false */
+  loop?: boolean;
+}
+
+const {
+  data = [],
+  columns = 2,
+  aspectRatio,
+  muted = true,
+  loop = false,
+} = Astro.props;
+
+const GAP = 16;
+
+const videos: VideoData[] = Array.isArray(data) ? data : [];
+const actualCols = Math.max(1, Math.min(columns, videos.length));
+
+/** 通过 OSS 视频截帧拼接封面图 URL */
+function getVideoPoster(url: string): string {
+  return `${url}?x-oss-process=video/snapshot,t_1000,f_jpg,w_800`;
+}
+---
+
+<div
+  class="video-list not-prose"
+  style={`display:grid;grid-template-columns:repeat(${actualCols},1fr);gap:${GAP}px`}
+>
+  {
+    videos.map((video) => {
+      const aspect =
+        aspectRatio != null
+          ? aspectRatio
+          : video.width > 0 && video.height > 0
+            ? video.width / video.height
+            : 16 / 9;
+
+      return (
+        <div
+          class="video-item"
+          data-video-src={video.url}
+          data-blurhash={video.blurhash}
+          data-width={video.width}
+          data-height={video.height}
+          data-name={video.name}
+          style={`width:100%;aspect-ratio:${aspect};position:relative;overflow:hidden;border-radius:8px;background:#000`}
+        >
+          <video
+            src={video.url}
+            poster={getVideoPoster(video.url)}
+            controls
+            muted={muted}
+            loop={loop}
+            playsinline
+            preload="none"
+            style="width:100%;height:100%;display:block;object-fit:contain"
+          >
+            <p>您的浏览器不支持 HTML5 视频播放。</p>
+          </video>
+        </div>
+      );
+    })
+  }
+</div>
+
+<script>
+  import { decode } from "blurhash";
+
+  function blurhashToDataURL(hash: string, w = 32, h = 32): string | undefined {
+    try {
+      const pixels = decode(hash, w, h);
+      const canvas = document.createElement("canvas");
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return undefined;
+      const imgData = ctx.createImageData(w, h);
+      imgData.data.set(pixels);
+      ctx.putImageData(imgData, 0, 0);
+      return canvas.toDataURL();
+    } catch {
+      return undefined;
+    }
+  }
+
+  function initVideoPlaceholders() {
+    const items = document.querySelectorAll<HTMLElement>(
+      ".video-list .video-item",
+    );
+    items.forEach((el) => {
+      if (el.dataset.placeholderInited) return;
+      el.dataset.placeholderInited = "1";
+
+      const hash = el.dataset.blurhash;
+      if (!hash) return;
+
+      const url = blurhashToDataURL(hash);
+      if (!url) return;
+
+      const ph = document.createElement("div");
+      ph.style.cssText =
+        "position:absolute;inset:0;background-size:cover;background-position:center;filter:blur(20px);transform:scale(1.1);z-index:0;transition:opacity 0.4s";
+      ph.style.backgroundImage = `url(${url})`;
+      el.insertBefore(ph, el.firstChild);
+
+      // 视频加载后淡出模糊占位
+      const video = el.querySelector("video");
+      if (video) {
+        video.style.position = "relative";
+        video.style.zIndex = "1";
+        video.addEventListener(
+          "loadeddata",
+          () => {
+            ph.style.opacity = "0";
+            setTimeout(() => ph.remove(), 500);
+          },
+          { once: true },
+        );
+      }
+    });
+  }
+
+  initVideoPlaceholders();
+  document.addEventListener("astro:page-load", initVideoPlaceholders);
+</script>
