@@ -1,4 +1,4 @@
----
+﻿---
 interface VideoData {
   sec_uid: string;
   name: string;
@@ -13,16 +13,9 @@ interface VideoData {
 
 interface Props {
   data?: VideoData[];
-  /** 桌面端列数，默认 2。实际列数 = min(columns, 视频数) */
   columns?: number;
-  /**
-   * 统一宽高比（宽/高），例如 16/9=1.778、4/3=1.333。
-   * 不传则每个视频保留自身原始比例。
-   */
   aspectRatio?: number;
-  /** 静音播放，默认 true */
   muted?: boolean;
-  /** 循环播放，默认 false */
   loop?: boolean;
 }
 
@@ -33,13 +26,10 @@ const {
   muted = true,
   loop = false,
 } = Astro.props;
-
 const GAP = 16;
-
 const videos: VideoData[] = Array.isArray(data) ? data : [];
 const actualCols = Math.max(1, Math.min(columns, videos.length));
 
-/** 通过 OSS 视频截帧拼接封面图 URL */
 function getVideoPoster(url: string): string {
   return `${url}?x-oss-process=video/snapshot,t_1000,f_jpg,w_800`;
 }
@@ -50,14 +40,13 @@ function getVideoPoster(url: string): string {
   style={`display:grid;grid-template-columns:repeat(${actualCols},1fr);gap:${GAP}px`}
 >
   {
-    videos.map((video) => {
+    videos.map((video, i) => {
       const aspect =
         aspectRatio != null
           ? aspectRatio
           : video.width > 0 && video.height > 0
             ? video.width / video.height
             : 16 / 9;
-
       return (
         <div
           class="video-item"
@@ -71,7 +60,6 @@ function getVideoPoster(url: string): string {
           <video
             src={video.url}
             poster={getVideoPoster(video.url)}
-            controls
             muted={muted}
             loop={loop}
             playsinline
@@ -80,14 +68,273 @@ function getVideoPoster(url: string): string {
           >
             <p>您的浏览器不支持 HTML5 视频播放。</p>
           </video>
+
+          <div class="big-play-btn" aria-hidden="true">
+            <svg
+              class="big-play-svg"
+              viewBox="0 0 64 64"
+              width="64"
+              height="64"
+            >
+              <circle
+                cx="32"
+                cy="32"
+                r="28"
+                fill="rgba(0,0,0,0.35)"
+                stroke="rgba(255,255,255,0.85)"
+                stroke-width="1.5"
+              />
+              <polygon
+                points="28,22 44,32 28,42"
+                fill="rgba(255,255,255,0.9)"
+              />
+            </svg>
+          </div>
+
+          <div class="video-controls">
+            <div class="controls-row">
+              <button
+                class="ctrl-btn play-pause-btn"
+                type="button"
+                aria-label="播放"
+              >
+                <svg
+                  class="ctrl-icon play-icon"
+                  viewBox="0 0 24 24"
+                  width="22"
+                  height="22"
+                >
+                  <polygon
+                    points="7,4 7,20 19,12"
+                    fill="rgba(255,255,255,0.85)"
+                  />
+                </svg>
+                <svg
+                  class="ctrl-icon pause-icon"
+                  viewBox="0 0 24 24"
+                  width="22"
+                  height="22"
+                  style="display:none"
+                >
+                  <rect
+                    x="6"
+                    y="4"
+                    width="4"
+                    height="16"
+                    fill="rgba(255,255,255,0.85)"
+                  />
+                  <rect
+                    x="14"
+                    y="4"
+                    width="4"
+                    height="16"
+                    fill="rgba(255,255,255,0.85)"
+                  />
+                </svg>
+              </button>
+
+              <div class="progress-track">
+                <svg class="progress-svg" viewBox="0 0 100 40" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible">
+                  <defs>
+                    <clipPath id={`pb-clip-${i}`}><rect x="0" y="0" width="0" height="40"/></clipPath>
+                  </defs>
+                  <g clip-path={`url(#pb-clip-${i})`}>
+                    <line x1="0" y1="20" x2="100" y2="20" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+                  </g>
+                  <polygon class="progress-thumb-rough" points="0,13 7,20 0,27 -7,20" fill="rgba(255,255,255,0.8)" stroke="#fff" stroke-width="1"/>
+                </svg>
+              </div>
+
+              <span class="time-display">0:00 / 0:00</span>
+
+              <button
+                class="ctrl-btn mute-btn"
+                type="button"
+                aria-label="静音切换"
+              >
+                <svg
+                  class="ctrl-icon volume-icon"
+                  viewBox="0 0 24 24"
+                  width="22"
+                  height="22"
+                >
+                  <polygon
+                    points="3,8 7,8 11,4 11,20 7,16 3,16"
+                    fill="rgba(255,255,255,0.85)"
+                  />
+                  <path
+                    d="M15,9 Q18,12 15,15"
+                    fill="none"
+                    stroke="rgba(255,255,255,0.85)"
+                    stroke-width="1.2"
+                  />
+                  <path
+                    d="M19,7 Q22,12 19,17"
+                    fill="none"
+                    stroke="rgba(255,255,255,0.85)"
+                    stroke-width="1.2"
+                  />
+                </svg>
+                <svg
+                  class="ctrl-icon muted-icon"
+                  viewBox="0 0 24 24"
+                  width="22"
+                  height="22"
+                  style="display:none"
+                >
+                  <polygon
+                    points="3,8 7,8 11,4 11,20 7,16 3,16"
+                    fill="rgba(255,255,255,0.85)"
+                  />
+                  <line
+                    x1="17"
+                    y1="9"
+                    x2="21"
+                    y2="15"
+                    stroke="#f66"
+                    stroke-width="2"
+                  />
+                  <line
+                    x1="21"
+                    y1="9"
+                    x2="17"
+                    y2="15"
+                    stroke="#f66"
+                    stroke-width="2"
+                  />
+                </svg>
+              </button>
+
+              <button
+                class="ctrl-btn fullscreen-btn"
+                type="button"
+                aria-label="全屏"
+              >
+                <svg
+                  class="ctrl-icon fs-icon"
+                  viewBox="0 0 24 24"
+                  width="22"
+                  height="22"
+                >
+                  <polyline
+                    points="5,5 14,5 14,8 8,8 8,14 5,14"
+    drawProgressBars();
+                    fill="none"
+                    stroke="rgba(255,255,255,0.85)"
+                    stroke-width="1.6"
+                  />
+                  <polyline
+                    points="19,19 10,19 10,16 16,16 16,10 19,10"
+                    fill="none"
+                    stroke="rgba(255,255,255,0.85)"
+                    stroke-width="1.6"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
       );
     })
   }
 </div>
 
+<style>
+  .video-item {
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .big-play-btn {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+  .video-item.paused .big-play-btn,
+  .video-item.ended .big-play-btn {
+    opacity: 1;
+  }
+  .big-play-btn svg {
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
+  }
+
+  .video-controls {
+    position: absolute;
+    inset: auto 0 0 0;
+    z-index: 20;
+    padding: 24px 10px 10px;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.65));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .video-item:hover .video-controls,
+  .video-item.paused .video-controls,
+  .video-item.ended .video-controls {
+    opacity: 1;
+  }
+
+  .controls-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ctrl-btn {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0.85;
+    transition:
+      opacity 0.2s,
+      transform 0.15s;
+  }
+  .ctrl-btn:hover {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  .ctrl-btn svg {
+    display: block;
+  }
+
+  .progress-track {
+    flex: 1;
+    height: 8px;
+    background: transparent;
+    cursor: pointer;
+    position: relative;
+    overflow: visible;
+  }
+  .progress-fill { display: none; }
+  .progress-thumb { display: none; }
+
+  .time-display {
+    flex-shrink: 0;
+    font-family: var(--font-sketch);
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.85);
+    min-width: 52px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+</style>
+
 <script>
   import { decode } from "blurhash";
+  import { initPlayer, drawIcons, drawProgressBars } from "../lib/video-player";
 
   function blurhashToDataURL(hash: string, w = 32, h = 32): string | undefined {
     try {
@@ -106,43 +353,64 @@ function getVideoPoster(url: string): string {
     }
   }
 
-  function initVideoPlaceholders() {
-    const items = document.querySelectorAll<HTMLElement>(
-      ".video-list .video-item",
-    );
-    items.forEach((el) => {
-      if (el.dataset.placeholderInited) return;
-      el.dataset.placeholderInited = "1";
-
-      const hash = el.dataset.blurhash;
-      if (!hash) return;
-
-      const url = blurhashToDataURL(hash);
-      if (!url) return;
-
-      const ph = document.createElement("div");
-      ph.style.cssText =
-        "position:absolute;inset:0;background-size:cover;background-position:center;filter:blur(20px);transform:scale(1.1);z-index:0;transition:opacity 0.4s";
-      ph.style.backgroundImage = `url(${url})`;
-      el.insertBefore(ph, el.firstChild);
-
-      // 视频加载后淡出模糊占位
-      const video = el.querySelector("video");
-      if (video) {
+  function initPlaceholders() {
+    document
+      .querySelectorAll<HTMLElement>(".video-list .video-item")
+      .forEach((el) => {
+        if (el.dataset.phInited) return;
+        el.dataset.phInited = "1";
+        const hash = el.dataset.blurhash;
+        if (!hash) return;
+        const url = blurhashToDataURL(hash);
+        if (!url) return;
+        const ph = document.createElement("div");
+        ph.style.cssText =
+          "position:absolute;inset:0;background-size:cover;background-position:center;filter:blur(20px);transform:scale(1.1);z-index:0;transition:opacity 0.5s;pointer-events:none";
+        ph.style.backgroundImage = "url(" + url + ")";
+        el.insertBefore(ph, el.firstChild);
+        const video = el.querySelector("video")!;
         video.style.position = "relative";
         video.style.zIndex = "1";
         video.addEventListener(
           "loadeddata",
           () => {
             ph.style.opacity = "0";
-            setTimeout(() => ph.remove(), 500);
+            setTimeout(() => ph.remove(), 600);
           },
           { once: true },
         );
-      }
-    });
+      });
   }
 
-  initVideoPlaceholders();
-  document.addEventListener("astro:page-load", initVideoPlaceholders);
+  function initPlayers() {
+    document
+      .querySelectorAll<HTMLElement>(".video-list .video-item")
+      .forEach((item) => {
+        initPlayer({
+          wrapper: item,
+          video: item.querySelector("video")!,
+          playPauseBtn: item.querySelector(".play-pause-btn")!,
+          playIcon: item.querySelector(".play-icon")!,
+          pauseIcon: item.querySelector(".pause-icon")!,
+          progressTrack: item.querySelector(".progress-track")!,
+          progressFill: item.querySelector(".progress-fill")!,
+          progressThumb: item.querySelector(".progress-thumb")!,
+          timeDisplay: item.querySelector(".time-display")!,
+          muteBtn: item.querySelector(".mute-btn")!,
+          volumeIcon: item.querySelector(".volume-icon")!,
+          mutedIcon: item.querySelector(".muted-icon")!,
+          fullscreenBtn: item.querySelector(".fullscreen-btn")!,
+        });
+      });
+  }
+
+  function scanAndInit() {
+    initPlaceholders();
+    initPlayers();
+    drawIcons();
+    drawProgressBars();
+  }
+
+  scanAndInit();
+  document.addEventListener("astro:page-load", scanAndInit);
 </script>
