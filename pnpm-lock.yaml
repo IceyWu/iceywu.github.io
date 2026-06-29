@@ -38,6 +38,9 @@ importers:
       tailwindcss:
         specifier: ^4.3.1
         version: 4.3.1
+      viewer-pro:
+        specifier: ^0.2.0
+        version: 0.2.0
 
 packages:
 
@@ -1925,6 +1928,9 @@ packages:
 
   vfile@6.0.3:
     resolution: {integrity: sha512-KzIbH/9tXat2u30jf+smMwFCsno4wHVdNmzFyL+T/L3UGqqk6JKfVqOFOZEpZSHADH1k40ab6NUIXZq422ov3Q==}
+
+  viewer-pro@0.2.0:
+    resolution: {integrity: sha512-0pGmIlIBO1eFx3DhPaL/8IFMwiJ03vIj6qyiZPrDX0NMRbez4+mFnxXDTKhWISJ7jHLg/j0/ZaVKY8mOBfq7tQ==}
 
   vite@8.0.16:
     resolution: {integrity: sha512-h9bXPmJichP5fLmVQo3PyaGSDE2n3aPuomeAlVRm0JLmt4rY6zmPKd59HYI4LNW8oTK7tlTsuC7l/m7awx9Jcw==}
@@ -3942,7 +3948,7 @@ snapshots:
     dependencies:
       '@types/hast': 3.0.4
       hast-util-to-html: 9.0.5
-      unified: 11.0.5
+      unified: 11.0.0
 
   rehype@13.0.2:
     dependencies:
@@ -3958,7 +3964,7 @@ snapshots:
       micromark-extension-gfm: 3.0.0
       remark-parse: 11.0.0
       remark-stringify: 11.0.0
-      unified: 11.0.5
+      unified: 11.0.0
     transitivePeerDependencies:
       - supports-color
 
@@ -3974,7 +3980,7 @@ snapshots:
       '@types/mdast': 4.0.4
       mdast-util-from-markdown: 2.0.3
       micromark-util-types: 2.0.0
-      unified: 11.0.5
+      unified: 11.0.0
     transitivePeerDependencies:
       - supports-color
 
@@ -3983,7 +3989,7 @@ snapshots:
       '@types/hast': 3.0.4
       '@types/mdast': 4.0.4
       mdast-util-to-hast: 13.2.1
-      unified: 11.0.5
+      unified: 11.0.0
       vfile: 6.0.3
 
   remark-smartypants@3.0.2:
@@ -3997,7 +4003,7 @@ snapshots:
     dependencies:
       '@types/mdast': 4.0.4
       mdast-util-to-markdown: 2.0.0
-      unified: 11.0.5
+      unified: 11.0.0
 
   resolve-pkg-maps@1.0.0: {}
 
@@ -4005,7 +4011,7 @@ snapshots:
     dependencies:
       '@types/nlcst': 2.0.3
       parse-latin: 7.0.0
-      unified: 11.0.5
+      unified: 11.0.0
 
   retext-smartypants@6.2.0:
     dependencies:
@@ -4017,14 +4023,14 @@ snapshots:
     dependencies:
       '@types/nlcst': 2.0.3
       nlcst-to-string: 4.0.0
-      unified: 11.0.5
+      unified: 11.0.0
 
   retext@9.0.0:
     dependencies:
       '@types/nlcst': 2.0.3
       retext-latin: 4.0.0
       retext-stringify: 4.0.0
-      unified: 11.0.5
+      unified: 11.0.0
 
   rolldown@1.0.3:
     dependencies:
@@ -4181,8 +4187,7 @@ snapshots:
 
   trough@2.2.0: {}
 
-  tslib@2.8.1:
-    optional: true
+  tslib@2.8.1: {}
 
   ufo@1.6.4: {}
 
@@ -4293,6 +4298,10 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
+
+  viewer-pro@0.2.0:
+    dependencies:
+      tslib: 2.8.1
 
   vite@8.0.16(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0):
     dependencies:

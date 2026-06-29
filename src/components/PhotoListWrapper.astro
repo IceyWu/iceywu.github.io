@@ -14,15 +14,24 @@ interface PhotoData {
 
 interface Props {
   data?: PhotoData[];
+  /** 桌面端列数，默认 3。实际列数 = min(columns, 照片数)，避免照片不足时空列 */
+  columns?: number;
+  /**
+   * 统一宽高比（宽/高），例如 4/3=1.333、3/2=1.5、1=正方形。
+   * 不传则每张图保留自身原始比例（横竖混合时可能参差不齐）。
+   */
+  aspectRatio?: number;
 }
 
-const { data = [] } = Astro.props;
+const { data = [], columns = 3, aspectRatio } = Astro.props;
 
-const COLUMNS = 3;
 const GAP = 16;
 const OBJECT_FIT = "cover";
 
 const photos: PhotoData[] = Array.isArray(data) ? data : [];
+
+// 实际列数：不超过照片总数，避免末行单张孤悬
+const actualCols = Math.max(1, Math.min(columns, photos.length));
 
 function getPhotoSrc(photo: PhotoData) {
   return `${photo.url}?x-oss-process=image/resize,l_800/format,avif`;
@@ -31,42 +40,61 @@ function getPhotoSrc(photo: PhotoData) {
 
 <div
   class="photo-list not-prose"
-  style={`display:grid;grid-template-columns:repeat(${COLUMNS},1fr);gap:${GAP}px`}
+  style={`display:grid;grid-template-columns:repeat(${actualCols},1fr);gap:${GAP}px`}
 >
-  {photos.map((photo) => {
-    const videoSrc = photo.live_photo_video_url || photo.live_photo_video || "";
-    const isLive = Boolean(videoSrc);
-    const src = getPhotoSrc(photo);
+  {
+    photos.map((photo) => {
+      const videoSrc =
+        photo.live_photo_video_url || photo.live_photo_video || "";
+      const isLive = Boolean(videoSrc);
+      const src = getPhotoSrc(photo);
 
-    // 每张图按自身数据的宽高比；缺失时回退到 1:1
-    const aspect =
-      photo.width > 0 && photo.height > 0 ? photo.width / photo.height : 1;
+      // aspectRatio 未传时保留照片原始宽高比；传入时统一覆盖
+      const aspect =
+        aspectRatio != null
+          ? aspectRatio
+          : photo.width > 0 && photo.height > 0
+            ? photo.width / photo.height
+            : 4 / 3;
 
-    return isLive ? (
-      <div
-        class="photo-item"
-        data-live-photo
-        data-image={src}
-        data-video={videoSrc}
-        data-blurhash={photo.blurhash}
-        data-fit={OBJECT_FIT}
-        style={`width:100%;aspect-ratio:${aspect};position:relative;overflow:hidden;border-radius:8px`}
-      />
-    ) : (
-      <div class="photo-item" style={`width:100%;aspect-ratio:${aspect};overflow:hidden;border-radius:8px`}>
-        <img
-          src={src}
-          alt={photo.name}
-          loading="lazy"
-          style={`width:100%;height:100%;object-fit:${OBJECT_FIT};border-radius:8px`}
+      return isLive ? (
+        <div
+          class="viewer-pro-item"
+          data-live-photo
+          data-image={src}
+          data-video={videoSrc}
+          data-blurhash={photo.blurhash}
+          data-fit={OBJECT_FIT}
+          data-full-src={photo.url}
+          data-name={photo.name}
+          data-width={photo.width}
+          data-height={photo.height}
+          style={`width:100%;aspect-ratio:${aspect};position:relative;overflow:hidden;border-radius:8px`}
         />
-      </div>
-    );
-  })}
+      ) : (
+        <div
+          class="viewer-pro-item"
+          data-full-src={photo.url}
+          data-name={photo.name}
+          data-width={photo.width}
+          data-height={photo.height}
+          style={`width:100%;aspect-ratio:${aspect};overflow:hidden;border-radius:8px`}
+        >
+          <img
+            src={src}
+            alt={photo.name}
+            loading="lazy"
+            style={`width:100%;height:100%;object-fit:${OBJECT_FIT};border-radius:8px`}
+          />
+        </div>
+      );
+    })
+  }
 </div>
 
 <script>
   import { LivePhotoViewer } from "live-photo";
+  import { ViewerPro, type ViewerItem } from "viewer-pro";
   import { decode } from "blurhash";
 
   function blurhashToDataURL(hash: string, w = 32, h = 32): string | undefined {
@@ -87,7 +115,9 @@ function getPhotoSrc(photo: PhotoData) {
   }
 
   function initLivePhotos() {
-    const nodes = document.querySelectorAll<HTMLElement>(".photo-list [data-live-photo]");
+    const nodes = document.querySelectorAll<HTMLElement>(
+      ".photo-list [data-live-photo]",
+    );
     nodes.forEach((el) => {
       if (el.dataset.inited) return;
       el.dataset.inited = "1";
@@ -115,6 +145,7 @@ function getPhotoSrc(photo: PhotoData) {
           height: "100%",
           autoplay: false,
           lazyLoadVideo: true,
+          staticBadgeIcon: true,
           // 持久化：偏好(autoplay/muted)存入 localStorage 并跨同源标签页同步
           storageKey: "live-photo-prefs",
           // 同页面多张照片实时共享偏好
@@ -134,6 +165,149 @@ function getPhotoSrc(photo: PhotoData) {
   }
 
   initLivePhotos();
+
+  // --- viewer-pro ---
+  function initViewerPro() {
+    const nodes = Array.from(
+      document.querySelectorAll<HTMLElement>(".photo-list .viewer-pro-item"),
+    );
+    if (!nodes.length) return;
+
+    const images: ViewerItem[] = nodes.map((el) => {
+      const live = el.hasAttribute("data-live-photo");
+      return {
+        src: el.dataset.fullSrc || "",
+        thumbnail:
+          (el.querySelector("img") as HTMLImageElement | null)?.src ||
+          el.dataset.image ||
+          "",
+        title: el.dataset.name || "",
+        type: live ? "live-photo" : "image",
+        ...(live
+          ? {
+              photoSrc: el.dataset.image || el.dataset.fullSrc || "",
+              videoSrc: el.dataset.video || "",
+            }
+          : {}),
+        blurhash: el.dataset.blurhash || "",
+        width: Number(el.dataset.width) || 0,
+        height: Number(el.dataset.height) || 0,
+      } as ViewerItem;
+    });
+
+    const rmCanvas = (frame: HTMLElement) => {
+      const c = frame.querySelector("canvas");
+      if (c) {
+        c.style.opacity = "0";
+        c.addEventListener("transitionend", () => c.remove(), { once: true });
+      }
+    };
+
+    const renderNode = (item: ViewerItem, idx: number) => {
+      const frame = document.createElement("div");
+      frame.id = `vp-frame-${idx}`;
+      frame.style.cssText =
+        "position:relative;width:100%;height:100%;overflow:hidden";
+
+      const bh = (item as any).blurhash;
+      if (bh) {
+        const c = document.createElement("canvas");
+        c.width = c.height = 32;
+        c.style.cssText =
+          "position:absolute;inset:0;width:100%;height:100%;transition:opacity 240ms";
+        try {
+          const ctx = c.getContext("2d")!;
+          const d = ctx.createImageData(32, 32);
+          d.data.set(decode(bh, 32, 32));
+          ctx.putImageData(d, 0, 0);
+        } catch {}
+        frame.appendChild(c);
+      }
+
+      if (item.type === "live-photo") {
+        const box = document.createElement("div");
+        box.id = `vp-live-${idx}`;
+        box.style.cssText = "position:absolute;inset:0;";
+        frame.appendChild(box);
+      } else {
+        const img = document.createElement("img");
+        img.src = item.src;
+        img.style.cssText =
+          "position:absolute;inset:0;margin:auto;max-width:100%;max-height:100%;object-fit:scale-down";
+        img.onload = () => requestAnimationFrame(() => rmCanvas(frame));
+        if (img.complete) img.dispatchEvent(new Event("load"));
+        frame.appendChild(img);
+      }
+      return frame;
+    };
+
+    const mountLivePhoto = (box: HTMLElement, item: ViewerItem) => {
+      if (box.dataset.vpMounted) return;
+      box.dataset.vpMounted = "1";
+      rmCanvas(box.parentElement!);
+      const r = (item as any).width / (item as any).height || 4 / 3;
+      const w = box.getBoundingClientRect().width * 0.7,
+        h = w / r;
+      box.style.cssText = `position:absolute;inset:0;margin:auto;width:${w}px;height:${h}px`;
+      new LivePhotoViewer({
+        photoSrc: (item as any).photoSrc,
+        videoSrc: (item as any).videoSrc,
+        container: box,
+        width: w,
+        height: h,
+        autoplay: true,
+        lazyLoadVideo: false,
+        borderRadius: "8px",
+        staticBadgeIcon: true,
+        storageKey: "live-photo-prefs",
+        syncGroup: "photo-list",
+      });
+    };
+
+    const onImageLoad = (item: ViewerItem, idx: number) => {
+      if (item.type !== "live-photo") return;
+      (function wait() {
+        const box = document.getElementById(`vp-live-${idx}`);
+        if (!box) return;
+        const { width, height } = box.getBoundingClientRect();
+        width && height
+          ? mountLivePhoto(box, item)
+          : requestAnimationFrame(wait);
+      })();
+    };
+
+    const onTransformChange = ({
+      scale,
+      translateX,
+      translateY,
+      rotation,
+      index,
+    }: any) => {
+      const f = document.getElementById(`vp-frame-${index}`);
+      if (f)
+        f.style.transform = `translate(${translateX}px,${translateY}px) scale(${scale}) rotate(${rotation}deg)`;
+    };
+
+    const viewer = new ViewerPro({
+      images,
+      renderNode,
+      onImageLoad,
+      onTransformChange,
+    });
+
+    nodes.forEach((el, i) => {
+      el.addEventListener("click", (e) => {
+        if (
+          el.hasAttribute("data-live-photo") &&
+          (e.target as HTMLElement).closest("[role]")
+        )
+          return;
+        viewer.open(i);
+      });
+    });
+  }
+
+  initViewerPro();
 </script>
 
 <style>
@@ -141,15 +315,24 @@ function getPhotoSrc(photo: PhotoData) {
     width: 100%;
   }
 
+  .viewer-pro-item {
+    cursor: pointer;
+  }
+
+  /* 平板：最多 2 列，但如果只有 1 张图也保持 1 列 */
   @media (max-width: 1024px) {
     .photo-list {
-      grid-template-columns: repeat(2, 1fr) !important;
+      grid-template-columns: repeat(
+        auto-fill,
+        minmax(max(280px, calc(50% - 8px)), 1fr)
+      ) !important;
     }
   }
 
+  /* 手机：单列 */
   @media (max-width: 640px) {
     .photo-list {
-      grid-template-columns: repeat(1, 1fr) !important;
+      grid-template-columns: 1fr !important;
     }
   }
 </style>
