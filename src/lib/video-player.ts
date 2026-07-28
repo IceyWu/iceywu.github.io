@@ -49,6 +49,16 @@ export function initPlayer(el: PlayerElements) {
 
   let scrubbing = false;
 
+  function togglePlayback() {
+    if (video.paused) void video.play().catch(() => undefined);
+    else video.pause();
+  }
+
+  function toggleFullscreen() {
+    if (document.fullscreenElement) void document.exitFullscreen();
+    else void wrapper.requestFullscreen();
+  }
+
   function updateState() {
     const paused = video.paused || video.ended;
     wrapper.classList.toggle("paused", paused);
@@ -57,6 +67,8 @@ export function initPlayer(el: PlayerElements) {
     (pauseIcon as HTMLElement).style.display = paused ? "none" : "";
     (volumeIcon as HTMLElement).style.display = video.muted ? "none" : "";
     (mutedIcon as HTMLElement).style.display = video.muted ? "" : "none";
+    playPauseBtn.setAttribute("aria-label", paused ? "播放" : "暂停");
+    muteBtn.setAttribute("aria-label", video.muted ? "取消静音" : "静音");
   }
 
   function updateProgress() {
@@ -92,14 +104,18 @@ export function initPlayer(el: PlayerElements) {
 
   wrapper.addEventListener("click", (e) => {
     if ((e.target as HTMLElement).closest(".video-controls")) return;
-    if (video.paused) video.play();
-    else video.pause();
+    togglePlayback();
+  });
+
+  wrapper.addEventListener("keydown", (e) => {
+    if (e.target !== wrapper || (e.key !== " " && e.key !== "Enter")) return;
+    e.preventDefault();
+    togglePlayback();
   });
 
   playPauseBtn.addEventListener("click", (e) => {
     e.stopPropagation();
-    if (video.paused) video.play();
-    else video.pause();
+    togglePlayback();
   });
 
   progressTrack.addEventListener("mousedown", (e) => {
@@ -126,11 +142,7 @@ export function initPlayer(el: PlayerElements) {
 
   fullscreenBtn.addEventListener("click", (e) => {
     e.stopPropagation();
-    if (document.fullscreenElement) {
-      document.exitFullscreen();
-    } else {
-      wrapper.requestFullscreen();
-    }
+    toggleFullscreen();
   });
 
   updateState();
