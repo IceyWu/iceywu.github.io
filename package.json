@@ -20,11 +20,11 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/mdx": "^7.0.4",
+    "@astrojs/mdx": "^7.0.5",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.3",
     "@tailwindcss/vite": "^4.3.3",
-    "astro": "^7.1.4",
+    "astro": "^7.2.0",
     "blurhash": "^2.0.5",
     "live-photo": "^0.2.0",
     "roughjs": "^4.6.6",
@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",
-    "lint-staged": "17.2.0",
+    "lint-staged": "17.3.0",
     "typescript": "7.0.2"
   }
 }
