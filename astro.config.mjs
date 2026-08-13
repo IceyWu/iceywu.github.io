@@ -1,24 +1,24 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
 
-import tailwindcss from '@tailwindcss/vite';
-import mdx from '@astrojs/mdx';
-import sitemap from '@astrojs/sitemap';
+import mdx from "@astrojs/mdx";
+import sitemap from "@astrojs/sitemap";
+import tailwindcss from "@tailwindcss/vite";
+import { defineConfig } from "astro/config";
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://iceywu.cn',
-  vite: {
-    plugins: [tailwindcss()]
-  },
   integrations: [mdx(), sitemap()],
   markdown: {
     shikiConfig: {
       themes: {
-        light: 'vitesse-light',
-        dark: 'vitesse-dark'
+        dark: "vitesse-dark",
+        light: "vitesse-light",
       },
-      wrap: true
-    }
-  }
+      wrap: true,
+    },
+  },
+  site: "https://levwu.me",
+  vite: {
+    plugins: [tailwindcss()],
+  },
 });

@@ -4,7 +4,9 @@
 
 // ── 工具 ──
 export function fmtTime(s: number): string {
-  if (!Number.isFinite(s) || s < 0) return "0:00";
+  if (!Number.isFinite(s) || s < 0) {
+    return "0:00";
+  }
   const m = Math.floor(s / 60);
   const sec = Math.floor(s % 60);
   return `${m}:${sec.toString().padStart(2, "0")}`;
@@ -12,19 +14,19 @@ export function fmtTime(s: number): string {
 
 // ── 播放器初始化 ──
 export interface PlayerElements {
-  wrapper: HTMLElement;
-  video: HTMLVideoElement;
-  playPauseBtn: Element;
-  playIcon: Element;
+  fullscreenBtn: Element;
+  muteBtn: Element;
+  mutedIcon: Element;
   pauseIcon: Element;
-  progressTrack: HTMLElement;
+  playIcon: Element;
+  playPauseBtn: Element;
   progressFill: HTMLElement;
   progressThumb: HTMLElement;
+  progressTrack: HTMLElement;
   timeDisplay: Element;
-  muteBtn: Element;
+  video: HTMLVideoElement;
   volumeIcon: Element;
-  mutedIcon: Element;
-  fullscreenBtn: Element;
+  wrapper: HTMLElement;
 }
 
 export function initPlayer(el: PlayerElements) {
@@ -44,19 +46,27 @@ export function initPlayer(el: PlayerElements) {
     fullscreenBtn,
   } = el;
 
-  if (wrapper.dataset.playerInited) return;
+  if (wrapper.dataset.playerInited) {
+    return;
+  }
   wrapper.dataset.playerInited = "1";
 
   let scrubbing = false;
 
   function togglePlayback() {
-    if (video.paused) void video.play().catch(() => undefined);
-    else video.pause();
+    if (video.paused) {
+      void video.play().catch(() => undefined);
+    } else {
+      video.pause();
+    }
   }
 
   function toggleFullscreen() {
-    if (document.fullscreenElement) void document.exitFullscreen();
-    else void wrapper.requestFullscreen();
+    if (document.fullscreenElement) {
+      void document.exitFullscreen();
+    } else {
+      void wrapper.requestFullscreen();
+    }
   }
 
   function updateState() {
@@ -72,12 +82,18 @@ export function initPlayer(el: PlayerElements) {
   }
 
   function updateProgress() {
-    if (scrubbing) return;
+    if (scrubbing) {
+      return;
+    }
     const dur = video.duration;
     const pct =
       Number.isFinite(dur) && dur > 0 ? (video.currentTime / dur) * 100 : 0;
-    if (progressFill) progressFill.style.width = `${pct}%`;
-    if (progressThumb) progressThumb.style.left = `${pct}%`;
+    if (progressFill) {
+      progressFill.style.width = `${pct}%`;
+    }
+    if (progressThumb) {
+      progressThumb.style.left = `${pct}%`;
+    }
     timeDisplay.textContent = `${fmtTime(video.currentTime)} / ${fmtTime(dur)}`;
     setProgressBar(progressTrack, pct);
   }
@@ -86,9 +102,15 @@ export function initPlayer(el: PlayerElements) {
     const rect = progressTrack.getBoundingClientRect();
     const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
     const dur = video.duration;
-    if (Number.isFinite(dur)) video.currentTime = pct * dur;
-    if (progressFill) progressFill.style.width = `${pct * 100}%`;
-    if (progressThumb) progressThumb.style.left = `${pct * 100}%`;
+    if (Number.isFinite(dur)) {
+      video.currentTime = pct * dur;
+    }
+    if (progressFill) {
+      progressFill.style.width = `${pct * 100}%`;
+    }
+    if (progressThumb) {
+      progressThumb.style.left = `${pct * 100}%`;
+    }
     setProgressBar(progressTrack, pct * 100);
   }
 
@@ -103,12 +125,16 @@ export function initPlayer(el: PlayerElements) {
   });
 
   wrapper.addEventListener("click", (e) => {
-    if ((e.target as HTMLElement).closest(".video-controls")) return;
+    if ((e.target as HTMLElement).closest(".video-controls")) {
+      return;
+    }
     togglePlayback();
   });
 
   wrapper.addEventListener("keydown", (e) => {
-    if (e.target !== wrapper || (e.key !== " " && e.key !== "Enter")) return;
+    if (e.target !== wrapper || (e.key !== " " && e.key !== "Enter")) {
+      return;
+    }
     e.preventDefault();
     togglePlayback();
   });
@@ -155,7 +181,9 @@ export async function drawIcons() {
 
   function draw(sel: string, opts: Record<string, any>) {
     document.querySelectorAll<SVGSVGElement>(sel).forEach((svg) => {
-      if (svg.dataset.drawn) return;
+      if (svg.dataset.drawn) {
+        return;
+      }
       svg.dataset.drawn = "1";
       svg.innerHTML = "";
       const rc = rough.svg(svg);
@@ -171,12 +199,12 @@ export async function drawIcons() {
         r = 28;
       svg.appendChild(
         rc.circle(cx, cy, r * 2, {
-          roughness: 1.2,
-          strokeWidth: 1.5,
-          stroke: "rgba(255,255,255,0.9)",
-          fill: "rgba(0,0,0,0.35)",
           bowing: 1,
-        }),
+          fill: "rgba(0,0,0,0.35)",
+          roughness: 1.2,
+          stroke: "rgba(255,255,255,0.9)",
+          strokeWidth: 1.5,
+        })
       );
       const s = 12;
       svg.appendChild(
@@ -187,13 +215,13 @@ export async function drawIcons() {
             [cx - s * 0.45, cy + s * 0.75],
           ],
           {
-            roughness: 0.8,
-            strokeWidth: 1.5,
-            stroke: "rgba(255,255,255,0.95)",
-            fill: "rgba(255,255,255,0.2)",
             bowing: 0.5,
-          },
-        ),
+            fill: "rgba(255,255,255,0.2)",
+            roughness: 0.8,
+            stroke: "rgba(255,255,255,0.95)",
+            strokeWidth: 1.5,
+          }
+        )
       );
     },
   });
@@ -209,13 +237,13 @@ export async function drawIcons() {
             [19, 12],
           ],
           {
-            roughness: 0.6,
-            strokeWidth: 1.8,
-            stroke: "#fff",
-            fill: "rgba(255,255,255,0.25)",
             bowing: 0.5,
-          },
-        ),
+            fill: "rgba(255,255,255,0.25)",
+            roughness: 0.6,
+            stroke: "#fff",
+            strokeWidth: 1.8,
+          }
+        )
       );
     },
   });
@@ -225,21 +253,21 @@ export async function drawIcons() {
     draw(rc: any, svg: SVGSVGElement) {
       svg.appendChild(
         rc.rectangle(6, 4, 4, 16, {
-          roughness: 0.5,
-          strokeWidth: 1.8,
-          stroke: "#fff",
-          fill: "#fff",
           bowing: 0.3,
-        }),
+          fill: "#fff",
+          roughness: 0.5,
+          stroke: "#fff",
+          strokeWidth: 1.8,
+        })
       );
       svg.appendChild(
         rc.rectangle(14, 4, 4, 16, {
-          roughness: 0.5,
-          strokeWidth: 1.8,
-          stroke: "#fff",
-          fill: "#fff",
           bowing: 0.3,
-        }),
+          fill: "#fff",
+          roughness: 0.5,
+          stroke: "#fff",
+          strokeWidth: 1.8,
+        })
       );
     },
   });
@@ -258,14 +286,14 @@ export async function drawIcons() {
             [3, 16],
           ],
           {
-            roughness: 0.5,
-            strokeWidth: 1.6,
-            stroke: "#fff",
-            fill: "rgba(255,255,255,0.2)",
             bowing: 0.3,
             closePath: false,
-          },
-        ),
+            fill: "rgba(255,255,255,0.2)",
+            roughness: 0.5,
+            stroke: "#fff",
+            strokeWidth: 1.6,
+          }
+        )
       );
       svg.appendChild(
         rc.curve(
@@ -275,12 +303,12 @@ export async function drawIcons() {
             [15, 15],
           ],
           {
-            roughness: 0.5,
-            strokeWidth: 1.2,
-            stroke: "#fff",
             fill: "none",
-          },
-        ),
+            roughness: 0.5,
+            stroke: "#fff",
+            strokeWidth: 1.2,
+          }
+        )
       );
       svg.appendChild(
         rc.curve(
@@ -290,12 +318,12 @@ export async function drawIcons() {
             [19, 17],
           ],
           {
-            roughness: 0.5,
-            strokeWidth: 1.2,
-            stroke: "#fff",
             fill: "none",
-          },
-        ),
+            roughness: 0.5,
+            stroke: "#fff",
+            strokeWidth: 1.2,
+          }
+        )
       );
     },
   });
@@ -314,14 +342,14 @@ export async function drawIcons() {
             [3, 16],
           ],
           {
-            roughness: 0.5,
-            strokeWidth: 1.6,
-            stroke: "#fff",
-            fill: "rgba(255,255,255,0.2)",
             bowing: 0.3,
             closePath: false,
-          },
-        ),
+            fill: "rgba(255,255,255,0.2)",
+            roughness: 0.5,
+            stroke: "#fff",
+            strokeWidth: 1.6,
+          }
+        )
       );
       svg.appendChild(
         rc.linearPath(
@@ -331,10 +359,10 @@ export async function drawIcons() {
           ],
           {
             roughness: 0.6,
-            strokeWidth: 1.5,
             stroke: "rgba(255,100,100,0.8)",
-          },
-        ),
+            strokeWidth: 1.5,
+          }
+        )
       );
       svg.appendChild(
         rc.linearPath(
@@ -344,10 +372,10 @@ export async function drawIcons() {
           ],
           {
             roughness: 0.6,
-            strokeWidth: 1.5,
             stroke: "rgba(255,100,100,0.8)",
-          },
-        ),
+            strokeWidth: 1.5,
+          }
+        )
       );
     },
   });
@@ -366,13 +394,13 @@ export async function drawIcons() {
             [5, 14],
           ],
           {
-            roughness: 0.5,
-            strokeWidth: 1.6,
-            stroke: "#fff",
-            fill: "none",
             bowing: 0.3,
-          },
-        ),
+            fill: "none",
+            roughness: 0.5,
+            stroke: "#fff",
+            strokeWidth: 1.6,
+          }
+        )
       );
       svg.appendChild(
         rc.linearPath(
@@ -385,13 +413,13 @@ export async function drawIcons() {
             [19, 10],
           ],
           {
-            roughness: 0.5,
-            strokeWidth: 1.6,
-            stroke: "#fff",
-            fill: "none",
             bowing: 0.3,
-          },
-        ),
+            fill: "none",
+            roughness: 0.5,
+            stroke: "#fff",
+            strokeWidth: 1.6,
+          }
+        )
       );
     },
   });
@@ -403,13 +431,17 @@ export async function drawProgressBars() {
   const { default: rough } = await import("roughjs");
 
   document.querySelectorAll<HTMLElement>(".progress-track").forEach((track) => {
-    if (track.dataset.barDrawn) return;
+    if (track.dataset.barDrawn) {
+      return;
+    }
     track.dataset.barDrawn = "1";
 
     const svg = track.querySelector(
-      ".progress-svg",
+      ".progress-svg"
     ) as unknown as SVGSVGElement | null;
-    if (!svg) return;
+    if (!svg) {
+      return;
+    }
 
     const rc = rough.svg(svg);
     const VH = 40;
@@ -430,11 +462,11 @@ export async function drawProgressBars() {
     }
     svg.appendChild(
       rc.linearPath(pts, {
-        roughness: 1.2,
-        strokeWidth: 2,
-        stroke: "rgba(255,255,255,0.3)",
         bowing: 1.5,
-      }),
+        roughness: 1.2,
+        stroke: "rgba(255,255,255,0.3)",
+        strokeWidth: 2,
+      })
     );
 
     // ── 填充：有机波浪边缘色块 ──
@@ -445,7 +477,7 @@ export async function drawProgressBars() {
       const barH = 16;
       const top = my - barH / 2;
       const seed = (n: number) => {
-        const x = Math.sin(n * 127.1 + 311.7) * 43758.5453;
+        const x = Math.sin(n * 127.1 + 311.7) * 43_758.5453;
         return x - Math.floor(x);
       };
 
@@ -464,12 +496,12 @@ export async function drawProgressBars() {
               [ex, ey],
             ],
             {
-              roughness: 0.8,
-              strokeWidth: 0.4 + seed(i * 9) * 1.1,
-              stroke: `rgba(255,255,255,${(0.15 + seed(i * 7) * 0.35).toFixed(2)})`,
               bowing: 1,
-            },
-          ),
+              roughness: 0.8,
+              stroke: `rgba(255,255,255,${(0.15 + seed(i * 7) * 0.35).toFixed(2)})`,
+              strokeWidth: 0.4 + seed(i * 9) * 1.1,
+            }
+          )
         );
       }
       // 12 条粗笔触强调
@@ -486,19 +518,21 @@ export async function drawProgressBars() {
               [ex, ey],
             ],
             {
-              roughness: 1.2,
-              strokeWidth: 0.8 + seed(i * 17) * 1.4,
-              stroke: `rgba(255,255,255,${(0.35 + seed(i * 19) * 0.3).toFixed(2)})`,
               bowing: 1.5,
-            },
-          ),
+              roughness: 1.2,
+              stroke: `rgba(255,255,255,${(0.35 + seed(i * 19) * 0.3).toFixed(2)})`,
+              strokeWidth: 0.8 + seed(i * 17) * 1.4,
+            }
+          )
         );
       }
     }
 
     // ── 滑块：手绘菱形 ──
     const oldThumb = svg.querySelector(".progress-thumb-rough");
-    if (oldThumb) oldThumb.remove();
+    if (oldThumb) {
+      oldThumb.remove();
+    }
 
     const r = 7;
     const thumb = rc.polygon(
@@ -509,18 +543,18 @@ export async function drawProgressBars() {
         [-r, my],
       ],
       {
-        roughness: 1,
-        strokeWidth: 1.2,
-        stroke: "#fff",
-        fill: "rgba(255,255,255,0.8)",
         bowing: 0.8,
-      },
+        fill: "rgba(255,255,255,0.8)",
+        roughness: 1,
+        stroke: "#fff",
+        strokeWidth: 1.2,
+      }
     );
     thumb.setAttribute("class", "progress-thumb-rough");
     svg.appendChild(thumb);
 
     const clipRect = svg.querySelector(
-      "clipPath rect",
+      "clipPath rect"
     ) as SVGRectElement | null;
     (track as any).__clipRect = clipRect;
     (track as any).__thumb = thumb;
@@ -532,7 +566,9 @@ export function setProgressBar(track: HTMLElement, pct: number) {
   const clipRect = (track as any).__clipRect as SVGRectElement | undefined;
   const thumb = (track as any).__thumb as SVGGElement | undefined;
   const svgW = (track as any).__svgW as number | undefined;
-  if (!clipRect || !thumb || !svgW) return;
+  if (!(clipRect && thumb && svgW)) {
+    return;
+  }
   const cx = (pct / 100) * svgW;
   clipRect.setAttribute("width", String(cx));
   thumb.setAttribute("transform", `translate(${cx},0)`);

@@ -24,10 +24,22 @@ const fmtDate = post.data.date.toLocaleDateString("zh-CN", {
 });
 ---
 
-<Layout title={`${post.data.title} | IceyWu`} description={post.data.description} type="article" publishedAt={post.data.date.toISOString()}>
+<Layout
+  title={`${post.data.title} | LevWu`}
+  description={post.data.description}
+  type="article"
+  publishedAt={post.data.date.toISOString()}
+>
   <!-- 顶部工具栏 -->
-  <div class="fixed top-4 right-4 z-50 flex items-center gap-4 rounded-full bg-white/60 px-4 py-2 shadow-sm ring-1 ring-black/5 backdrop-blur-lg md:top-6 md:right-6 dark:bg-black/60 dark:ring-white/10">
-    <a href="/posts" title="返回列表" class="font-sketch text-lg opacity-50 transition-opacity hover:opacity-100">← Posts</a>
+  <div
+    class="fixed top-4 right-4 z-50 flex items-center gap-4 rounded-full bg-white/60 px-4 py-2 shadow-sm ring-1 ring-black/5 backdrop-blur-lg md:top-6 md:right-6 dark:bg-black/60 dark:ring-white/10"
+  >
+    <a
+      href="/posts"
+      title="返回列表"
+      class="font-sketch text-lg opacity-50 transition-opacity hover:opacity-100"
+      >← Posts</a
+    >
     <DarkToggle />
   </div>
 
@@ -35,15 +47,19 @@ const fmtDate = post.data.date.toLocaleDateString("zh-CN", {
     <article class="prose">
       <header class="not-prose mb-10">
         <div class="relative inline-block">
-          <h1 class="font-sketch text-4xl leading-tight opacity-95 md:text-5xl">{post.data.title}</h1>
+          <h1 class="font-sketch text-4xl leading-tight opacity-95 md:text-5xl">
+            {post.data.title}
+          </h1>
           <!-- 手绘潦草下划线 -->
-          <svg class="rough-underline pointer-events-none absolute -bottom-2 left-0 h-3 w-full" aria-hidden="true"></svg>
+          <svg
+            class="rough-underline pointer-events-none absolute -bottom-2 left-0 h-3 w-full"
+            aria-hidden="true"></svg>
         </div>
-        <div class="mt-4 flex flex-wrap items-center gap-3 font-sketch text-sm opacity-50">
+        <div
+          class="mt-4 flex flex-wrap items-center gap-3 font-sketch text-sm opacity-50"
+        >
           <time>{fmtDate}</time>
-          {post.data.tags.map((tag) => (
-            <span class="opacity-80">#{tag}</span>
-          ))}
+          {post.data.tags.map((tag) => <span class="opacity-80">#{tag}</span>)}
         </div>
       </header>
 
@@ -55,7 +71,9 @@ const fmtDate = post.data.date.toLocaleDateString("zh-CN", {
       href="/posts"
       class="rough-box group relative mt-14 inline-block px-6 py-2.5 font-sketch text-lg opacity-80 transition-all hover:-translate-y-0.5 hover:opacity-100"
     >
-      <svg class="rough-frame pointer-events-none absolute inset-0 h-full w-full" aria-hidden="true"></svg>
+      <svg
+        class="rough-frame pointer-events-none absolute inset-0 h-full w-full"
+        aria-hidden="true"></svg>
       <span class="relative">← Back to Posts</span>
     </a>
   </div>
@@ -64,12 +82,18 @@ const fmtDate = post.data.date.toLocaleDateString("zh-CN", {
   {
     toc.length > 0 && (
       <nav class="rough-box fixed top-32 right-8 hidden max-w-[15rem] px-5 py-4 opacity-80 transition-opacity hover:opacity-100 xl:block">
-        <svg class="rough-frame pointer-events-none absolute inset-0 h-full w-full" aria-hidden="true" />
+        <svg
+          class="rough-frame pointer-events-none absolute inset-0 h-full w-full"
+          aria-hidden="true"
+        />
         <p class="relative mb-2 font-sketch text-sm opacity-50">目录</p>
         <ul class="relative space-y-1.5 font-sketch text-sm">
           {toc.map((h) => (
             <li class={h.depth === 3 ? "pl-3" : ""}>
-              <a href={`#${h.slug}`} class="opacity-60 transition-opacity hover:opacity-100">
+              <a
+                href={`#${h.slug}`}
+                class="opacity-60 transition-opacity hover:opacity-100"
+              >
                 {h.text}
               </a>
             </li>
@@ -99,7 +123,7 @@ const fmtDate = post.data.date.toLocaleDateString("zh-CN", {
         roughness: 2,
         bowing: 2,
         seed: 7,
-      })
+      }),
     );
   }
 
@@ -118,7 +142,7 @@ const fmtDate = post.data.date.toLocaleDateString("zh-CN", {
         roughness: 2.4,
         bowing: 3,
         seed: 11,
-      })
+      }),
     );
   }
 

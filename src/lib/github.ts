@@ -58,20 +58,20 @@ export async function getGithubStats(): Promise<GithubStats> {
 
   try {
     const res = await fetch("https://api.github.com/graphql", {
-      method: "POST",
+      body: JSON.stringify({
+        query: QUERY,
+        variables: {
+          allRepoLimit: 100,
+          languageLimit: 10,
+          login: GITHUB_USERNAME,
+          repoLimit: 12,
+        },
+      }),
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        query: QUERY,
-        variables: {
-          login: GITHUB_USERNAME,
-          allRepoLimit: 100,
-          repoLimit: 12,
-          languageLimit: 10,
-        },
-      }),
+      method: "POST",
     });
 
     const json: any = await res.json();
@@ -94,7 +94,11 @@ export async function getGithubStats(): Promise<GithubStats> {
       for (const edge of repo.languages?.edges ?? []) {
         const lang = edge?.node?.name;
         const bytes = edge?.size;
-        if (!lang || typeof bytes !== "number" || EXCLUDED_LANGUAGES.has(lang)) {
+        if (
+          !lang ||
+          typeof bytes !== "number" ||
+          EXCLUDED_LANGUAGES.has(lang)
+        ) {
           continue;
         }
         byteCount[lang] = (byteCount[lang] ?? 0) + bytes;

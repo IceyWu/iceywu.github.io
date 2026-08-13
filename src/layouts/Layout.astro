@@ -10,8 +10,8 @@ interface Props {
 }
 
 const {
-  title = "IceyWu - 全栈开发者 | You only live once",
-  description = "IceyWu 的个人网站。全栈开发者，热爱开源，专注于 Vue、Nuxt、TypeScript 等前端技术，分享技术博客、开源项目与生活随笔。",
+  title = "LevWu - 全栈开发者 | You only live once",
+  description = "LevWu 的个人网站。全栈开发者，热爱开源，专注于 Vue、Nuxt、TypeScript 等前端技术，分享技术博客、开源项目与生活随笔。",
   image = "/avatar.png",
   type = "website",
   publishedAt,
@@ -32,8 +32,11 @@ const imageURL = new URL(image, Astro.site);
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL.href} />
-    <meta name="author" content="IceyWu" />
-    <meta name="keywords" content="IceyWu, 全栈开发, Vue, TypeScript, Nuxt, 开源, 前端, 博客" />
+    <meta name="author" content="LevWu" />
+    <meta
+      name="keywords"
+      content="LevWu, 全栈开发, Vue, TypeScript, Nuxt, 开源, 前端, 博客"
+    />
 
     <!-- Open Graph -->
     <meta property="og:type" content={type} />
@@ -41,9 +44,13 @@ const imageURL = new URL(image, Astro.site);
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={imageURL.href} />
-    <meta property="og:site_name" content="IceyWu" />
+    <meta property="og:site_name" content="LevWu" />
     <meta property="og:locale" content="zh_CN" />
-    {publishedAt && <meta property="article:published_time" content={publishedAt} />}
+    {
+      publishedAt && (
+        <meta property="article:published_time" content={publishedAt} />
+      )
+    }
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -55,7 +62,12 @@ const imageURL = new URL(image, Astro.site);
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
 
     <!-- RSS -->
-    <link rel="alternate" type="application/rss+xml" title="IceyWu" href={new URL("rss.xml", Astro.site)} />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="LevWu"
+      href={new URL("rss.xml", Astro.site)}
+    />
 
     <!-- 手绘风格字体 -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -69,16 +81,14 @@ const imageURL = new URL(image, Astro.site);
     <script is:inline>
       const stored = localStorage.getItem("theme");
       const prefersDark = window.matchMedia(
-        "(prefers-color-scheme: dark)"
+        "(prefers-color-scheme: dark)",
       ).matches;
       if (stored === "dark" || (!stored && prefersDark)) {
         document.documentElement.classList.add("dark");
       }
     </script>
   </head>
-  <body
-    class="min-h-screen bg-white text-black dark:bg-black dark:text-white"
-  >
+  <body class="min-h-screen bg-white text-black dark:bg-black dark:text-white">
     <slot />
   </body>
 </html>

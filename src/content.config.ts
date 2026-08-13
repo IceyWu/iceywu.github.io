@@ -5,25 +5,25 @@ import { z } from "astro/zod";
 const posts = defineCollection({
   loader: glob({ base: "./src/content/posts", pattern: "**/*.{md,mdx}" }),
   schema: z.object({
-    title: z.string(),
     date: z.coerce.date(),
     description: z.string().optional().default(""),
-    tags: z.array(z.string()).optional().default([]),
-    lang: z.string().optional().default("zh-cn"),
     draft: z.boolean().optional().default(false),
+    lang: z.string().optional().default("zh-cn"),
+    tags: z.array(z.string()).optional().default([]),
+    title: z.string(),
   }),
 });
 
 const essays = defineCollection({
   loader: glob({ base: "./src/content/essays", pattern: "**/*.{md,mdx}" }),
   schema: z.object({
-    title: z.string(),
     date: z.coerce.date(),
     description: z.string().optional().default(""),
-    tags: z.array(z.string()).optional().default([]),
-    lang: z.string().optional().default("zh-cn"),
     draft: z.boolean().optional().default(false),
+    lang: z.string().optional().default("zh-cn"),
+    tags: z.array(z.string()).optional().default([]),
+    title: z.string(),
   }),
 });
 
-export const collections = { posts, essays };
+export const collections = { essays, posts };

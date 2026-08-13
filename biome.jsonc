@@ -1,0 +1,25 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "extends": ["ultracite/biome/core"],
+  "files": {
+    "includes": ["!!**/*.astro"]
+  },
+  "linter": {
+    "rules": {
+      "complexity": {
+        "noForEach": "off",
+        "noVoid": "off"
+      },
+      "performance": {
+        "useTopLevelRegex": "off"
+      },
+      "style": {
+        "noDescendingSpecificity": "off",
+        "noIncrementDecrement": "off"
+      },
+      "suspicious": {
+        "noExplicitAny": "off"
+      }
+    }
+  }
+}

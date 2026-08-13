@@ -91,6 +91,6 @@ th,
 /* 暗黑模式切换圆形揭示过渡 */
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation: none;
   mix-blend-mode: normal;
+  animation: none;
 }
