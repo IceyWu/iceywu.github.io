@@ -26,13 +26,13 @@ const friends: FriendLink[] = [
   >
     <a
       href="/"
-      class="font-sketch text-lg opacity-50 transition-opacity hover:opacity-100"
+      class="inline-flex min-h-11 items-center font-sketch text-lg opacity-60 transition-opacity hover:opacity-100"
       >← Home</a
     >
     <DarkToggle />
   </div>
 
-  <div class="mx-auto max-w-2xl px-6 py-20 md:py-28">
+  <main id="main-content" class="mx-auto max-w-2xl px-6 py-20 md:py-28">
     <!-- Header -->
     <header class="mb-16">
       <div class="relative inline-block pb-4">
@@ -54,6 +54,7 @@ const friends: FriendLink[] = [
             href={friend.url}
             target="_blank"
             rel="noopener noreferrer"
+            aria-label={`${friend.name}（在新窗口打开）`}
             class="friend-card group relative flex items-center gap-4 border border-dashed border-current/15 p-5 no-underline transition-all hover:border-current/30 hover:bg-black/[0.02] dark:hover:bg-white/[0.02]"
             style={`animation-delay: ${index * 0.08}s`}
           >
@@ -65,6 +66,8 @@ const friends: FriendLink[] = [
               height="48"
               class="h-12 w-12 shrink-0 rounded-full border border-dashed border-current/20 object-cover p-0.5 grayscale-[20%] transition-all group-hover:border-current/40 group-hover:grayscale-0"
               loading="lazy"
+              decoding="async"
+              referrerpolicy="no-referrer"
             />
 
             {/* Info */}
@@ -140,7 +143,7 @@ const friends: FriendLink[] = [
         联系我 ✉
       </p>
     </div>
-  </div>
+  </main>
 </Layout>
 
 <style>

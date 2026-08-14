@@ -4,6 +4,15 @@ import DarkToggle from "../components/DarkToggle.astro";
 import { getProjectSections, getLanguageColor } from "../lib/projects";
 
 const sections = await getProjectSections();
+const sectionDescriptions: Record<string, string> = {
+  "all-projects": "我创建并持续探索的公开项目，跨越产品、创意体验与工程实践。",
+  "apps-experiences": "面向真实使用场景的应用、影像体验与交互实验。",
+  "libraries-components": "可复用的界面组件、组合式能力与跨框架基础设施。",
+  "open-source-contributions":
+    "曾向这些社区项目提交并合并过代码；卡片数据来自 GitHub。",
+  "templates-starters": "帮助想法更快落地的模板、脚手架与起步项目。",
+  "tools-utilities": "服务开发流程的工具、插件与通用能力。",
+};
 ---
 
 <Layout
@@ -15,13 +24,13 @@ const sections = await getProjectSections();
   >
     <a
       href="/"
-      class="font-sketch text-lg opacity-50 transition-opacity hover:opacity-100"
+      class="inline-flex min-h-11 items-center font-sketch text-lg opacity-60 transition-opacity hover:opacity-100"
       >← Home</a
     >
     <DarkToggle />
   </div>
 
-  <div class="mx-auto max-w-4xl px-6 py-20 md:py-28">
+  <main id="main-content" class="mx-auto max-w-4xl px-6 py-20 md:py-28">
     <!-- Header -->
     <header class="relative mb-16">
       <h1 class="font-sketch text-4xl opacity-90 md:text-5xl">Projects</h1>
@@ -29,7 +38,7 @@ const sections = await getProjectSections();
         class="rough-underline pointer-events-none absolute -bottom-2 left-0 h-3 w-48"
         aria-hidden="true"></svg>
       <p class="mt-5 font-sketch text-sm opacity-40 md:text-base">
-        Open source work I'm proud of — tools, templates, and contributions.
+        从产品与创意体验，到开源工具、组件和社区协作。
       </p>
     </header>
 
@@ -39,7 +48,7 @@ const sections = await getProjectSections();
         sections.map((section) => (
           <a
             href={`#${section.id}`}
-            class="rounded-sm border border-dashed border-current/15 px-3 py-1.5 font-sketch text-sm opacity-40 transition-all hover:border-current/30 hover:opacity-80"
+            class="inline-flex min-h-11 items-center rounded-sm border border-dashed border-current/15 px-3 py-1.5 font-sketch text-sm opacity-60 transition-all hover:border-current/30 hover:opacity-100"
           >
             {section.title}
           </a>
@@ -54,6 +63,10 @@ const sections = await getProjectSections();
           <section id={section.id} class="scroll-mt-24">
             <div class="relative mb-6">
               <h2 class="font-sketch text-xl opacity-70">{section.title}</h2>
+              <p class="mt-1 font-sketch-cn text-sm opacity-50">
+                {sectionDescriptions[section.id] ||
+                  "根据项目公开信息整理的作品集合。"}
+              </p>
               <svg
                 class="absolute -bottom-2 left-0 h-[1px] w-full opacity-10"
                 aria-hidden="true"
@@ -76,6 +89,7 @@ const sections = await getProjectSections();
                   href={repo.url}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label={`${repo.name}（在新窗口打开）`}
                   class="group relative block rounded-sm p-4 no-underline transition-all hover:bg-black/3 dark:hover:bg-white/3"
                 >
                   {/* Dashed border drawn by CSS */}
@@ -145,7 +159,7 @@ const sections = await getProjectSections();
         )
       }
     </div>
-  </div>
+  </main>
 </Layout>
 
 <script>

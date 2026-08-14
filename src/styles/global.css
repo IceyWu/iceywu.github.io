@@ -1,3 +1,5 @@
+@import "@fontsource-variable/caveat";
+@import "@fontsource/ma-shan-zheng";
 @import "tailwindcss";
 
 /* 基于 .dark class 的暗黑模式变体 */
@@ -5,13 +7,45 @@
 
 /* 手绘风格字体 */
 @theme {
-  --font-sketch: "Caveat", "Ma Shan Zheng", "ZCOOL XiaoWei", cursive;
-  --font-sketch-cn: "Ma Shan Zheng", "ZCOOL XiaoWei", "Caveat", cursive;
+  --font-sketch: "Caveat Variable", "Ma Shan Zheng", cursive;
+  --font-sketch-cn: "Ma Shan Zheng", "Caveat Variable", cursive;
 }
 
 html,
 body {
   min-height: 100%;
+}
+
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 100;
+  padding: 0.65rem 1rem;
+  color: CanvasText;
+  background: Canvas;
+  border-radius: 999px;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+:where(a, button, input, textarea, select):focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 body {

@@ -1,0 +1,17 @@
+<svg
+  fill="none"
+  id="canvas"
+  viewBox="0 0 320 160"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <title>lev</title>
+  <path
+    class="logo-signature"
+    d="M 24 130 C 43 113 65 72 77 31 C 84 8 92 13 87 38 C 80 74 56 111 49 130 C 45 142 56 146 72 138 C 88 130 100 111 109 91 C 116 76 112 69 105 74 C 93 82 89 108 98 123 C 108 139 128 132 144 118 C 157 106 166 90 174 73 C 169 97 168 124 178 135 C 190 148 208 112 224 78 C 220 98 219 124 230 135 C 243 147 263 119 280 91 C 291 73 300 63 306 66"
+    pathLength="1"
+    stroke="currentColor"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="4.5"
+  />
+</svg>

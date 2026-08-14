@@ -37,13 +37,13 @@ const fmtDate = post.data.date.toLocaleDateString("zh-CN", {
     <a
       href="/posts"
       title="返回列表"
-      class="font-sketch text-lg opacity-50 transition-opacity hover:opacity-100"
+      class="inline-flex min-h-11 items-center font-sketch text-lg opacity-60 transition-opacity hover:opacity-100"
       >← Posts</a
     >
     <DarkToggle />
   </div>
 
-  <div class="relative mx-auto max-w-3xl px-6 py-16 md:py-24">
+  <main id="main-content" class="relative mx-auto max-w-3xl px-6 py-16 md:py-24">
     <article class="prose">
       <header class="not-prose mb-10">
         <div class="relative inline-block">
@@ -76,7 +76,7 @@ const fmtDate = post.data.date.toLocaleDateString("zh-CN", {
         aria-hidden="true"></svg>
       <span class="relative">← Back to Posts</span>
     </a>
-  </div>
+  </main>
 
   <!-- TOC 侧边目录（大屏） -->
   {

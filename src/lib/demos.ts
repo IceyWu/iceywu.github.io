@@ -4,6 +4,7 @@ export interface DemoItem {
   description: string;
   link: string;
   title: string;
+  video?: string;
 }
 
 export const demos: DemoItem[] = [
@@ -17,16 +18,18 @@ export const demos: DemoItem[] = [
   {
     cover: "/demos/eos.png",
     date: "2025-12-20",
-    description: "基于 Web Components 技术栈的跨框架组件库🙌",
+    description:
+      "Cross-framework component library built with Web Components 🙌",
     link: "https://github.com/IceyWu/eos",
     title: "eos",
   },
   {
-    cover: "/demos/live-photo.gif",
+    cover: "/demos/live-photo.poster.webp",
     date: "2024-12-25",
     description: "A LivePhoto viewer for web applications🖼️",
     link: "https://github.com/IceyWu/live-photo",
     title: "live-photo",
+    video: "/demos/live-photo.webm",
   },
   {
     cover: "/demos/svg-animate-web.gif",
@@ -36,11 +39,12 @@ export const demos: DemoItem[] = [
     title: "svg-animate-web",
   },
   {
-    cover: "/demos/ViewerPro.gif",
+    cover: "/demos/ViewerPro.poster.webp",
     date: "2024-10-01",
     description: "A powerful image/video viewer component",
     link: "https://github.com/IceyWu/viewer-pro",
     title: "ViewerPro",
+    video: "/demos/ViewerPro.webm",
   },
   {
     cover: "/demos/WordsEssence.gif",
@@ -50,33 +54,37 @@ export const demos: DemoItem[] = [
     title: "WordsEssence",
   },
   {
-    cover: "/demos/QuickMemo.gif",
+    cover: "/demos/QuickMemo.poster.webp",
     date: "2024-07-24",
     description: "Your efficient and convenient note-taking tool🎉",
     link: "https://github.com/IceyWu/quick-memo",
     title: "QuickMemo",
+    video: "/demos/QuickMemo.webm",
   },
   {
-    cover: "/demos/LeanSnippet.gif",
+    cover: "/demos/LeanSnippet.poster.webp",
     date: "2024-06-01",
     description: "A lean code snippet manager",
     link: "https://github.com/IceyWu/LeanSnippet",
     title: "LeanSnippet",
+    video: "/demos/LeanSnippet.webm",
   },
   {
-    cover: "/demos/utils.gif",
+    cover: "/demos/utils.poster.webp",
     date: "2023-08-01",
     description:
       "Collection of common and useful JavaScript / TypeScript utilities",
     link: "https://github.com/IceyWu/utils",
     title: "utils",
+    video: "/demos/utils.webm",
   },
   {
-    cover: "/demos/cloud-template.gif",
+    cover: "/demos/cloud-template.poster.webp",
     date: "2023-12-20",
-    description: "vite + vue3 + ts 开箱即用现代开发模板",
+    description: "Ready-to-use modern starter for Vite, Vue 3, and TypeScript",
     link: "https://github.com/IceyWu/cloud-template",
     title: "cloud-template",
+    video: "/demos/cloud-template.webm",
   },
   {
     cover: "/demos/uni-ui-plus.png",

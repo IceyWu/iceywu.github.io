@@ -57,9 +57,19 @@ function getSectionId(title: string) {
     .replace(/^-+|-+$/g, "");
 }
 
-function filterRepos(repos: GHRepo[], key: string) {
+function matchesProjectArea(repos: GHRepo[], keywords: string[]) {
   return repos
-    .filter((repo) => repo.topics?.includes(key))
+    .filter((repo) => {
+      const searchable = [
+        repo.name,
+        repo.description || "",
+        ...(repo.topics || []),
+      ]
+        .join(" ")
+        .toLowerCase();
+
+      return keywords.some((keyword) => searchable.includes(keyword));
+    })
     .sort((a, b) => b.stargazers_count - a.stargazers_count);
 }
 
@@ -87,11 +97,40 @@ export async function getProjectSections(): Promise<ProjectSection[]> {
       const publicNotFork = publicRepos.filter((r) => !r.fork);
 
       const repoGroups: Record<string, GHRepo[]> = {
-        All: publicNotFork,
-        Templates: filterRepos(publicNotFork, "template"),
-        UnoCSS: filterRepos(publicRepos, "unocss"),
-        Utils: filterRepos(publicNotFork, "util"),
-        "Vite Ecosystem": filterRepos(publicNotFork, "vite"),
+        "All Projects": publicNotFork,
+        "Apps & Experiences": matchesProjectArea(publicNotFork, [
+          "app",
+          "demo",
+          "experience",
+          "live-photo",
+          "photo",
+          "visualization",
+        ]),
+        "Libraries & Components": matchesProjectArea(publicNotFork, [
+          "component",
+          "composable",
+          "hook",
+          "library",
+          "ui",
+          "web-component",
+        ]),
+        "Templates & Starters": publicNotFork
+          .filter(
+            (repo) =>
+              repo.is_template ||
+              repo.topics?.some((topic) =>
+                ["boilerplate", "starter", "template"].includes(topic)
+              )
+          )
+          .sort((a, b) => b.stargazers_count - a.stargazers_count),
+        "Tools & Utilities": matchesProjectArea(publicNotFork, [
+          "cli",
+          "plugin",
+          "tool",
+          "util",
+          "unocss",
+          "vite",
+        ]),
       };
 
       for (const [title, repos] of Object.entries(repoGroups)) {
@@ -168,7 +207,7 @@ export async function getProjectSections(): Promise<ProjectSection[]> {
 
           if (contributions.length > 0) {
             sections.unshift({
-              id: getSectionId("Contributed To"),
+              id: getSectionId("Open Source Contributions"),
               repos: contributions.map((repo) => ({
                 description: repo.description,
                 forks: 0,
@@ -182,7 +221,7 @@ export async function getProjectSections(): Promise<ProjectSection[]> {
                 stars: repo.stars,
                 url: repo.url,
               })),
-              title: "Contributed To",
+              title: "Open Source Contributions",
             });
           }
         }
@@ -194,7 +233,37 @@ export async function getProjectSections(): Promise<ProjectSection[]> {
     // API errors are non-fatal
   }
 
-  return sections;
+  if (sections.length > 0) {
+    return sections;
+  }
+
+  // GitHub API 不可用时复用站内 Demos 已有信息，避免项目页完全空白。
+  return [
+    {
+      id: "my-projects",
+      repos: [
+        [
+          "eos",
+          "Cross-framework component library built with Web Components 🙌",
+        ],
+        ["live-photo", "A LivePhoto viewer for web applications 🖼️"],
+        ["viewer-pro", "A powerful image/video viewer component"],
+        ["quick-memo", "Your efficient and convenient note-taking tool 🎉"],
+        ["utils", "Collection of common JavaScript / TypeScript utilities"],
+        ["vue-hooks-pure", "Pure Vue 3 composable hooks"],
+      ].map(([name, description]) => ({
+        badge: "Public",
+        description,
+        forks: 0,
+        id: `fallback-${name}`,
+        language: null,
+        name,
+        stars: 0,
+        url: `https://github.com/IceyWu/${name}`,
+      })),
+      title: "All Projects",
+    },
+  ];
 }
 
 const language2Color: Record<string, string> = {

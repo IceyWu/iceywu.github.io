@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import BackToTop from "../components/BackToTop.astro";
 
 interface Props {
   title?: string;
@@ -19,6 +20,16 @@ const {
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const imageURL = new URL(image, Astro.site);
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": type === "article" ? "BlogPosting" : "WebPage",
+  headline: title,
+  description,
+  image: imageURL.href,
+  url: canonicalURL.href,
+  ...(publishedAt ? { datePublished: publishedAt } : {}),
+  author: { "@type": "Person", name: "LevWu", url: Astro.site?.href },
+};
 ---
 
 <!doctype html>
@@ -31,6 +42,9 @@ const imageURL = new URL(image, Astro.site);
     <!-- SEO -->
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
     <link rel="canonical" href={canonicalURL.href} />
     <meta name="author" content="LevWu" />
     <meta
@@ -59,7 +73,7 @@ const imageURL = new URL(image, Astro.site);
     <meta name="twitter:image" content={imageURL.href} />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     <!-- RSS -->
     <link
@@ -69,13 +83,7 @@ const imageURL = new URL(image, Astro.site);
       href={new URL("rss.xml", Astro.site)}
     />
 
-    <!-- 手绘风格字体 -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=ZCOOL+XiaoWei&family=Ma+Shan+Zheng&display=swap"
-    />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 
     <!-- 暗黑模式无闪烁：渲染前同步设置 .dark -->
     <script is:inline>
@@ -89,6 +97,8 @@ const imageURL = new URL(image, Astro.site);
     </script>
   </head>
   <body class="min-h-screen bg-white text-black dark:bg-black dark:text-white">
+    <a class="skip-link" href="#main-content">跳到主要内容</a>
     <slot />
+    <BackToTop />
   </body>
 </html>

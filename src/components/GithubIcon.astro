@@ -1,5 +1,5 @@
 ---
-// GitHub 手绘字标（@Matcha 绘制），svg-animate-web 描边动画，随主题色重绘
+// GitHub 手绘字标（@Matcha 绘制），颜色跟随当前主题
 ---
 <svg
   id="github-icon"
@@ -57,25 +57,3 @@
   </g>
 </svg>
 
-<script>
-  import SetSvgAnimation from "svg-animate-web";
-
-  function renderGithub() {
-    const svg = document.getElementById("github-icon");
-    if (!svg) return;
-    const isDark = document.documentElement.classList.contains("dark");
-    const color = isDark ? "#fff" : "#333";
-    SetSvgAnimation(svg as unknown as HTMLElement, {
-      duration: 1,
-      count: 1,
-      fill: "transparent",
-      stroke: color,
-      strokeWidth: 7,
-      renderMode: "fill",
-      pathOptions: { stroke: color, fill: color, strokeWidth: 1 },
-    });
-  }
-
-  renderGithub();
-  document.addEventListener("theme-change", () => requestAnimationFrame(renderGithub));
-</script>

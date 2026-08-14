@@ -27,12 +27,12 @@ const fmtDate = (d: Date) =>
 <Layout title="Posts | LevWu" description="技术博客 - 分享前端开发、Vue、Nuxt、TypeScript 等技术文章">
   <!-- 顶部工具栏 -->
   <div class="fixed top-4 right-4 z-50 flex items-center gap-4 rounded-full bg-white/60 px-4 py-2 shadow-sm ring-1 ring-black/5 backdrop-blur-lg md:top-6 md:right-6 dark:bg-black/60 dark:ring-white/10">
-    <a href="/" title="返回首页" class="font-sketch text-lg opacity-50 transition-opacity hover:opacity-100">← Home</a>
+    <a href="/" title="返回首页" class="inline-flex min-h-11 items-center font-sketch text-lg opacity-60 transition-opacity hover:opacity-100">← Home</a>
     <RssIcon />
     <DarkToggle />
   </div>
 
-  <main class="mx-auto min-h-screen max-w-4xl px-6 py-20 md:py-28">
+  <main id="main-content" class="mx-auto min-h-screen max-w-4xl px-6 py-20 md:py-28">
     <!-- 标题 -->
     <header class="mb-16">
       <div class="relative inline-block">

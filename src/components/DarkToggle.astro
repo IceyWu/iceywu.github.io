@@ -7,7 +7,7 @@
   type="button"
   aria-label="切换深色/浅色模式"
   title="切换深色/浅色模式"
-  class="cursor-pointer opacity-90 transition-opacity outline-none hover:opacity-100"
+  class="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center opacity-90 transition-opacity hover:opacity-100"
 >
   <!-- 月亮（深色模式时显示） -->
   <svg id="moon-icon" class="hidden dark:block" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 112.3904888259924 100.96113539489806" width="37" height="33">
@@ -52,26 +52,7 @@
 </button>
 
 <script>
-  import SetSvgAnimation from "svg-animate-web";
-
   const btn = document.getElementById("dark-toggle");
-
-  // 给当前可见的日/月图标应用手绘描边动画（保留路径原色）
-  function animateToggleIcon() {
-    const isDark = document.documentElement.classList.contains("dark");
-    const svg = document.getElementById(isDark ? "moon-icon" : "sun-icon");
-    if (!svg) return;
-    const color = isDark ? "#fff" : "#333";
-    SetSvgAnimation(svg as unknown as HTMLElement, {
-      duration: 1,
-      count: 1,
-      fill: "transparent",
-      stroke: color,
-      strokeWidth: 7,
-      renderMode: "fill",
-      pathOptions: { stroke: color, strokeWidth: 1 },
-    });
-  }
 
   function applyToggle() {
     const root = document.documentElement;
@@ -120,10 +101,4 @@
   }
 
   btn?.addEventListener("click", onClick);
-
-  // 初始绘制 + 切换时重绘当前可见图标
-  animateToggleIcon();
-  document.addEventListener("theme-change", () =>
-    requestAnimationFrame(animateToggleIcon)
-  );
 </script>

@@ -11,21 +11,48 @@ import DarkToggle from "../components/DarkToggle.astro";
     <a
       href="/"
       title="返回首页"
-      class="font-sketch text-lg opacity-50 transition-opacity hover:opacity-100"
+      class="inline-flex min-h-11 items-center font-sketch text-lg opacity-60 transition-opacity hover:opacity-100"
       >← Home</a
     >
     <DarkToggle />
   </div>
 
-  <div class="fixed inset-0">
+  <div id="main-content" role="main" class="fixed inset-0">
     <iframe id="map-iframe" class="h-full w-full border-none" title="旅行地图"
     ></iframe>
+  </div>
+
+  <div
+    id="map-status"
+    class="fixed bottom-4 left-1/2 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 rounded-2xl bg-white/90 p-4 text-center shadow-lg ring-1 ring-black/10 backdrop-blur-lg transition-opacity md:bottom-6 dark:bg-black/85 dark:ring-white/15"
+    role="status"
+  >
+    <p id="map-status-text" class="font-sketch-cn text-sm opacity-65">
+      正在加载旅行地图…
+    </p>
+    <div id="map-actions" class="mt-3 hidden justify-center gap-2">
+      <button id="map-retry" type="button" class="min-h-11 rounded-full border border-current/20 px-4 font-sketch-cn text-sm">
+        重新加载
+      </button>
+      <a href="https://lpalette.cn/map/mkIo6X4FryYKOcUzuz4Kew" target="_blank" rel="noopener" class="inline-flex min-h-11 items-center rounded-full px-4 font-sketch-cn text-sm underline decoration-dashed underline-offset-4">
+        新窗口打开
+      </a>
+      <button id="map-dismiss" type="button" class="min-h-11 rounded-full px-4 font-sketch-cn text-sm opacity-60">
+        继续等待
+      </button>
+    </div>
   </div>
 </Layout>
 
 <script>
   const baseUrl = "https://lpalette.cn/map/mkIo6X4FryYKOcUzuz4Kew";
   const iframe = document.getElementById("map-iframe") as HTMLIFrameElement;
+  const status = document.getElementById("map-status") as HTMLDivElement;
+  const statusText = document.getElementById("map-status-text") as HTMLParagraphElement;
+  const actions = document.getElementById("map-actions") as HTMLDivElement;
+  const retry = document.getElementById("map-retry") as HTMLButtonElement;
+  const dismiss = document.getElementById("map-dismiss") as HTMLButtonElement;
+  let loadTimer: number;
 
   // 初始化时根据当前主题设置 iframe src
   function getTheme(): string {
@@ -34,7 +61,41 @@ import DarkToggle from "../components/DarkToggle.astro";
       : "light";
   }
 
-  iframe.src = `${baseUrl}?theme=${getTheme()}`;
+  function loadMap() {
+    status.classList.remove("pointer-events-none", "opacity-0");
+    statusText.textContent = "正在加载旅行地图…";
+    actions.classList.add("hidden");
+    actions.classList.remove("flex");
+    iframe.src = `${baseUrl}?theme=${getTheme()}&t=${Date.now()}`;
+
+    window.clearTimeout(loadTimer);
+    loadTimer = window.setTimeout(() => {
+      status.classList.remove("pointer-events-none", "opacity-0");
+      statusText.textContent = "如果地图仍停留在加载状态，可以重试或在新窗口打开。";
+      actions.classList.remove("hidden");
+      actions.classList.add("flex");
+    }, 15000);
+  }
+
+  iframe.addEventListener("load", () => {
+    // 跨域 iframe 的 load 只表示页面文档已打开，无法判断地图数据是否就绪。
+    // 暂时隐藏提示，但保留超时兜底，让卡在远端加载页时仍有恢复入口。
+    status.classList.add("pointer-events-none", "opacity-0");
+  });
+
+  iframe.addEventListener("error", () => {
+    window.clearTimeout(loadTimer);
+    statusText.textContent = "地图暂时无法显示，请稍后重试。";
+    actions.classList.remove("hidden");
+    actions.classList.add("flex");
+  });
+
+  retry.addEventListener("click", loadMap);
+  dismiss.addEventListener("click", () => {
+    window.clearTimeout(loadTimer);
+    status.classList.add("pointer-events-none", "opacity-0");
+  });
+  loadMap();
 
   // 监听主题切换，通知 iframe
   document.addEventListener("theme-change", () => {
