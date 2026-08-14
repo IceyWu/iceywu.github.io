@@ -14,7 +14,7 @@ interface PhotoData {
 
 interface Props {
   data?: PhotoData[];
-  /** 桌面端列数，默认 3。实际列数 = min(columns, 照片数)，避免照片不足时空列 */
+  /** 桌面端每行最多图片数，默认 3 */
   columns?: number;
   /**
    * 统一宽高比（宽/高），例如 4/3=1.333、3/2=1.5、1=正方形。
@@ -30,65 +30,90 @@ const OBJECT_FIT = "cover";
 
 const photos: PhotoData[] = Array.isArray(data) ? data : [];
 
-// 实际列数：不超过照片总数，避免末行单张孤悬
 const actualCols = Math.max(1, Math.min(columns, photos.length));
+const rows = Array.from(
+  { length: Math.ceil(photos.length / actualCols) },
+  (_, index) => photos.slice(index * actualCols, (index + 1) * actualCols),
+);
+
+function getProcessedPhotoSrc(url: string, longestSide: number) {
+  const process = `image/resize,l_${longestSide}/quality,q_90/format,avif`;
+  const hashIndex = url.indexOf("#");
+  const hash = hashIndex >= 0 ? url.slice(hashIndex) : "";
+  const base = hashIndex >= 0 ? url.slice(0, hashIndex) : url;
+  const separator = base.includes("?") ? "&" : "?";
+  return `${base}${separator}x-oss-process=${process}${hash}`;
+}
 
 function getPhotoSrc(photo: PhotoData) {
-  return `${photo.url}?x-oss-process=image/resize,l_800/format,avif`;
+  return getProcessedPhotoSrc(photo.url, 800);
+}
+
+function getPreviewSrc(photo: PhotoData) {
+  return getProcessedPhotoSrc(photo.url, 2400);
 }
 ---
 
 <div
   class="photo-list not-prose"
-  style={`display:grid;grid-template-columns:repeat(${actualCols},1fr);gap:${GAP}px`}
+  style={`display:flex;flex-direction:column;gap:${GAP}px`}
 >
   {
-    photos.map((photo) => {
-      const videoSrc =
-        photo.live_photo_video_url || photo.live_photo_video || "";
-      const isLive = Boolean(videoSrc);
-      const src = getPhotoSrc(photo);
+    rows.map((row) => (
+      <div
+        class={`photo-row${row.length === 1 ? " photo-row-single" : ""}`}
+        style={`display:flex;gap:${GAP}px`}
+      >
+        {row.map((photo) => {
+          const videoSrc =
+            photo.live_photo_video_url || photo.live_photo_video || "";
+          const isLive = Boolean(videoSrc);
+          const src = getPhotoSrc(photo);
+          const previewSrc = getPreviewSrc(photo);
 
-      // aspectRatio 未传时保留照片原始宽高比；传入时统一覆盖
-      const aspect =
-        aspectRatio != null
-          ? aspectRatio
-          : photo.width > 0 && photo.height > 0
-            ? photo.width / photo.height
-            : 4 / 3;
+          // 默认使用原图比例；显式传入 aspectRatio 时才统一裁切比例。
+          const aspect =
+            aspectRatio != null
+              ? aspectRatio
+              : photo.width > 0 && photo.height > 0
+                ? photo.width / photo.height
+                : 4 / 3;
+          const itemStyle = `--photo-aspect:${aspect};flex:${aspect} 1 0;min-width:0;aspect-ratio:${aspect};overflow:hidden;border-radius:8px`;
 
-      return isLive ? (
-        <div
-          class="viewer-pro-item"
-          data-live-photo
-          data-image={src}
-          data-video={videoSrc}
-          data-blurhash={photo.blurhash}
-          data-fit={OBJECT_FIT}
-          data-full-src={photo.url}
-          data-name={photo.name}
-          data-width={photo.width}
-          data-height={photo.height}
-          style={`width:100%;aspect-ratio:${aspect};position:relative;overflow:hidden;border-radius:8px`}
-        />
-      ) : (
-        <div
-          class="viewer-pro-item"
-          data-full-src={photo.url}
-          data-name={photo.name}
-          data-width={photo.width}
-          data-height={photo.height}
-          style={`width:100%;aspect-ratio:${aspect};overflow:hidden;border-radius:8px`}
-        >
-          <img
-            src={src}
-            alt={photo.name}
-            loading="lazy"
-            style={`width:100%;height:100%;object-fit:${OBJECT_FIT};border-radius:8px`}
-          />
-        </div>
-      );
-    })
+          return isLive ? (
+            <div
+              class="viewer-pro-item"
+              data-live-photo
+              data-image={src}
+              data-video={videoSrc}
+              data-blurhash={photo.blurhash}
+              data-fit={OBJECT_FIT}
+              data-full-src={previewSrc}
+              data-name={photo.name}
+              data-width={photo.width}
+              data-height={photo.height}
+              style={`${itemStyle};position:relative`}
+            />
+          ) : (
+            <div
+              class="viewer-pro-item"
+              data-full-src={previewSrc}
+              data-name={photo.name}
+              data-width={photo.width}
+              data-height={photo.height}
+              style={itemStyle}
+            >
+              <img
+                src={src}
+                alt={photo.name}
+                loading="lazy"
+                style={`width:100%;height:100%;object-fit:${OBJECT_FIT};border-radius:8px`}
+              />
+            </div>
+          );
+        })}
+      </div>
+    ))
   }
 </div>
 
@@ -185,7 +210,9 @@ function getPhotoSrc(photo: PhotoData) {
         type: live ? "live-photo" : "image",
         ...(live
           ? {
-              photoSrc: el.dataset.image || el.dataset.fullSrc || "",
+              // 正文使用 800px 轻量图；预览改用 OSS 转码后的 2400px 高清图，
+              // 兼顾大屏清晰度与浏览器格式兼容性。
+              photoSrc: el.dataset.fullSrc || el.dataset.image || "",
               videoSrc: el.dataset.video || "",
             }
           : {}),
@@ -319,20 +346,38 @@ function getPhotoSrc(photo: PhotoData) {
     cursor: pointer;
   }
 
-  /* 平板：最多 2 列，但如果只有 1 张图也保持 1 列 */
+  .photo-row-single {
+    justify-content: flex-start;
+  }
+
+  .photo-row-single .viewer-pro-item {
+    max-width: min(100%, calc(30rem * var(--photo-aspect)));
+    flex-basis: 100% !important;
+    flex-grow: 0 !important;
+  }
+
+  /* 平板：每行最多两张，仍保留各自原始比例。 */
   @media (max-width: 1024px) {
-    .photo-list {
-      grid-template-columns: repeat(
-        auto-fill,
-        minmax(max(280px, calc(50% - 8px)), 1fr)
-      ) !important;
+    .photo-row {
+      flex-wrap: wrap;
+    }
+
+    .photo-row .viewer-pro-item {
+      flex-basis: calc(50% - 8px) !important;
+      flex-grow: 0 !important;
     }
   }
 
   /* 手机：单列 */
   @media (max-width: 640px) {
-    .photo-list {
-      grid-template-columns: 1fr !important;
+    .photo-row {
+      flex-direction: column;
+    }
+
+    .photo-row .viewer-pro-item {
+      max-width: none;
+      width: 100%;
+      flex-basis: auto !important;
     }
   }
 </style>
