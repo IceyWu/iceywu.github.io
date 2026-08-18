@@ -28,6 +28,7 @@ export default defineConfig({
     },
   },
   site: "https://levwu.me",
+  trailingSlash: "always",
   vite: {
     plugins: [tailwindcss()],
   },

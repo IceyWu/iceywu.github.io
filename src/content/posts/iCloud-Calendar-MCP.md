@@ -1,0 +1,91 @@
+---
+title: 我用 TypeScript 做了一个 iCloud Calendar MCP
+date: 2026-08-18 16:00:00
+description: 通过 CalDAV 连接 iCloud Calendar，让 AI 可以可靠地查询、创建和调整日程。
+tags:
+  - MCP
+  - TypeScript
+  - CalDAV
+lang: zh-cn
+---
+
+![iCloud Calendar MCP](/posts/icloud-calendar-mcp.png)
+
+AI 已经可以写代码、查资料和管理文件，现在它也可以管理你的 iCloud 日历。
+
+最近我开源了 **iCloud Calendar MCP**：一个使用 TypeScript 开发、通过 CalDAV 连接 Apple iCloud Calendar 的 MCP Server。
+
+- [GitHub](https://github.com/IceyWu/icloud-calendar-mcp)
+- [npm](https://www.npmjs.com/package/icloud-calendar-mcp)
+- Official MCP Registry：`io.github.IceyWu/icloud-calendar`
+
+## 它能做什么
+
+接入支持 MCP 的客户端后，可以直接用自然语言操作日历：
+
+> 查询我明天的日程。
+
+> 明天上午十点创建一个 30 分钟的项目讨论。
+
+> 检查明天下午有没有时间冲突。
+
+> 把周五的会议调整到下周一上午。
+
+目前支持查询日历与事件、事件增删改查、冲突检测、忙闲计算，以及全天事件、时区、提醒、参与者和 RRULE 重复事件。
+
+## 快速开始
+
+准备好 Apple 账户邮箱和**应用专用密码**。不要使用 Apple 账户主密码。
+
+在 MCP 客户端中添加：
+
+```json
+{
+  "mcpServers": {
+    "icloud-calendar": {
+      "command": "npx",
+      "args": ["-y", "icloud-calendar-mcp"],
+      "env": {
+        "ICLOUD_USERNAME": "you@example.com",
+        "ICLOUD_APP_PASSWORD": "xxxx-xxxx-xxxx-xxxx"
+      }
+    }
+  }
+}
+```
+
+重启客户端后，就可以让 AI 查询或安排日程。
+
+## 不只是简单包装 CalDAV
+
+日历写入很容易遇到重复创建和并发覆盖。项目为此加入了：
+
+- `request_id` 和稳定 UID，降低重复创建风险
+- `If-None-Match`、`If-Match` 和 ETag 并发控制
+- 可跨进程复用的请求记录和事件 handle
+- 超时、指数退避、`Retry-After` 和写后读取处理
+- 密码、Authorization、敏感 URL 与事件内容脱敏
+
+项目也明确处理时区、夏令时和全天事件语义。对于无法安全完成的重复事件修改，会返回明确错误，而不是静默改错整个系列。
+
+## 为什么选择 TypeScript
+
+我希望它能通过 npm 直接使用，不要求安装其他语言运行时，也不依赖 macOS、AppleScript 或 Calendar.app：
+
+```bash
+npx -y icloud-calendar-mcp
+```
+
+项目使用官方 `@modelcontextprotocol/sdk`，默认通过 stdio 运行，同时保留经过认证和安全限制的 Streamable HTTP 模式。
+
+CI 使用 fake CalDAV Server，不需要真实 Apple 账号，覆盖 MCP 握手、事件 CRUD、幂等重放、ETag 冲突、重复事件、DST、限流和重试等场景。
+
+## 发布到 Official MCP Registry
+
+项目已经发布到 npm，并注册到 Official MCP Registry：
+
+```text
+io.github.IceyWu/icloud-calendar
+```
+
+如果你正在使用 Codex、Claude Desktop、Cursor 或其他支持 MCP 的客户端，欢迎[试用项目](https://github.com/IceyWu/icloud-calendar-mcp)，也欢迎提交 Issue 或 PR。
