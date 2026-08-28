@@ -1,31 +1,16 @@
-/**
- * 共享视频播放器逻辑，供 VideoListWrapper.astro 复用。
- */
-
-// ── 工具 ──
-export function fmtTime(s: number): string {
-  if (!Number.isFinite(s) || s < 0) {
-    return "0:00";
-  }
-  const m = Math.floor(s / 60);
-  const sec = Math.floor(s % 60);
-  return `${m}:${sec.toString().padStart(2, "0")}`;
-}
-
-// ── 播放器初始化 ──
-export interface PlayerElements {
-  fullscreenBtn: Element;
-  muteBtn: Element;
-  mutedIcon: Element;
-  pauseIcon: Element;
-  playIcon: Element;
-  playPauseBtn: Element;
-  progressFill: HTMLElement;
-  progressThumb: HTMLElement;
+interface PlayerElements {
+  fullscreenBtn: HTMLButtonElement;
+  muteBtn: HTMLButtonElement;
+  mutedIcon: SVGSVGElement;
+  pauseIcon: SVGSVGElement;
+  playIcon: SVGSVGElement;
+  playPauseBtn: HTMLButtonElement;
+  progressFill: SVGPathElement;
+  progressThumb: SVGPolygonElement;
   progressTrack: HTMLElement;
-  timeDisplay: Element;
+  timeDisplay: HTMLElement;
   video: HTMLVideoElement;
-  volumeIcon: Element;
+  volumeIcon: SVGSVGElement;
   wrapper: HTMLElement;
 }
 
@@ -73,10 +58,10 @@ export function initPlayer(el: PlayerElements) {
     const paused = video.paused || video.ended;
     wrapper.classList.toggle("paused", paused);
     wrapper.classList.toggle("ended", video.ended);
-    (playIcon as HTMLElement).style.display = paused ? "" : "none";
-    (pauseIcon as HTMLElement).style.display = paused ? "none" : "";
-    (volumeIcon as HTMLElement).style.display = video.muted ? "none" : "";
-    (mutedIcon as HTMLElement).style.display = video.muted ? "" : "none";
+    playIcon.style.display = paused ? "" : "none";
+    pauseIcon.style.display = paused ? "none" : "";
+    volumeIcon.style.display = video.muted ? "none" : "";
+    mutedIcon.style.display = video.muted ? "" : "none";
     playPauseBtn.setAttribute("aria-label", paused ? "播放" : "暂停");
     muteBtn.setAttribute("aria-label", video.muted ? "取消静音" : "静音");
   }
@@ -85,33 +70,30 @@ export function initPlayer(el: PlayerElements) {
     if (scrubbing) {
       return;
     }
-    const dur = video.duration;
-    const pct =
-      Number.isFinite(dur) && dur > 0 ? (video.currentTime / dur) * 100 : 0;
-    if (progressFill) {
-      progressFill.style.width = `${pct}%`;
-    }
-    if (progressThumb) {
-      progressThumb.style.left = `${pct}%`;
-    }
-    timeDisplay.textContent = `${fmtTime(video.currentTime)} / ${fmtTime(dur)}`;
-    setProgressBar(progressTrack, pct);
+    const { duration } = video;
+    const percent =
+      Number.isFinite(duration) && duration > 0
+        ? (video.currentTime / duration) * 100
+        : 0;
+    setProgressBar(progressFill, progressThumb, percent);
+    timeDisplay.textContent = `${formatTime(video.currentTime)} / ${formatTime(duration)}`;
   }
 
-  function seek(e: MouseEvent) {
+  function seek(event: MouseEvent) {
     const rect = progressTrack.getBoundingClientRect();
-    const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    const dur = video.duration;
-    if (Number.isFinite(dur)) {
-      video.currentTime = pct * dur;
+    if (rect.width <= 0) {
+      return;
     }
-    if (progressFill) {
-      progressFill.style.width = `${pct * 100}%`;
+
+    const ratio = Math.max(
+      0,
+      Math.min(1, (event.clientX - rect.left) / rect.width)
+    );
+    const { duration } = video;
+    if (Number.isFinite(duration)) {
+      video.currentTime = ratio * duration;
     }
-    if (progressThumb) {
-      progressThumb.style.left = `${pct * 100}%`;
-    }
-    setProgressBar(progressTrack, pct * 100);
+    setProgressBar(progressFill, progressThumb, ratio * 100);
   }
 
   video.addEventListener("play", updateState);
@@ -120,54 +102,60 @@ export function initPlayer(el: PlayerElements) {
   video.addEventListener("timeupdate", updateProgress);
   video.addEventListener("loadedmetadata", updateProgress);
   video.addEventListener("volumechange", () => {
-    (volumeIcon as HTMLElement).style.display = video.muted ? "none" : "";
-    (mutedIcon as HTMLElement).style.display = video.muted ? "" : "none";
+    volumeIcon.style.display = video.muted ? "none" : "";
+    mutedIcon.style.display = video.muted ? "" : "none";
   });
 
-  wrapper.addEventListener("click", (e) => {
-    if ((e.target as HTMLElement).closest(".video-controls")) {
+  wrapper.addEventListener("click", (event) => {
+    if ((event.target as HTMLElement).closest(".video-controls")) {
       return;
     }
     togglePlayback();
   });
 
-  wrapper.addEventListener("keydown", (e) => {
-    if (e.target !== wrapper || (e.key !== " " && e.key !== "Enter")) {
+  wrapper.addEventListener("keydown", (event) => {
+    if (
+      event.target !== wrapper ||
+      (event.key !== " " && event.key !== "Enter")
+    ) {
       return;
     }
-    e.preventDefault();
+    event.preventDefault();
     togglePlayback();
   });
 
-  playPauseBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
+  playPauseBtn.addEventListener("click", (event) => {
+    event.stopPropagation();
     togglePlayback();
   });
 
-  progressTrack.addEventListener("mousedown", (e) => {
+  progressTrack.addEventListener("mousedown", (event) => {
     scrubbing = true;
     wrapper.classList.add("scrubbing");
-    seek(e);
-    function onScrub(ev: MouseEvent) {
-      seek(ev);
+    seek(event);
+
+    function onScrub(scrubEvent: MouseEvent) {
+      seek(scrubEvent);
     }
+
     function onScrubEnd() {
       scrubbing = false;
       wrapper.classList.remove("scrubbing");
       document.removeEventListener("mousemove", onScrub);
       document.removeEventListener("mouseup", onScrubEnd);
     }
+
     document.addEventListener("mousemove", onScrub);
     document.addEventListener("mouseup", onScrubEnd);
   });
 
-  muteBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
+  muteBtn.addEventListener("click", (event) => {
+    event.stopPropagation();
     video.muted = !video.muted;
   });
 
-  fullscreenBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
+  fullscreenBtn.addEventListener("click", (event) => {
+    event.stopPropagation();
     toggleFullscreen();
   });
 
@@ -175,401 +163,25 @@ export function initPlayer(el: PlayerElements) {
   updateProgress();
 }
 
-// ── roughjs 图标绘制 ──
-export async function drawIcons() {
-  const { default: rough } = await import("roughjs");
-
-  function draw(sel: string, opts: Record<string, any>) {
-    document.querySelectorAll<SVGSVGElement>(sel).forEach((svg) => {
-      if (svg.dataset.drawn) {
-        return;
-      }
-      svg.dataset.drawn = "1";
-      svg.innerHTML = "";
-      const rc = rough.svg(svg);
-      opts.draw(rc, svg);
-    });
-  }
-
-  // 大播放三角
-  draw(".big-play-svg", {
-    draw(rc: any, svg: SVGSVGElement) {
-      const cx = 32,
-        cy = 32,
-        r = 28;
-      svg.appendChild(
-        rc.circle(cx, cy, r * 2, {
-          bowing: 1,
-          fill: "rgba(0,0,0,0.35)",
-          roughness: 1.2,
-          stroke: "rgba(255,255,255,0.9)",
-          strokeWidth: 1.5,
-        })
-      );
-      const s = 12;
-      svg.appendChild(
-        rc.linearPath(
-          [
-            [cx - s * 0.45, cy - s * 0.75],
-            [cx + s * 0.7, cy],
-            [cx - s * 0.45, cy + s * 0.75],
-          ],
-          {
-            bowing: 0.5,
-            fill: "rgba(255,255,255,0.2)",
-            roughness: 0.8,
-            stroke: "rgba(255,255,255,0.95)",
-            strokeWidth: 1.5,
-          }
-        )
-      );
-    },
-  });
-
-  // 播放
-  draw(".play-icon", {
-    draw(rc: any, svg: SVGSVGElement) {
-      svg.appendChild(
-        rc.linearPath(
-          [
-            [7, 4],
-            [7, 20],
-            [19, 12],
-          ],
-          {
-            bowing: 0.5,
-            fill: "rgba(255,255,255,0.25)",
-            roughness: 0.6,
-            stroke: "#fff",
-            strokeWidth: 1.8,
-          }
-        )
-      );
-    },
-  });
-
-  // 暂停
-  draw(".pause-icon", {
-    draw(rc: any, svg: SVGSVGElement) {
-      svg.appendChild(
-        rc.rectangle(6, 4, 4, 16, {
-          bowing: 0.3,
-          fill: "#fff",
-          roughness: 0.5,
-          stroke: "#fff",
-          strokeWidth: 1.8,
-        })
-      );
-      svg.appendChild(
-        rc.rectangle(14, 4, 4, 16, {
-          bowing: 0.3,
-          fill: "#fff",
-          roughness: 0.5,
-          stroke: "#fff",
-          strokeWidth: 1.8,
-        })
-      );
-    },
-  });
-
-  // 有音量
-  draw(".volume-icon", {
-    draw(rc: any, svg: SVGSVGElement) {
-      svg.appendChild(
-        rc.linearPath(
-          [
-            [3, 8],
-            [7, 8],
-            [11, 4],
-            [11, 20],
-            [7, 16],
-            [3, 16],
-          ],
-          {
-            bowing: 0.3,
-            closePath: false,
-            fill: "rgba(255,255,255,0.2)",
-            roughness: 0.5,
-            stroke: "#fff",
-            strokeWidth: 1.6,
-          }
-        )
-      );
-      svg.appendChild(
-        rc.curve(
-          [
-            [15, 9],
-            [18, 12],
-            [15, 15],
-          ],
-          {
-            fill: "none",
-            roughness: 0.5,
-            stroke: "#fff",
-            strokeWidth: 1.2,
-          }
-        )
-      );
-      svg.appendChild(
-        rc.curve(
-          [
-            [19, 7],
-            [21, 12],
-            [19, 17],
-          ],
-          {
-            fill: "none",
-            roughness: 0.5,
-            stroke: "#fff",
-            strokeWidth: 1.2,
-          }
-        )
-      );
-    },
-  });
-
-  // 静音
-  draw(".muted-icon", {
-    draw(rc: any, svg: SVGSVGElement) {
-      svg.appendChild(
-        rc.linearPath(
-          [
-            [3, 8],
-            [7, 8],
-            [11, 4],
-            [11, 20],
-            [7, 16],
-            [3, 16],
-          ],
-          {
-            bowing: 0.3,
-            closePath: false,
-            fill: "rgba(255,255,255,0.2)",
-            roughness: 0.5,
-            stroke: "#fff",
-            strokeWidth: 1.6,
-          }
-        )
-      );
-      svg.appendChild(
-        rc.linearPath(
-          [
-            [17, 9],
-            [21, 15],
-          ],
-          {
-            roughness: 0.6,
-            stroke: "rgba(255,100,100,0.8)",
-            strokeWidth: 1.5,
-          }
-        )
-      );
-      svg.appendChild(
-        rc.linearPath(
-          [
-            [21, 9],
-            [17, 15],
-          ],
-          {
-            roughness: 0.6,
-            stroke: "rgba(255,100,100,0.8)",
-            strokeWidth: 1.5,
-          }
-        )
-      );
-    },
-  });
-
-  // 全屏
-  draw(".fs-icon", {
-    draw(rc: any, svg: SVGSVGElement) {
-      svg.appendChild(
-        rc.linearPath(
-          [
-            [5, 5],
-            [14, 5],
-            [14, 8],
-            [8, 8],
-            [8, 14],
-            [5, 14],
-          ],
-          {
-            bowing: 0.3,
-            fill: "none",
-            roughness: 0.5,
-            stroke: "#fff",
-            strokeWidth: 1.6,
-          }
-        )
-      );
-      svg.appendChild(
-        rc.linearPath(
-          [
-            [19, 19],
-            [10, 19],
-            [10, 16],
-            [16, 16],
-            [16, 10],
-            [19, 10],
-          ],
-          {
-            bowing: 0.3,
-            fill: "none",
-            roughness: 0.5,
-            stroke: "#fff",
-            strokeWidth: 1.6,
-          }
-        )
-      );
-    },
-  });
+function setProgressBar(
+  fill: SVGPathElement,
+  thumb: SVGPolygonElement,
+  percent: number
+) {
+  const value = Math.max(
+    0,
+    Math.min(100, Number.isFinite(percent) ? percent : 0)
+  );
+  fill.style.strokeDasharray = `${value} 100`;
+  thumb.setAttribute("transform", `translate(${value},0)`);
 }
 
-// ── 手绘进度条 ──
-export async function drawProgressBars() {
-  await new Promise((r) => requestAnimationFrame(r));
-  const { default: rough } = await import("roughjs");
-
-  document.querySelectorAll<HTMLElement>(".progress-track").forEach((track) => {
-    if (track.dataset.barDrawn) {
-      return;
-    }
-    track.dataset.barDrawn = "1";
-
-    const svg = track.querySelector(
-      ".progress-svg"
-    ) as unknown as SVGSVGElement | null;
-    if (!svg) {
-      return;
-    }
-
-    const rc = rough.svg(svg);
-    const VH = 40;
-    const vb = svg.getAttribute("viewBox")?.split(/\s+/).map(Number) || [
-      0, 0, 100, 40,
-    ];
-    const VW = vb[2] || 100;
-    const my = VH / 2;
-
-    // ── 轨道：铅笔般柔和波浪线 ──
-    const segs = 20;
-    const pts: [number, number][] = [];
-    for (let i = 0; i <= segs; i++) {
-      const x = (i / segs) * VW;
-      // 正弦波 + 微小随机抖动，模拟手绘不完美
-      const wave = Math.sin(i * 0.6) * 3 + (Math.random() - 0.5) * 2;
-      pts.push([x, my + wave]);
-    }
-    svg.appendChild(
-      rc.linearPath(pts, {
-        bowing: 1.5,
-        roughness: 1.2,
-        stroke: "rgba(255,255,255,0.3)",
-        strokeWidth: 2,
-      })
-    );
-
-    // ── 填充：有机波浪边缘色块 ──
-    const barGroup = svg.querySelector("g[clip-path]");
-    if (barGroup) {
-      barGroup.innerHTML = "";
-
-      const barH = 16;
-      const top = my - barH / 2;
-      const seed = (n: number) => {
-        const x = Math.sin(n * 127.1 + 311.7) * 43_758.5453;
-        return x - Math.floor(x);
-      };
-
-      // 80 条细碎铅笔短线
-      for (let i = 0; i < 80; i++) {
-        const sx = seed(i * 3) * VW;
-        const sy = top + seed(i * 3 + 1) * barH;
-        const len = 4 + seed(i * 3 + 2) * 10;
-        const angle = (seed(i * 5) - 0.5) * 1.2;
-        const ex = sx + Math.cos(angle) * len;
-        const ey = sy + Math.sin(angle) * len;
-        barGroup.appendChild(
-          rc.linearPath(
-            [
-              [sx, sy],
-              [ex, ey],
-            ],
-            {
-              bowing: 1,
-              roughness: 0.8,
-              stroke: `rgba(255,255,255,${(0.15 + seed(i * 7) * 0.35).toFixed(2)})`,
-              strokeWidth: 0.4 + seed(i * 9) * 1.1,
-            }
-          )
-        );
-      }
-      // 12 条粗笔触强调
-      for (let i = 0; i < 12; i++) {
-        const sx = seed(i * 11 + 100) * VW;
-        const sy = top + seed(i * 11 + 101) * barH;
-        const len = 6 + seed(i * 11 + 102) * 14;
-        const ex = sx + (seed(i * 13) - 0.5) * len * 1.5;
-        const ey = sy + (seed(i * 13 + 1) - 0.5) * 8;
-        barGroup.appendChild(
-          rc.linearPath(
-            [
-              [sx, sy],
-              [ex, ey],
-            ],
-            {
-              bowing: 1.5,
-              roughness: 1.2,
-              stroke: `rgba(255,255,255,${(0.35 + seed(i * 19) * 0.3).toFixed(2)})`,
-              strokeWidth: 0.8 + seed(i * 17) * 1.4,
-            }
-          )
-        );
-      }
-    }
-
-    // ── 滑块：手绘菱形 ──
-    const oldThumb = svg.querySelector(".progress-thumb-rough");
-    if (oldThumb) {
-      oldThumb.remove();
-    }
-
-    const r = 7;
-    const thumb = rc.polygon(
-      [
-        [0, my - r],
-        [r, my],
-        [0, my + r],
-        [-r, my],
-      ],
-      {
-        bowing: 0.8,
-        fill: "rgba(255,255,255,0.8)",
-        roughness: 1,
-        stroke: "#fff",
-        strokeWidth: 1.2,
-      }
-    );
-    thumb.setAttribute("class", "progress-thumb-rough");
-    svg.appendChild(thumb);
-
-    const clipRect = svg.querySelector(
-      "clipPath rect"
-    ) as SVGRectElement | null;
-    (track as any).__clipRect = clipRect;
-    (track as any).__thumb = thumb;
-    (track as any).__svgW = VW;
-  });
-}
-
-export function setProgressBar(track: HTMLElement, pct: number) {
-  const clipRect = (track as any).__clipRect as SVGRectElement | undefined;
-  const thumb = (track as any).__thumb as SVGGElement | undefined;
-  const svgW = (track as any).__svgW as number | undefined;
-  if (!(clipRect && thumb && svgW)) {
-    return;
+function formatTime(seconds: number): string {
+  if (!Number.isFinite(seconds) || seconds < 0) {
+    return "0:00";
   }
-  const cx = (pct / 100) * svgW;
-  clipRect.setAttribute("width", String(cx));
-  thumb.setAttribute("transform", `translate(${cx},0)`);
+
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+  return `${minutes}:${String(remainingSeconds).padStart(2, "0")}`;
 }

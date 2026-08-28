@@ -18,7 +18,7 @@ export interface RepoCard {
   updatedAt: Date | null;
 }
 
-export interface ProjectData {
+interface ProjectData {
   contributions: RepoCard[];
   own: RepoCard[];
   source: "github" | "fallback";
@@ -58,7 +58,9 @@ const FALLBACK_PROJECTS = [
 ] as const;
 
 function toDate(value: string | null): Date | null {
-  if (!value) return null;
+  if (!value) {
+    return null;
+  }
   const date = new Date(value);
   return Number.isNaN(date.valueOf()) ? null : date;
 }
@@ -88,7 +90,7 @@ function mapRepo(repo: GHRepo, includeOwner = false): RepoCard {
 function compareByActivity(a: RepoCard, b: RepoCard): number {
   return (
     (b.updatedAt?.valueOf() ?? 0) - (a.updatedAt?.valueOf() ?? 0) ||
-    b.stars! - a.stars! ||
+    (b.stars ?? 0) - (a.stars ?? 0) ||
     a.name.localeCompare(b.name)
   );
 }
@@ -119,7 +121,9 @@ async function loadProjects(): Promise<ProjectData> {
     Accept: "application/vnd.github+json",
     "User-Agent": "astro-blog",
   };
-  if (token) headers.Authorization = `Bearer ${token}`;
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
 
   let own: RepoCard[] = [];
   let contributions: RepoCard[] = [];
@@ -127,7 +131,7 @@ async function loadProjects(): Promise<ProjectData> {
   try {
     const reposResponse = await fetch(
       `https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&type=owner&sort=updated`,
-      { headers },
+      { headers }
     );
 
     if (reposResponse.ok) {
@@ -138,7 +142,7 @@ async function loadProjects(): Promise<ProjectData> {
         .sort(compareByActivity);
     } else {
       console.warn(
-        `[projects] GitHub repositories request failed: ${reposResponse.status}`,
+        `[projects] GitHub repositories request failed: ${reposResponse.status}`
       );
     }
   } catch (error) {
@@ -149,7 +153,7 @@ async function loadProjects(): Promise<ProjectData> {
     try {
       const searchResponse = await fetch(
         `https://api.github.com/search/issues?q=author:${GITHUB_USERNAME}+type:pr+is:merged+-user:${GITHUB_USERNAME}&per_page=100`,
-        { headers },
+        { headers }
       );
 
       if (searchResponse.ok) {
@@ -157,11 +161,8 @@ async function loadProjects(): Promise<ProjectData> {
         const names = [
           ...new Set(
             (result.items ?? []).map((item) =>
-              item.repository_url.replace(
-                "https://api.github.com/repos/",
-                "",
-              ),
-            ),
+              item.repository_url.replace("https://api.github.com/repos/", "")
+            )
           ),
         ].slice(0, 20);
 
@@ -170,13 +171,13 @@ async function loadProjects(): Promise<ProjectData> {
             try {
               const response = await fetch(
                 `https://api.github.com/repos/${fullName}`,
-                { headers },
+                { headers }
               );
               return response.ok ? ((await response.json()) as GHRepo) : null;
             } catch {
               return null;
             }
-          }),
+          })
         );
 
         contributions = details
@@ -185,11 +186,11 @@ async function loadProjects(): Promise<ProjectData> {
           .sort(
             (a, b) =>
               (b.stars ?? 0) - (a.stars ?? 0) ||
-              a.fullName.localeCompare(b.fullName),
+              a.fullName.localeCompare(b.fullName)
           );
       } else {
         console.warn(
-          `[projects] GitHub contributions request failed: ${searchResponse.status}`,
+          `[projects] GitHub contributions request failed: ${searchResponse.status}`
         );
       }
     } catch (error) {
@@ -212,7 +213,7 @@ export function getProjects(): Promise<ProjectData> {
 export function formatProjectDate(date: Date, locale: "zh-CN" | "en"): string {
   return new Intl.DateTimeFormat(locale, {
     month: locale === "zh-CN" ? "long" : "short",
-    year: "numeric",
     timeZone: "Asia/Shanghai",
+    year: "numeric",
   }).format(date);
 }

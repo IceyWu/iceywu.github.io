@@ -324,9 +324,11 @@ function getPreviewSrc(photo: PhotoData) {
 
     nodes.forEach((el, i) => {
       el.addEventListener("click", (e) => {
+        const roleTarget = (e.target as HTMLElement).closest("[role]");
         if (
           el.hasAttribute("data-live-photo") &&
-          (e.target as HTMLElement).closest("[role]")
+          roleTarget &&
+          el.contains(roleTarget)
         )
           return;
         viewer.open(i);

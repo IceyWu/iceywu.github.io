@@ -1,4 +1,4 @@
-export interface GithubStats {
+interface GithubStats {
   avatar: string;
   createdAt: string;
   languageStats: Record<string, number>;

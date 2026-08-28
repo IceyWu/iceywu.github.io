@@ -7,8 +7,10 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans: "Inter Variable", "Noto Sans SC Variable", "Segoe UI",
-    "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+  --color-black: #080808;
+  --font-sans:
+    "Inter Variable", "Noto Sans SC Variable", "Segoe UI", "Microsoft YaHei",
+    "PingFang SC", system-ui, sans-serif;
 }
 
 html,
@@ -89,40 +91,92 @@ th,
   user-select: text;
 }
 
-/* 手绘描边动画 */
-.draw-path {
-  stroke-dasharray: 1000;
-  stroke-dashoffset: 1000;
-  animation: draw 3s ease-out forwards;
-}
-
-@keyframes draw {
+/* 页面内容按语义层级分批进入 */
+@keyframes slide-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
   to {
-    stroke-dashoffset: 0;
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-/* 头像有机形状形变动画 */
-.animate-shape {
-  animation: shape 5s linear infinite;
-}
+@media (prefers-reduced-motion: no-preference) {
+  html[data-enter-mode="full"] [data-page-enter],
+  html[data-enter-mode="full"] [data-page-enter-list] > *,
+  html[data-enter-mode="compact"] [data-enter-priority] {
+    --enter-stage: 0;
+    --enter-step: 90ms;
+    --enter-initial: 0ms;
+    animation: slide-enter 1s ease both;
+    animation-delay: calc(
+      var(--enter-initial) +
+      var(--enter-stage) *
+      var(--enter-step)
+    );
+  }
 
-@keyframes shape {
-  0%,
-  100% {
-    border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
-    transform: translate3d(0, 0, 0) rotateZ(0.01deg);
+  [data-page-enter-list] > :nth-child(1) {
+    --enter-stage: 2;
   }
-  34% {
-    border-radius: 70% 30% 46% 54% / 30% 29% 71% 70%;
-    transform: translate3d(0, 5px, 0) rotateZ(0.01deg);
+  [data-page-enter-list] > :nth-child(2) {
+    --enter-stage: 3;
   }
-  50% {
-    transform: translate3d(0, 0, 0) rotateZ(0.01deg);
+  [data-page-enter-list] > :nth-child(3) {
+    --enter-stage: 4;
   }
-  67% {
-    border-radius: 100% 60% 60% 100% / 100% 100% 60% 60%;
-    transform: translate3d(0, -3px, 0) rotateZ(0.01deg);
+  [data-page-enter-list] > :nth-child(4) {
+    --enter-stage: 5;
+  }
+  [data-page-enter-list] > :nth-child(5) {
+    --enter-stage: 6;
+  }
+  [data-page-enter-list] > :nth-child(6) {
+    --enter-stage: 7;
+  }
+  [data-page-enter-list] > :nth-child(7) {
+    --enter-stage: 8;
+  }
+  [data-page-enter-list] > :nth-child(8) {
+    --enter-stage: 9;
+  }
+  [data-page-enter-list] > :nth-child(9) {
+    --enter-stage: 10;
+  }
+  [data-page-enter-list] > :nth-child(10) {
+    --enter-stage: 11;
+  }
+  [data-page-enter-list] > :nth-child(11) {
+    --enter-stage: 12;
+  }
+  [data-page-enter-list] > :nth-child(12) {
+    --enter-stage: 13;
+  }
+  [data-page-enter-list] > :nth-child(13) {
+    --enter-stage: 14;
+  }
+  [data-page-enter-list] > :nth-child(14) {
+    --enter-stage: 15;
+  }
+  [data-page-enter-list] > :nth-child(15) {
+    --enter-stage: 16;
+  }
+  [data-page-enter-list] > :nth-child(16) {
+    --enter-stage: 17;
+  }
+  [data-page-enter-list] > :nth-child(17) {
+    --enter-stage: 18;
+  }
+  [data-page-enter-list] > :nth-child(18) {
+    --enter-stage: 19;
+  }
+  [data-page-enter-list] > :nth-child(19) {
+    --enter-stage: 20;
+  }
+  [data-page-enter-list] > :nth-child(20) {
+    --enter-stage: 21;
   }
 }
 
@@ -131,4 +185,20 @@ th,
 ::view-transition-new(root) {
   mix-blend-mode: normal;
   animation: none;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 2;
+}
+
+html.dark::view-transition-old(root) {
+  z-index: 2;
+}
+
+html.dark::view-transition-new(root) {
+  z-index: 1;
 }

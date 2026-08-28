@@ -1,15 +1,13 @@
 ---
-import DarkToggle from "../../../components/DarkToggle.astro";
-import LangToggle from "../../../components/LangToggle.astro";
-import Logo from "../../../components/Logo.astro";
+import PageIntro from "../../../components/PageIntro.astro";
 import RssIcon from "../../../components/RssIcon.astro";
+import SiteFooter from "../../../components/SiteFooter.astro";
+import SiteHeader from "../../../components/SiteHeader.astro";
 import {
-  LOCALES,
+  getLocalePageContext,
+  getLocaleStaticPaths,
   interpolate,
-  localeParam,
-  localeUrl,
-  useTranslations,
-  type Locale,
+  type LocalePageProps,
 } from "../../../i18n";
 import Layout from "../../../layouts/Layout.astro";
 import {
@@ -21,22 +19,15 @@ import {
 } from "../../../lib/essays";
 
 export function getStaticPaths() {
-  return LOCALES.map((locale) => ({
-    params: { locale: localeParam(locale) },
-    props: { locale },
-  }));
+  return getLocaleStaticPaths();
 }
 
-const { locale } = Astro.props as { locale: Locale };
-const t = useTranslations(locale);
+const { alternates, locale, t } = getLocalePageContext(
+  Astro.props as LocalePageProps,
+  "essays",
+);
 const essays = await getEssays(locale);
 const groups = groupEssaysByYear(essays);
-const alternates = Object.fromEntries(
-  LOCALES.map((supportedLocale) => [
-    supportedLocale,
-    localeUrl(supportedLocale, "essays"),
-  ]),
-) as Record<Locale, string>;
 ---
 
 <Layout
@@ -47,25 +38,23 @@ const alternates = Object.fromEntries(
   alternates={alternates}
 >
   <div id="main-content" role="main" class="min-h-screen bg-white/[0.9] dark:bg-black/[0.88]">
-    <header class="mx-auto flex max-w-xl items-center justify-between px-6 pt-8 sm:pt-10">
-      <a href={localeUrl(locale)} aria-label={t.essays.homeLabel} class="inline-flex">
-        <Logo class="w-24 sm:w-28" />
-      </a>
-      <div class="flex items-center gap-1 sm:gap-2">
-        <LangToggle locale={locale} path="essays" />
-        <RssIcon label={t.essays.rssLabel} title="RSS" />
-        <DarkToggle label={t.home.themeToggleLabel} />
-      </div>
-    </header>
+    <SiteHeader locale={locale} path="essays" width="xl">
+      <RssIcon slot="extra" label={t.essays.rssLabel} title="RSS" />
+    </SiteHeader>
 
     <main class="mx-auto max-w-xl px-6 pt-10 pb-24 sm:pt-12 sm:pb-28">
-      <header class="sr-only">
-        <h1>{t.essays.title}</h1>
-        <p>{t.essays.intro}</p>
-      </header>
+      <PageIntro
+        title={t.essays.title}
+        intro={t.essays.intro}
+        mode="sr-only"
+      />
 
       {groups.length > 0 ? (
-        <div aria-label={t.essays.archiveLabel} class="space-y-10 sm:space-y-12">
+        <div
+          aria-label={t.essays.archiveLabel}
+          class="space-y-10 sm:space-y-12"
+          data-page-enter-list
+        >
           {groups.map((group) => (
             <section aria-labelledby={`year-${group.year}`}>
               <h2
@@ -118,9 +107,7 @@ const alternates = Object.fromEntries(
         </div>
       )}
 
-      <footer class="mt-16 text-xs leading-6 text-black/40 dark:text-white/40 sm:mt-20">
-        <p>© {new Date().getFullYear()} Lev Wu</p>
-      </footer>
+      <SiteFooter />
     </main>
   </div>
 </Layout>

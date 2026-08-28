@@ -156,26 +156,28 @@ function formatVideoName(name: string): string {
                     preserveAspectRatio="none"
                     aria-hidden="true"
                   >
-                    <defs>
-                      <clipPath id={`pb-clip-${i}`}>
-                        <rect x="0" y="0" width="0" height="40"></rect>
-                      </clipPath>
-                    </defs>
-                    <g clip-path={`url(#pb-clip-${i})`}>
-                      <line
-                        x1="0"
-                        y1="20"
-                        x2="100"
-                        y2="20"
-                        stroke="rgba(255,255,255,0.12)"
-                        stroke-width="1"></line>
-                    </g>
+                    <path
+                      d="M0 20 C8 18 14 22 22 20 S38 18 46 20 S62 22 70 20 S86 18 100 20"
+                      fill="none"
+                      stroke="rgba(255,255,255,0.3)"
+                      stroke-width="2"
+                      vector-effect="non-scaling-stroke"></path>
+                    <path
+                      class="progress-fill-svg"
+                      d="M0 20 C8 18 14 22 22 20 S38 18 46 20 S62 22 70 20 S86 18 100 20"
+                      pathLength="100"
+                      fill="none"
+                      stroke="rgba(255,255,255,0.85)"
+                      stroke-width="3"
+                      stroke-dasharray="0 100"
+                      vector-effect="non-scaling-stroke"></path>
                     <polygon
-                      class="progress-thumb-rough"
+                      class="progress-thumb-svg"
                       points="0,13 7,20 0,27 -7,20"
                       fill="rgba(255,255,255,0.8)"
                       stroke="#fff"
-                      stroke-width="1"></polygon>
+                      stroke-width="1"
+                      vector-effect="non-scaling-stroke"></polygon>
                   </svg>
                 </div>
 
@@ -595,11 +597,6 @@ function formatVideoName(name: string): string {
     pointer-events: none;
   }
 
-  .progress-fill,
-  .progress-thumb {
-    display: none;
-  }
-
   .time-display {
     flex-shrink: 0;
     font-family: inherit;
@@ -676,7 +673,7 @@ function formatVideoName(name: string): string {
 
 <script>
   import { decode } from "blurhash";
-  import { initPlayer, drawIcons, drawProgressBars } from "../lib/video-player";
+  import { initPlayer } from "../lib/video-player";
 
   function blurhashToDataURL(hash: string, w = 32, h = 32): string | undefined {
     try {
@@ -710,7 +707,7 @@ function formatVideoName(name: string): string {
           "position:absolute;inset:0;background-size:cover;background-position:center;filter:blur(20px);transform:scale(1.1);z-index:0;transition:opacity 0.5s;pointer-events:none";
         ph.style.backgroundImage = "url(" + url + ")";
         const surface = el.querySelector<HTMLElement>(".video-surface");
-        const video = el.querySelector("video")!;
+        const video = el.querySelector<HTMLVideoElement>("video")!;
         if (!surface) return;
         surface.insertBefore(ph, video);
         video.style.position = "relative";
@@ -732,18 +729,26 @@ function formatVideoName(name: string): string {
       .forEach((item) => {
         initPlayer({
           wrapper: item,
-          video: item.querySelector("video")!,
-          playPauseBtn: item.querySelector(".play-pause-btn")!,
-          playIcon: item.querySelector(".play-icon")!,
-          pauseIcon: item.querySelector(".pause-icon")!,
-          progressTrack: item.querySelector(".progress-track")!,
-          progressFill: item.querySelector(".progress-fill")!,
-          progressThumb: item.querySelector(".progress-thumb")!,
-          timeDisplay: item.querySelector(".time-display")!,
-          muteBtn: item.querySelector(".mute-btn")!,
-          volumeIcon: item.querySelector(".volume-icon")!,
-          mutedIcon: item.querySelector(".muted-icon")!,
-          fullscreenBtn: item.querySelector(".fullscreen-btn")!,
+          video: item.querySelector<HTMLVideoElement>("video")!,
+          playPauseBtn: item.querySelector<HTMLButtonElement>(
+            ".play-pause-btn",
+          )!,
+          playIcon: item.querySelector<SVGSVGElement>(".play-icon")!,
+          pauseIcon: item.querySelector<SVGSVGElement>(".pause-icon")!,
+          progressTrack:
+            item.querySelector<HTMLElement>(".progress-track")!,
+          progressFill: item.querySelector<SVGPathElement>(
+            ".progress-fill-svg",
+          )!,
+          progressThumb: item.querySelector<SVGPolygonElement>(
+            ".progress-thumb-svg",
+          )!,
+          timeDisplay: item.querySelector<HTMLSpanElement>(".time-display")!,
+          muteBtn: item.querySelector<HTMLButtonElement>(".mute-btn")!,
+          volumeIcon: item.querySelector<SVGSVGElement>(".volume-icon")!,
+          mutedIcon: item.querySelector<SVGSVGElement>(".muted-icon")!,
+          fullscreenBtn:
+            item.querySelector<HTMLButtonElement>(".fullscreen-btn")!,
         });
       });
   }
@@ -751,8 +756,6 @@ function formatVideoName(name: string): string {
   function scanAndInit() {
     initPlaceholders();
     initPlayers();
-    drawIcons();
-    drawProgressBars();
   }
 
   scanAndInit();

@@ -59,11 +59,45 @@ const structuredData = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
 
+    <script is:inline>
+      (() => {
+        const storageKey = "page-enter:last";
+        const compactWindow = 30_000;
+        let mode = "full";
+
+        try {
+          const lastVisit = sessionStorage.getItem(storageKey);
+          const sameOrigin = Boolean(document.referrer) &&
+            new URL(document.referrer).origin === window.location.origin;
+          const elapsed = lastVisit ? Date.now() - Number(lastVisit) : Infinity;
+
+          if (sameOrigin && elapsed >= 0 && elapsed < compactWindow) {
+            mode = "compact";
+          }
+        } catch {
+          // A full entrance remains the safe fallback when storage is unavailable.
+        }
+
+        document.documentElement.dataset.enterMode = mode;
+        window.addEventListener(
+          "DOMContentLoaded",
+          () => {
+            try {
+              sessionStorage.setItem(storageKey, String(Date.now()));
+            } catch {
+              // Navigation and animation remain usable without session storage.
+            }
+          },
+          { once: true },
+        );
+      })();
+    </script>
+
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="robots" content="index,follow,max-image-preview:large" />
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#080808" media="(prefers-color-scheme: dark)" />
     <link rel="canonical" href={canonicalURL.href} />
     {
       alternateEntries.map(([alternateLocale, href]) => (
@@ -125,12 +159,18 @@ const structuredData = {
     <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 
     <script is:inline>
-      const storedTheme = localStorage.getItem("theme");
-      const prefersDark = window.matchMedia(
-        "(prefers-color-scheme: dark)",
-      ).matches;
-      if (storedTheme === "dark" || (!storedTheme && prefersDark)) {
-        document.documentElement.classList.add("dark");
+      try {
+        const storedTheme = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)",
+        ).matches;
+        if (storedTheme === "dark" || (!storedTheme && prefersDark)) {
+          document.documentElement.classList.add("dark");
+        }
+      } catch {
+        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+          document.documentElement.classList.add("dark");
+        }
       }
     </script>
 
@@ -180,7 +220,7 @@ const structuredData = {
       )
     }
   </head>
-  <body class="min-h-screen bg-white text-black dark:bg-black dark:text-white">
+  <body class="min-h-screen bg-white text-black dark:bg-black dark:text-white/90">
     <a class="skip-link" href="#main-content">{t.layout.skipToContent}</a>
     <slot />
     <BackToTop />

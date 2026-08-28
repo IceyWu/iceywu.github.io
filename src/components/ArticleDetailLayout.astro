@@ -1,0 +1,150 @@
+---
+import type { MarkdownHeading } from "astro";
+import type { Locale } from "../i18n";
+import Layout from "../layouts/Layout.astro";
+import "../styles/prose.css";
+import ArticleToc from "./ArticleToc.astro";
+import SiteHeader from "./SiteHeader.astro";
+
+interface NavigationItem {
+  href: string;
+  label: string;
+  title: string;
+}
+
+interface Props {
+  alternates: Partial<Record<Locale, string>>;
+  archiveLabel: string;
+  backHref: string;
+  backLabel: string;
+  dateLabel: string;
+  description: string;
+  headings: MarkdownHeading[];
+  languagePath?: string;
+  lineHeight: number;
+  locale: Locale;
+  newer?: NavigationItem;
+  older?: NavigationItem;
+  path: "posts" | "essays";
+  publishedAt: string;
+  readingTimeLabel: string;
+  tags: string[];
+  title: string;
+  tocLabel: string;
+}
+
+const {
+  alternates,
+  archiveLabel,
+  backHref,
+  backLabel,
+  dateLabel,
+  description,
+  headings,
+  languagePath,
+  lineHeight,
+  locale,
+  newer,
+  older,
+  path,
+  publishedAt,
+  readingTimeLabel,
+  tags,
+  title,
+  tocLabel,
+} = Astro.props;
+---
+
+<Layout
+  title={`${title} — Lev Wu`}
+  description={description}
+  locale={locale}
+  alternates={alternates}
+  type="article"
+  publishedAt={publishedAt}
+>
+  <div id="main-content" role="main" class="min-h-screen bg-white/[0.9] dark:bg-black/[0.88]">
+    <SiteHeader
+      locale={locale}
+      path={path}
+      width="6xl"
+      sticky
+      languagePath={languagePath}
+      showLanguageToggle={Boolean(languagePath)}
+    >
+      <a
+        slot="context"
+        href={backHref}
+        aria-label={backLabel}
+        class="inline-flex min-h-11 min-w-0 items-center gap-1.5 border-black/10 border-l pl-3 text-xs font-medium text-black/48 transition-colors hover:text-black sm:pl-4 sm:text-sm dark:border-white/12 dark:text-white/48 dark:hover:text-white"
+      >
+        <span aria-hidden="true">←</span>
+        <span class="hidden truncate min-[360px]:inline">{backLabel}</span>
+      </a>
+    </SiteHeader>
+
+    <main class="mx-auto max-w-6xl pt-10 pb-24 sm:pt-12 sm:pb-28 xl:grid xl:grid-cols-[minmax(0,1fr)_36rem_minmax(0,1fr)] xl:gap-x-8">
+      <aside class="hidden xl:block">
+        <div class="sticky top-28 pr-6">
+          <ArticleToc headings={headings} label={tocLabel} variant="desktop" />
+        </div>
+      </aside>
+
+      <div class="min-w-0 px-6">
+        <article class="prose article-content" style={`--article-line-height: ${lineHeight};`}>
+          <header
+            class="not-prose mb-12"
+            data-page-enter
+            data-enter-priority="primary"
+            style="--enter-stage: 1;"
+          >
+            <h1 class="text-3xl leading-[1.2] font-bold sm:text-4xl">{title}</h1>
+            <div class="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-black/45 dark:text-white/45">
+              <time datetime={publishedAt}>{dateLabel}</time>
+              <span aria-hidden="true">·</span>
+              <span>{readingTimeLabel}</span>
+              {tags.map((tag) => <span class="ml-1">#{tag}</span>)}
+            </div>
+          </header>
+
+          <ArticleToc headings={headings} label={tocLabel} variant="mobile" />
+          <slot />
+        </article>
+
+        {(newer || older) && (
+          <nav
+            aria-label={archiveLabel}
+            class="mt-16 grid gap-8 border-t border-black/10 pt-6 sm:grid-cols-2 dark:border-white/10"
+          >
+            <div>
+              {newer && (
+                <a href={newer.href} class="group block">
+                  <span class="text-xs text-black/40 dark:text-white/40">
+                    ← {newer.label}
+                  </span>
+                  <span class="mt-1 block text-sm leading-6 text-black/70 underline-offset-4 group-hover:text-black group-hover:underline dark:text-white/70 dark:group-hover:text-white">
+                    {newer.title}
+                  </span>
+                </a>
+              )}
+            </div>
+            <div class="sm:text-right">
+              {older && (
+                <a href={older.href} class="group block">
+                  <span class="text-xs text-black/40 dark:text-white/40">
+                    {older.label} →
+                  </span>
+                  <span class="mt-1 block text-sm leading-6 text-black/70 underline-offset-4 group-hover:text-black group-hover:underline dark:text-white/70 dark:group-hover:text-white">
+                    {older.title}
+                  </span>
+                </a>
+              )}
+            </div>
+          </nav>
+        )}
+      </div>
+
+      <div class="hidden xl:block" aria-hidden="true"></div>
+    </main>
+  </div>
+</Layout>

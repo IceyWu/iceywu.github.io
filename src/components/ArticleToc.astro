@@ -1,0 +1,121 @@
+---
+import type { MarkdownHeading } from "astro";
+
+interface Props {
+  headings: MarkdownHeading[];
+  label: string;
+  variant: "desktop" | "mobile";
+}
+
+const { headings, label, variant } = Astro.props;
+const items = headings.filter((heading) =>
+  heading.depth === 2 || heading.depth === 3
+);
+---
+
+{
+  items.length > 0 && variant === "desktop" && (
+    <nav aria-label={label} class="article-toc">
+      <p class="mb-4 text-xs font-medium tracking-[0.16em] text-black/35 uppercase dark:text-white/35">
+        {label}
+      </p>
+      <ol class="space-y-2.5">
+        {items.map((heading) => (
+          <li class:list={[heading.depth === 3 && "pl-3"]}>
+            <a
+              href={`#${heading.slug}`}
+              class="block text-sm leading-5 text-black/45 transition-colors hover:text-black dark:text-white/45 dark:hover:text-white"
+            >
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+}
+
+{
+  items.length > 0 && variant === "mobile" && (
+    <details class="article-toc-mobile not-prose mb-10 border-black/10 border-y py-3 xl:hidden dark:border-white/10">
+      <summary class="flex min-h-8 cursor-pointer list-none items-center justify-between text-sm font-medium text-black/55 dark:text-white/55">
+        <span>{label}</span>
+        <span class="toc-chevron text-black/30 transition-transform dark:text-white/30" aria-hidden="true">
+          ↓
+        </span>
+      </summary>
+      <ol class="mt-3 space-y-2.5 border-black/10 border-l pl-4 dark:border-white/10">
+        {items.map((heading) => (
+          <li class:list={[heading.depth === 3 && "pl-3"]}>
+            <a
+              href={`#${heading.slug}`}
+              class="block text-sm leading-5 text-black/50 underline-offset-4 hover:text-black hover:underline dark:text-white/50 dark:hover:text-white"
+            >
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </details>
+  )
+}
+
+<script>
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const tocLinks = document.querySelectorAll<HTMLAnchorElement>(
+    '.article-toc a[href^="#"], .article-toc-mobile a[href^="#"]',
+  );
+
+  for (const link of tocLinks) {
+    if (link.dataset.smoothScrollBound) continue;
+    link.dataset.smoothScrollBound = "true";
+
+    link.addEventListener("click", (event) => {
+      if (
+        event.button !== 0 ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey
+      )
+        return;
+
+      let id = link.hash.slice(1);
+      try {
+        id = decodeURIComponent(id);
+      } catch {
+        // Keep the encoded fragment when it cannot be decoded.
+      }
+
+      const target = document.getElementById(id);
+      if (!target) return;
+
+      event.preventDefault();
+      history.pushState(null, "", link.hash);
+      target.scrollIntoView({
+        behavior: reducedMotion.matches ? "auto" : "smooth",
+        block: "start",
+      });
+    });
+  }
+</script>
+
+<style>
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .article-toc-mobile ol {
+    padding-left: 1rem;
+    margin: 0.75rem 0 0;
+    list-style: none;
+  }
+
+  .article-toc-mobile li {
+    margin: 0;
+  }
+
+  .article-toc-mobile[open] .toc-chevron {
+    transform: rotate(180deg);
+  }
+</style>

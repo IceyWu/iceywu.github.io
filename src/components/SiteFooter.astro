@@ -1,0 +1,20 @@
+---
+interface Props {
+  spacing?: "compact" | "spacious";
+  tone?: "muted" | "subtle";
+}
+
+const { spacing = "compact", tone = "muted" } = Astro.props;
+const footerClass = [
+  "text-xs leading-6",
+  spacing === "spacious" ? "mt-24 sm:mt-32" : "mt-16 sm:mt-20",
+  tone === "subtle"
+    ? "text-black/45 dark:text-white/45"
+    : "text-black/40 dark:text-white/40",
+];
+---
+
+<footer class:list={footerClass}>
+  <slot />
+  <p>© {new Date().getFullYear()} Lev Wu</p>
+</footer>

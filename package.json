@@ -11,33 +11,22 @@
     "lint:fix": "ultracite fix",
     "preview": "astro preview"
   },
-  "simple-git-hooks": {
-    "pre-commit": "pnpm lint-staged"
-  },
-  "lint-staged": {
-    "*.{css,js,json,jsonc,mjs,ts}": "ultracite fix"
-  },
   "dependencies": {
     "@astrojs/mdx": "^7.0.8",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.3",
     "@fontsource-variable/inter": "5.3.0",
     "@fontsource-variable/noto-sans-sc": "5.3.0",
-    "@iconify-json/lucide": "^1.2.126",
-    "@iconify-json/simple-icons": "^1.2.93",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.2.6",
-    "astro-icon": "^1.2.0",
     "blurhash": "^2.0.5",
     "live-photo": "^0.2.0",
-    "roughjs": "^4.6.6",
     "tailwindcss": "^4.3.3",
     "viewer-pro": "^0.2.0"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",
     "@biomejs/biome": "2.5.10",
-    "lint-staged": "17.3.0",
     "typescript": "6.0.3",
     "ultracite": "7.10.6"
   },
