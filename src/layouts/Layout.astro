@@ -1,6 +1,13 @@
 ---
-import "../styles/global.css";
 import BackToTop from "../components/BackToTop.astro";
+import {
+  DEFAULT_LOCALE,
+  HREFLANG,
+  OG_LOCALE,
+  useTranslations,
+  type Locale,
+} from "../i18n";
+import "../styles/global.css";
 
 interface Props {
   title?: string;
@@ -8,6 +15,10 @@ interface Props {
   image?: string;
   type?: "website" | "article";
   publishedAt?: string;
+  locale?: Locale;
+  keywords?: string;
+  alternates?: Partial<Record<Locale, string>>;
+  detectLocale?: boolean;
 }
 
 const {
@@ -16,10 +27,18 @@ const {
   image = "/avatar.png",
   type = "website",
   publishedAt,
+  locale = DEFAULT_LOCALE,
+  keywords = "LevWu, 全栈开发, Vue, TypeScript, Nuxt, 开源, 前端, 博客",
+  alternates = {},
+  detectLocale = false,
 } = Astro.props;
 
+const t = useTranslations(locale);
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const imageURL = new URL(image, Astro.site);
+const alternateEntries = Object.entries(alternates).filter(
+  (entry): entry is [Locale, string] => Boolean(entry[1]),
+);
 const structuredData = {
   "@context": "https://schema.org",
   "@type": type === "article" ? "BlogPosting" : "WebPage",
@@ -27,55 +46,75 @@ const structuredData = {
   description,
   image: imageURL.href,
   url: canonicalURL.href,
+  inLanguage: locale,
   ...(publishedAt ? { datePublished: publishedAt } : {}),
   author: { "@type": "Person", name: "LevWu", url: Astro.site?.href },
 };
 ---
 
 <!doctype html>
-<html lang="zh-CN">
+<html lang={locale}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
 
-    <!-- SEO -->
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="robots" content="index,follow,max-image-preview:large" />
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
     <link rel="canonical" href={canonicalURL.href} />
+    {
+      alternateEntries.map(([alternateLocale, href]) => (
+        <link
+          rel="alternate"
+          hreflang={HREFLANG[alternateLocale]}
+          href={new URL(href, Astro.site).href}
+        />
+      ))
+    }
+    {
+      alternates[DEFAULT_LOCALE] && (
+        <link
+          rel="alternate"
+          hreflang="x-default"
+          href={new URL(alternates[DEFAULT_LOCALE], Astro.site).href}
+        />
+      )
+    }
     <meta name="author" content="LevWu" />
-    <meta
-      name="keywords"
-      content="LevWu, 全栈开发, Vue, TypeScript, Nuxt, 开源, 前端, 博客"
-    />
+    <meta name="keywords" content={keywords} />
 
-    <!-- Open Graph -->
     <meta property="og:type" content={type} />
     <meta property="og:url" content={canonicalURL.href} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={imageURL.href} />
     <meta property="og:site_name" content="LevWu" />
-    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:locale" content={OG_LOCALE[locale]} />
+    {
+      alternateEntries
+        .filter(([alternateLocale]) => alternateLocale !== locale)
+        .map(([alternateLocale]) => (
+          <meta
+            property="og:locale:alternate"
+            content={OG_LOCALE[alternateLocale]}
+          />
+        ))
+    }
     {
       publishedAt && (
         <meta property="article:published_time" content={publishedAt} />
       )
     }
 
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={imageURL.href} />
 
-    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-
-    <!-- RSS -->
     <link
       rel="alternate"
       type="application/rss+xml"
@@ -85,19 +124,64 @@ const structuredData = {
 
     <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 
-    <!-- 暗黑模式无闪烁：渲染前同步设置 .dark -->
     <script is:inline>
-      const stored = localStorage.getItem("theme");
+      const storedTheme = localStorage.getItem("theme");
       const prefersDark = window.matchMedia(
         "(prefers-color-scheme: dark)",
       ).matches;
-      if (stored === "dark" || (!stored && prefersDark)) {
+      if (storedTheme === "dark" || (!storedTheme && prefersDark)) {
         document.documentElement.classList.add("dark");
       }
     </script>
+
+    {
+      detectLocale && (
+        <script
+          is:inline
+          define:vars={{
+            currentLocale: locale,
+            localeTargets: alternates,
+          }}
+        >
+          try {
+            const supportedLocales = Object.keys(localeTargets);
+            const storedLocale = localStorage.getItem("locale");
+            let preferredLocale = supportedLocales.includes(storedLocale)
+              ? storedLocale
+              : undefined;
+
+            if (!preferredLocale) {
+              preferredLocale = navigator.languages.find((language) =>
+                supportedLocales.some(
+                  (supported) =>
+                    language.toLowerCase() === supported.toLowerCase() ||
+                    language.toLowerCase().startsWith(`${supported.toLowerCase()}-`) ||
+                    (supported === "zh-CN" && language.toLowerCase().startsWith("zh")),
+                ),
+              );
+              preferredLocale = preferredLocale?.toLowerCase().startsWith("zh")
+                ? "zh-CN"
+                : preferredLocale?.toLowerCase().startsWith("en")
+                  ? "en"
+                  : undefined;
+            }
+
+            const target = preferredLocale && localeTargets[preferredLocale];
+            if (target && preferredLocale !== currentLocale) {
+              const nextURL = new URL(target, window.location.origin);
+              nextURL.search = window.location.search;
+              nextURL.hash = window.location.hash;
+              window.location.replace(nextURL);
+            }
+          } catch {
+            // Explicit URL remains usable when browser storage is unavailable.
+          }
+        </script>
+      )
+    }
   </head>
   <body class="min-h-screen bg-white text-black dark:bg-black dark:text-white">
-    <a class="skip-link" href="#main-content">跳到主要内容</a>
+    <a class="skip-link" href="#main-content">{t.layout.skipToContent}</a>
     <slot />
     <BackToTop />
   </body>

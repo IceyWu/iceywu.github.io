@@ -16,7 +16,7 @@
 .prose h3,
 .prose h4 {
   margin: 2em 0 0.8em;
-  font-family: var(--font-sketch);
+  font-family: inherit;
   font-weight: 600;
   line-height: 1.25;
   color: rgba(var(--prose-fg), 0.95);

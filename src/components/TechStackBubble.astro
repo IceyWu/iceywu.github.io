@@ -57,15 +57,15 @@ const { languageStats = {} } = Astro.props;
         circle.className =
           "flex items-center justify-center rounded-full border border-black/10 bg-black/3 transition-colors duration-300 dark:border-white/15 dark:bg-white/5";
         const abbr = document.createElement("span");
-        abbr.className = "font-sketch";
+        abbr.className = "font-sans";
         abbr.textContent = lang.name.slice(0, 2);
         circle.appendChild(abbr);
         const label = document.createElement("span");
         label.className =
-          "mt-0.5 font-sketch text-[9px] leading-tight whitespace-nowrap md:text-[10px]";
+          "mt-0.5 font-sans text-[9px] leading-tight whitespace-nowrap md:text-[10px]";
         label.textContent = lang.name;
         const pct = document.createElement("span");
-        pct.className = "font-sketch text-[7px] leading-tight md:text-[8px]";
+        pct.className = "font-sans text-[7px] leading-tight md:text-[8px]";
         pct.textContent = `${lang.pct}%`;
         wrap.append(circle, label, pct);
         container.appendChild(wrap);

@@ -26,7 +26,7 @@ const friends: FriendLink[] = [
   >
     <a
       href="/"
-      class="inline-flex min-h-11 items-center font-sketch text-lg opacity-60 transition-opacity hover:opacity-100"
+      class="inline-flex min-h-11 items-center font-sans text-lg opacity-60 transition-opacity hover:opacity-100"
       >← Home</a
     >
     <DarkToggle />
@@ -36,12 +36,12 @@ const friends: FriendLink[] = [
     <!-- Header -->
     <header class="mb-16">
       <div class="relative inline-block pb-4">
-        <h1 class="font-sketch text-4xl opacity-90 md:text-5xl">Friends</h1>
+        <h1 class="font-sans text-4xl opacity-90 md:text-5xl">Friends</h1>
         <svg
           class="rough-underline pointer-events-none absolute bottom-0 left-0 h-3 w-full"
           aria-hidden="true"></svg>
       </div>
-      <p class="mt-4 font-sketch-cn text-sm opacity-40 md:text-base">
+      <p class="mt-4 font-sans text-sm opacity-40 md:text-base">
         一些有趣的朋友们，链接彼此的数字花园。
       </p>
     </header>
@@ -72,7 +72,7 @@ const friends: FriendLink[] = [
 
             {/* Info */}
             <div class="min-w-0 flex-1">
-              <h3 class="flex items-center gap-1.5 font-sketch text-lg opacity-80 group-hover:opacity-100">
+              <h3 class="flex items-center gap-1.5 font-sans text-lg opacity-80 group-hover:opacity-100">
                 {friend.name}
                 <svg
                   class="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-50"
@@ -87,7 +87,7 @@ const friends: FriendLink[] = [
                   />
                 </svg>
               </h3>
-              <p class="truncate font-sketch-cn text-sm opacity-40">
+              <p class="truncate font-sans text-sm opacity-40">
                 {friend.desc}
               </p>
             </div>
@@ -123,7 +123,7 @@ const friends: FriendLink[] = [
           fill="none"
           stroke-dasharray="4 3"></path>
       </svg>
-      <p class="font-sketch-cn text-sm opacity-45">
+      <p class="font-sans text-sm opacity-45">
         想要交换友链？欢迎通过
         <a
           href="https://github.com/iceywu"

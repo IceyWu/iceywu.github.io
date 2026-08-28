@@ -1,28 +1,29 @@
-import { getCollection } from "astro:content";
 import rss from "@astrojs/rss";
+import { getEssayUrl, getEssays } from "../lib/essays";
+import { getPosts, getPostUrl } from "../lib/posts";
 
 export async function GET(context) {
   const [posts, essays] = await Promise.all([
-    getCollection("posts"),
-    getCollection("essays"),
+    getPosts("zh-CN"),
+    getEssays("zh-CN"),
   ]);
 
   const items = [
     ...posts
-      .filter((p) => !p.data.draft)
+      .filter((post) => !post.data.draft)
       .map((post) => ({
         categories: post.data.tags,
         description: post.data.description,
-        link: `/posts/${post.id}/`,
+        link: getPostUrl(post),
         pubDate: post.data.date,
         title: post.data.title,
       })),
     ...essays
-      .filter((e) => !e.data.draft)
+      .filter((essay) => !essay.data.draft)
       .map((essay) => ({
         categories: essay.data.tags,
         description: essay.data.description,
-        link: `/essays/${essay.id}/`,
+        link: getEssayUrl(essay),
         pubDate: essay.data.date,
         title: essay.data.title,
       })),

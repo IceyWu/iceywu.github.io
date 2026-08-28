@@ -1,0 +1,110 @@
+---
+import DarkToggle from "../../../components/DarkToggle.astro";
+import LangToggle from "../../../components/LangToggle.astro";
+import Logo from "../../../components/Logo.astro";
+import RssIcon from "../../../components/RssIcon.astro";
+import {
+  LOCALES,
+  interpolate,
+  localeParam,
+  localeUrl,
+  useTranslations,
+  type Locale,
+} from "../../../i18n";
+import Layout from "../../../layouts/Layout.astro";
+import {
+  formatPostDate,
+  getPosts,
+  getPostUrl,
+  groupPostsByYear,
+  getReadingTime,
+} from "../../../lib/posts";
+
+export function getStaticPaths() {
+  return LOCALES.map((locale) => ({
+    params: { locale: localeParam(locale) },
+    props: { locale },
+  }));
+}
+
+const { locale } = Astro.props as { locale: Locale };
+const t = useTranslations(locale);
+const posts = await getPosts(locale);
+const groups = groupPostsByYear(posts);
+const alternates = Object.fromEntries(
+  LOCALES.map((supportedLocale) => [
+    supportedLocale,
+    localeUrl(supportedLocale, "posts"),
+  ]),
+) as Record<Locale, string>;
+---
+
+<Layout
+  title={t.posts.seo.title}
+  description={t.posts.seo.description}
+  keywords={t.posts.seo.keywords}
+  locale={locale}
+  alternates={alternates}
+>
+  <div id="main-content" role="main" class="min-h-screen bg-white/[0.9] dark:bg-black/[0.88]">
+    <header class="mx-auto flex max-w-xl items-center justify-between px-6 pt-8 sm:pt-10">
+      <a href={localeUrl(locale)} aria-label={t.posts.homeLabel} class="inline-flex">
+        <Logo class="w-24 sm:w-28" />
+      </a>
+      <div class="flex items-center gap-1 sm:gap-2">
+        <LangToggle locale={locale} path="posts" />
+        <RssIcon label={t.posts.rssLabel} title="RSS" />
+        <DarkToggle label={t.home.themeToggleLabel} />
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-xl px-6 pt-10 pb-24 sm:pt-12 sm:pb-28">
+      <header class="sr-only">
+        <h1>{t.posts.title}</h1>
+        <p>{t.posts.intro}</p>
+      </header>
+
+      <div aria-label={t.posts.archiveLabel} class="space-y-10 sm:space-y-12">
+        {groups.map((group) => (
+          <section aria-labelledby={`year-${group.year}`}>
+            <h2
+              id={`year-${group.year}`}
+              class="text-3xl leading-9 font-normal tabular-nums tracking-tight text-black/85 dark:text-white/85"
+            >
+              {group.year}
+            </h2>
+            <ul class="mt-3">
+              {group.posts.map((post) => (
+                <li>
+                  <a
+                    href={getPostUrl(post)}
+                    class="group grid gap-0 py-2 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-baseline sm:gap-4 sm:py-1.5"
+                  >
+                    <h3 class="min-w-0 text-base leading-6 font-normal text-black/80 underline-offset-4 group-hover:text-black group-hover:underline dark:text-white/80 dark:group-hover:text-white">
+                      {post.data.title}
+                    </h3>
+                    <p class="mt-0.5 flex shrink-0 items-center gap-1.5 text-sm leading-6 tabular-nums text-black/40 sm:mt-0 dark:text-white/40">
+                      <time datetime={post.data.date.toISOString()}>
+                        {formatPostDate(post.data.date, locale)}
+                      </time>
+                      <span aria-hidden="true">·</span>
+                      <span>
+                        {interpolate(t.posts.readingTime, {
+                          minutes: getReadingTime(post.body ?? ""),
+                        })}
+                      </span>
+                    </p>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+
+      <footer class="mt-16 text-xs leading-6 text-black/40 dark:text-white/40 sm:mt-20">
+        <p>© {new Date().getFullYear()} Lev Wu</p>
+      </footer>
+    </main>
+  </div>
+</Layout>

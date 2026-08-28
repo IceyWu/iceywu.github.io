@@ -11,7 +11,7 @@ import DarkToggle from "../components/DarkToggle.astro";
     <a
       href="/"
       title="返回首页"
-      class="inline-flex min-h-11 items-center font-sketch text-lg opacity-60 transition-opacity hover:opacity-100"
+      class="inline-flex min-h-11 items-center font-sans text-lg opacity-60 transition-opacity hover:opacity-100"
       >← Home</a
     >
     <DarkToggle />
@@ -27,17 +27,17 @@ import DarkToggle from "../components/DarkToggle.astro";
     class="fixed bottom-4 left-1/2 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 rounded-2xl bg-white/90 p-4 text-center shadow-lg ring-1 ring-black/10 backdrop-blur-lg transition-opacity md:bottom-6 dark:bg-black/85 dark:ring-white/15"
     role="status"
   >
-    <p id="map-status-text" class="font-sketch-cn text-sm opacity-65">
+    <p id="map-status-text" class="font-sans text-sm opacity-65">
       正在加载旅行地图…
     </p>
     <div id="map-actions" class="mt-3 hidden justify-center gap-2">
-      <button id="map-retry" type="button" class="min-h-11 rounded-full border border-current/20 px-4 font-sketch-cn text-sm">
+      <button id="map-retry" type="button" class="min-h-11 rounded-full border border-current/20 px-4 font-sans text-sm">
         重新加载
       </button>
-      <a href="https://lpalette.cn/map/mkIo6X4FryYKOcUzuz4Kew" target="_blank" rel="noopener" class="inline-flex min-h-11 items-center rounded-full px-4 font-sketch-cn text-sm underline decoration-dashed underline-offset-4">
+      <a href="https://lpalette.cn/map/mkIo6X4FryYKOcUzuz4Kew" target="_blank" rel="noopener" class="inline-flex min-h-11 items-center rounded-full px-4 font-sans text-sm underline decoration-dashed underline-offset-4">
         新窗口打开
       </a>
-      <button id="map-dismiss" type="button" class="min-h-11 rounded-full px-4 font-sketch-cn text-sm opacity-60">
+      <button id="map-dismiss" type="button" class="min-h-11 rounded-full px-4 font-sans text-sm opacity-60">
         继续等待
       </button>
     </div>

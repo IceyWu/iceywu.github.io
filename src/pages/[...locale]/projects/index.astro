@@ -1,0 +1,216 @@
+---
+import DarkToggle from "../../../components/DarkToggle.astro";
+import LangToggle from "../../../components/LangToggle.astro";
+import Logo from "../../../components/Logo.astro";
+import {
+  LOCALES,
+  interpolate,
+  localeParam,
+  localeUrl,
+  useTranslations,
+  type Locale,
+} from "../../../i18n";
+import Layout from "../../../layouts/Layout.astro";
+import {
+  formatProjectDate,
+  getProjects,
+  type RepoCard,
+} from "../../../lib/projects";
+
+export function getStaticPaths() {
+  return LOCALES.map((locale) => ({
+    params: { locale: localeParam(locale) },
+    props: { locale },
+  }));
+}
+
+const { locale } = Astro.props as { locale: Locale };
+const t = useTranslations(locale);
+const projects = await getProjects();
+const alternates = Object.fromEntries(
+  LOCALES.map((supportedLocale) => [
+    supportedLocale,
+    localeUrl(supportedLocale, "projects"),
+  ]),
+) as Record<Locale, string>;
+
+const groups: {
+  description: string;
+  id: string;
+  repos: RepoCard[];
+  title: string;
+}[] = [
+  ...(projects.contributions.length
+    ? [
+        {
+          description: t.projects.contributionsDescription,
+          id: "open-source-contributions",
+          repos: projects.contributions,
+          title: t.projects.contributionsTitle,
+        },
+      ]
+    : []),
+  {
+    description: t.projects.ownDescription,
+    id: "own-projects",
+    repos: projects.own,
+    title: t.projects.ownTitle,
+  },
+];
+---
+
+<Layout
+  title={t.projects.seo.title}
+  description={t.projects.seo.description}
+  keywords={t.projects.seo.keywords}
+  locale={locale}
+  alternates={alternates}
+>
+  <div class="min-h-screen bg-white/[0.9] dark:bg-black/[0.88]">
+    <header class="mx-auto flex max-w-3xl items-center justify-between px-6 pt-8 sm:pt-10">
+      <a href={localeUrl(locale)} aria-label={t.projects.homeLabel} class="inline-flex">
+        <Logo class="w-24 sm:w-28" />
+      </a>
+      <div class="flex items-center gap-1 sm:gap-2">
+        <LangToggle locale={locale} path="projects" />
+        <DarkToggle label={t.home.themeToggleLabel} />
+      </div>
+    </header>
+
+    <main id="main-content" class="mx-auto max-w-3xl px-6 pt-12 pb-24 sm:pt-16 sm:pb-28">
+      <header class="mb-20 max-w-xl sm:mb-24">
+        <h1 class="text-3xl leading-tight font-bold tracking-tight">
+          {t.projects.title}
+        </h1>
+        <p class="mt-3 max-w-lg text-sm leading-6 text-black/55 dark:text-white/55">
+          {t.projects.intro}
+        </p>
+      </header>
+
+      {projects.source === "fallback" && (
+        <p class="mb-12 max-w-xl border-black/15 border-l-2 pl-4 text-sm leading-6 text-black/50 dark:border-white/20 dark:text-white/50">
+          {t.projects.fallbackNotice}
+        </p>
+      )}
+
+      {groups.some((group) => group.repos.length) ? (
+        <div aria-label={t.projects.archiveLabel} class="space-y-24 sm:space-y-32">
+          {groups.map((group, groupIndex) =>
+            group.repos.length ? (
+              <section id={group.id} aria-labelledby={`${group.id}-title`}>
+                <div class="grid gap-5 border-black/20 border-t pt-6 dark:border-white/20 sm:grid-cols-2 sm:gap-10 sm:pt-8">
+                  <div>
+                    <span
+                      aria-hidden="true"
+                      class="text-xs font-medium tracking-[0.18em] text-black/30 dark:text-white/30"
+                    >
+                      {String(groupIndex + 1).padStart(2, "0")}
+                    </span>
+                    <h2
+                      id={`${group.id}-title`}
+                      class="mt-2 text-3xl leading-tight font-bold tracking-tight text-black/85 dark:text-white/85 sm:text-4xl"
+                    >
+                      {group.title}
+                    </h2>
+                  </div>
+                  <div class="sm:pt-7">
+                    <p class="max-w-md text-sm leading-6 text-black/50 dark:text-white/50">
+                      {group.description}
+                    </p>
+                    <p class="mt-3 text-xs tabular-nums text-black/30 dark:text-white/30">
+                      {interpolate(t.projects.countLabel, {
+                        count: group.repos.length,
+                      })}
+                    </p>
+                  </div>
+                </div>
+
+                <ul class="mt-10 grid grid-cols-1 gap-x-10 gap-y-9 md:grid-cols-2">
+                  {group.repos.map((repo) => {
+                    const description = repo.description;
+                    const displayName = repo.owner
+                      ? `${repo.owner.name}/${repo.name}`
+                      : repo.name;
+                    const homepageUrl =
+                      repo.homepageUrl && repo.homepageUrl !== repo.githubUrl
+                        ? repo.homepageUrl
+                        : null;
+
+                    return (
+                      <li class="min-w-0 border-black/10 border-t pt-5 dark:border-white/10">
+                        <div class="flex items-start justify-between gap-4">
+                          <h3 class="min-w-0 text-base leading-6 font-medium">
+                            <a
+                              href={repo.githubUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              aria-label={interpolate(t.projects.openRepositoryLabel, {
+                                name: displayName,
+                              })}
+                              class="break-words text-black/85 underline-offset-4 hover:text-black hover:underline dark:text-white/85 dark:hover:text-white"
+                            >
+                              {displayName}
+                            </a>
+                          </h3>
+                          {homepageUrl && (
+                            <a
+                              href={homepageUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              class="inline-flex min-h-6 shrink-0 items-center text-xs text-black/45 underline-offset-4 hover:text-black hover:underline dark:text-white/45 dark:hover:text-white"
+                            >
+                              {t.projects.visitLabel} ↗
+                            </a>
+                          )}
+                        </div>
+
+                        {description && (
+                          <p class="mt-1.5 text-sm leading-6 text-black/55 dark:text-white/55">
+                            {description}
+                          </p>
+                        )}
+
+                        <div class="mt-2.5 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-black/35 dark:text-white/35">
+                          {repo.language && <span>{repo.language}</span>}
+                          {repo.stars !== null && repo.stars > 0 && (
+                            <span aria-label={`${repo.stars} ${t.projects.starsLabel}`}>
+                              ★ {repo.stars}
+                            </span>
+                          )}
+                          {repo.forks !== null && repo.forks > 0 && (
+                            <span aria-label={`${repo.forks} ${t.projects.forksLabel}`}>
+                              ⑂ {repo.forks}
+                            </span>
+                          )}
+                          {repo.isTemplate && <span>{t.projects.templateLabel}</span>}
+                          {repo.updatedAt && (
+                            <span>
+                              {interpolate(t.projects.updatedLabel, {
+                                date: formatProjectDate(repo.updatedAt, locale),
+                              })}
+                            </span>
+                          )}
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
+            ) : null,
+          )}
+        </div>
+      ) : (
+        <div class="py-16 text-center">
+          <h2 class="text-lg font-medium">{t.projects.emptyTitle}</h2>
+          <p class="mt-2 text-sm text-black/50 dark:text-white/50">
+            {t.projects.emptyDescription}
+          </p>
+        </div>
+      )}
+
+      <footer class="mt-24 text-xs leading-6 text-black/40 dark:text-white/40 sm:mt-32">
+        <p>© {new Date().getFullYear()} Lev Wu</p>
+      </footer>
+    </main>
+  </div>
+</Layout>

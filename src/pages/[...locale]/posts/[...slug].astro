@@ -1,0 +1,163 @@
+---
+import { render } from "astro:content";
+import DarkToggle from "../../../components/DarkToggle.astro";
+import LangToggle from "../../../components/LangToggle.astro";
+import Logo from "../../../components/Logo.astro";
+import { localeParam, useTranslations, type Locale } from "../../../i18n";
+import Layout from "../../../layouts/Layout.astro";
+import {
+  formatPostDate,
+  getAdjacentPosts,
+  getPostAlternates,
+  getPosts,
+  getPostsUrl,
+  getPostTranslation,
+  getPostUrl,
+  getReadingTime,
+  type PostEntry,
+} from "../../../lib/posts";
+import "../../../styles/prose.css";
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => ({
+    params: {
+      locale: localeParam(post.data.lang),
+      slug: post.data.route,
+    },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props as { post: PostEntry };
+const locale = post.data.lang as Locale;
+const t = useTranslations(locale);
+const posts = await getPosts();
+const { Content } = await render(post);
+const alternates = getPostAlternates(post, posts);
+const targetLocale: Locale = locale === "zh-CN" ? "en" : "zh-CN";
+const translation = getPostTranslation(post, posts, targetLocale);
+const adjacent = getAdjacentPosts(post, posts);
+const readingTime = getReadingTime(post.body ?? "");
+---
+
+<Layout
+  title={`${post.data.title} — Lev Wu`}
+  description={post.data.description}
+  locale={locale}
+  alternates={alternates}
+  type="article"
+  publishedAt={post.data.date.toISOString()}
+>
+  <div id="main-content" role="main" class="min-h-screen bg-white/[0.9] dark:bg-black/[0.88]">
+    <header class="mx-auto flex max-w-xl items-center justify-between px-6 pt-8 sm:pt-10">
+      <a href={getPostsUrl(locale)} aria-label={t.posts.backToPosts} class="inline-flex">
+        <Logo class="w-24 sm:w-28" />
+      </a>
+      <div class="flex items-center gap-1 sm:gap-2">
+        <a
+          href={getPostsUrl(locale)}
+          class="inline-flex min-h-11 items-center text-sm font-medium text-black/50 transition-colors hover:text-black dark:text-white/50 dark:hover:text-white"
+        >
+          ← {t.posts.backToPosts}
+        </a>
+        {translation && (
+          <LangToggle locale={locale} path={`posts/${translation.data.route}`} />
+        )}
+        <DarkToggle label={t.home.themeToggleLabel} />
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-xl px-6 pt-12 pb-24 sm:pt-16 sm:pb-28">
+      <article class="prose post-content">
+        <header class="not-prose mb-12">
+          <h1 class="text-3xl leading-[1.2] font-bold sm:text-4xl">
+            {post.data.title}
+          </h1>
+          <div class="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-black/45 dark:text-white/45">
+            <time datetime={post.data.date.toISOString()}>
+              {formatPostDate(post.data.date, locale, true)}
+            </time>
+            <span aria-hidden="true">·</span>
+            <span>{readingTime} {locale === "zh-CN" ? "分钟" : "min"}</span>
+            {post.data.tags.map((tag) => <span class="ml-1">#{tag}</span>)}
+          </div>
+        </header>
+        <Content />
+      </article>
+
+      {(adjacent.newer || adjacent.older) && (
+        <nav
+          aria-label={t.posts.archiveLabel}
+          class="mt-16 grid gap-8 border-t border-black/10 pt-6 sm:grid-cols-2 dark:border-white/10"
+        >
+          <div>
+            {adjacent.newer && (
+              <a href={getPostUrl(adjacent.newer)} class="group block">
+                <span class="text-xs text-black/40 dark:text-white/40">
+                  ← {t.posts.newerPost}
+                </span>
+                <span class="mt-1 block text-sm leading-6 text-black/70 underline-offset-4 group-hover:text-black group-hover:underline dark:text-white/70 dark:group-hover:text-white">
+                  {adjacent.newer.data.title}
+                </span>
+              </a>
+            )}
+          </div>
+          <div class="sm:text-right">
+            {adjacent.older && (
+              <a href={getPostUrl(adjacent.older)} class="group block">
+                <span class="text-xs text-black/40 dark:text-white/40">
+                  {t.posts.olderPost} →
+                </span>
+                <span class="mt-1 block text-sm leading-6 text-black/70 underline-offset-4 group-hover:text-black group-hover:underline dark:text-white/70 dark:group-hover:text-white">
+                  {adjacent.older.data.title}
+                </span>
+              </a>
+            )}
+          </div>
+        </nav>
+      )}
+    </main>
+  </div>
+</Layout>
+
+<style>
+  :global(.post-content > header h1) {
+    margin: 0;
+    font-size: 1.875rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  @media (min-width: 40rem) {
+    :global(.post-content > header h1) {
+      font-size: 2.25rem;
+    }
+  }
+
+  :global(.post-content) {
+    line-height: 1.75;
+  }
+
+  :global(.post-content h2) {
+    margin-top: 2.4em;
+    margin-bottom: 0.75em;
+    font-size: 1.5rem;
+    line-height: 1.35;
+  }
+
+  :global(.post-content h3) {
+    margin-top: 2em;
+    margin-bottom: 0.65em;
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+
+  :global(.post-content :not(h1, h2, h3, h4, h5) > a) {
+    border-bottom-style: solid;
+  }
+
+  :global(.post-content hr) {
+    border-top-style: solid;
+  }
+</style>

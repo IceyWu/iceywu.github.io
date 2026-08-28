@@ -1,0 +1,45 @@
+---
+import {
+  DEFAULT_LOCALE,
+  HREFLANG,
+  localeUrl,
+  useTranslations,
+  type Locale,
+} from "../i18n";
+
+interface Props {
+  locale: Locale;
+  path?: string;
+}
+
+const { locale, path = "" } = Astro.props;
+const targetLocale: Locale = locale === DEFAULT_LOCALE ? "en" : DEFAULT_LOCALE;
+const target = useTranslations(locale).home;
+---
+
+<a
+  href={localeUrl(targetLocale, path)}
+  lang={targetLocale}
+  hreflang={HREFLANG[targetLocale]}
+  aria-label={target.languageToggleLabel}
+  title={target.languageToggleLabel}
+  data-locale-toggle={targetLocale}
+  class="inline-flex min-h-11 min-w-11 items-center justify-center text-sm font-medium tracking-wide opacity-55 transition-opacity hover:opacity-100"
+>
+  {target.languageToggleShort}
+</a>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-locale-toggle]").forEach((link) => {
+    link.addEventListener("click", () => {
+      const locale = link.dataset.localeToggle;
+      if (!locale) return;
+
+      try {
+        localStorage.setItem("locale", locale);
+      } catch {
+        // Storage can be unavailable in privacy modes; navigation still works.
+      }
+    });
+  });
+</script>

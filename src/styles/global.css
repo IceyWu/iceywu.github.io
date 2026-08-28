@@ -1,19 +1,23 @@
-@import "@fontsource-variable/caveat";
-@import "@fontsource/ma-shan-zheng";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/inter/wght-italic.css";
+@import "@fontsource-variable/noto-sans-sc";
 @import "tailwindcss";
 
 /* 基于 .dark class 的暗黑模式变体 */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* 手绘风格字体 */
 @theme {
-  --font-sketch: "Caveat Variable", "Ma Shan Zheng", cursive;
-  --font-sketch-cn: "Ma Shan Zheng", "Caveat Variable", cursive;
+  --font-sans: "Inter Variable", "Noto Sans SC Variable", "Segoe UI",
+    "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
 }
 
 html,
 body {
   min-height: 100%;
+}
+
+html {
+  font-family: var(--font-sans);
 }
 
 .skip-link {

@@ -8,9 +8,11 @@ const posts = defineCollection({
     date: z.coerce.date(),
     description: z.string().optional().default(""),
     draft: z.boolean().optional().default(false),
-    lang: z.string().optional().default("zh-cn"),
+    lang: z.enum(["zh-CN", "en"]).default("zh-CN"),
+    route: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
     tags: z.array(z.string()).optional().default([]),
     title: z.string(),
+    translationKey: z.string(),
   }),
 });
 
@@ -20,9 +22,11 @@ const essays = defineCollection({
     date: z.coerce.date(),
     description: z.string().optional().default(""),
     draft: z.boolean().optional().default(false),
-    lang: z.string().optional().default("zh-cn"),
+    lang: z.enum(["zh-CN", "en"]).default("zh-CN"),
+    route: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
     tags: z.array(z.string()).optional().default([]),
     title: z.string(),
+    translationKey: z.string(),
   }),
 });
 

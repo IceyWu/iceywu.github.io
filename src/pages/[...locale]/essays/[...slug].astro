@@ -1,0 +1,165 @@
+---
+import { render } from "astro:content";
+import DarkToggle from "../../../components/DarkToggle.astro";
+import LangToggle from "../../../components/LangToggle.astro";
+import Logo from "../../../components/Logo.astro";
+import { localeParam, useTranslations, type Locale } from "../../../i18n";
+import Layout from "../../../layouts/Layout.astro";
+import {
+  formatEssayDate,
+  getAdjacentEssays,
+  getEssayAlternates,
+  getEssayReadingTime,
+  getEssays,
+  getEssaysUrl,
+  getEssayTranslation,
+  getEssayUrl,
+  type EssayEntry,
+} from "../../../lib/essays";
+import "../../../styles/prose.css";
+
+export async function getStaticPaths() {
+  const essays = await getEssays();
+  return essays.map((essay) => ({
+    params: {
+      locale: localeParam(essay.data.lang),
+      slug: essay.data.route,
+    },
+    props: { essay },
+  }));
+}
+
+const { essay } = Astro.props as { essay: EssayEntry };
+const locale = essay.data.lang as Locale;
+const t = useTranslations(locale);
+const essays = await getEssays();
+const { Content } = await render(essay);
+const alternates = getEssayAlternates(essay, essays);
+const targetLocale: Locale = locale === "zh-CN" ? "en" : "zh-CN";
+const translation = getEssayTranslation(essay, essays, targetLocale);
+const adjacent = getAdjacentEssays(essay, essays);
+const readingTime = getEssayReadingTime(essay.body ?? "");
+---
+
+<Layout
+  title={`${essay.data.title} — Lev Wu`}
+  description={essay.data.description}
+  locale={locale}
+  alternates={alternates}
+  type="article"
+  publishedAt={essay.data.date.toISOString()}
+>
+  <div id="main-content" role="main" class="min-h-screen bg-white/[0.9] dark:bg-black/[0.88]">
+    <header class="mx-auto flex max-w-xl items-center justify-between px-6 pt-8 sm:pt-10">
+      <a href={getEssaysUrl(locale)} aria-label={t.essays.backToEssays} class="inline-flex">
+        <Logo class="w-24 sm:w-28" />
+      </a>
+      <div class="flex items-center gap-1 sm:gap-2">
+        <a
+          href={getEssaysUrl(locale)}
+          class="inline-flex min-h-11 items-center text-sm font-medium text-black/50 transition-colors hover:text-black dark:text-white/50 dark:hover:text-white"
+        >
+          ← {t.essays.backToEssays}
+        </a>
+        {translation && (
+          <LangToggle locale={locale} path={`essays/${translation.data.route}`} />
+        )}
+        <DarkToggle label={t.home.themeToggleLabel} />
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-xl px-6 pt-12 pb-24 sm:pt-16 sm:pb-28">
+      <article class="prose essay-content">
+        <header class="not-prose mb-12">
+          <h1 class="text-3xl leading-[1.2] font-bold sm:text-4xl">
+            {essay.data.title}
+          </h1>
+          <div class="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-black/45 dark:text-white/45">
+            <time datetime={essay.data.date.toISOString()}>
+              {formatEssayDate(essay.data.date, locale, true)}
+            </time>
+            <span aria-hidden="true">·</span>
+            <span>
+              {readingTime} {locale === "zh-CN" ? "分钟" : "min"}
+            </span>
+            {essay.data.tags.map((tag) => <span class="ml-1">#{tag}</span>)}
+          </div>
+        </header>
+        <Content />
+      </article>
+
+      {(adjacent.newer || adjacent.older) && (
+        <nav
+          aria-label={t.essays.archiveLabel}
+          class="mt-16 grid gap-8 border-t border-black/10 pt-6 sm:grid-cols-2 dark:border-white/10"
+        >
+          <div>
+            {adjacent.newer && (
+              <a href={getEssayUrl(adjacent.newer)} class="group block">
+                <span class="text-xs text-black/40 dark:text-white/40">
+                  ← {t.essays.newerEssay}
+                </span>
+                <span class="mt-1 block text-sm leading-6 text-black/70 underline-offset-4 group-hover:text-black group-hover:underline dark:text-white/70 dark:group-hover:text-white">
+                  {adjacent.newer.data.title}
+                </span>
+              </a>
+            )}
+          </div>
+          <div class="sm:text-right">
+            {adjacent.older && (
+              <a href={getEssayUrl(adjacent.older)} class="group block">
+                <span class="text-xs text-black/40 dark:text-white/40">
+                  {t.essays.olderEssay} →
+                </span>
+                <span class="mt-1 block text-sm leading-6 text-black/70 underline-offset-4 group-hover:text-black group-hover:underline dark:text-white/70 dark:group-hover:text-white">
+                  {adjacent.older.data.title}
+                </span>
+              </a>
+            )}
+          </div>
+        </nav>
+      )}
+    </main>
+  </div>
+</Layout>
+
+<style>
+  :global(.essay-content > header h1) {
+    margin: 0;
+    font-size: 1.875rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  @media (min-width: 40rem) {
+    :global(.essay-content > header h1) {
+      font-size: 2.25rem;
+    }
+  }
+
+  :global(.essay-content) {
+    line-height: 1.8;
+  }
+
+  :global(.essay-content h2) {
+    margin-top: 2.4em;
+    margin-bottom: 0.75em;
+    font-size: 1.5rem;
+    line-height: 1.35;
+  }
+
+  :global(.essay-content h3) {
+    margin-top: 2em;
+    margin-bottom: 0.65em;
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+
+  :global(.essay-content :not(h1, h2, h3, h4, h5) > a) {
+    border-bottom-style: solid;
+  }
+
+  :global(.essay-content hr) {
+    border-top-style: solid;
+  }
+</style>

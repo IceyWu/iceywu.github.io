@@ -1,12 +1,16 @@
 ---
-// 暗黑模式切换：手绘日/月图标（保留原色），圆形揭示过渡，持久化到 localStorage
+interface Props {
+  label?: string;
+}
+
+const { label = "切换深色/浅色模式" } = Astro.props;
 ---
 
 <button
   id="dark-toggle"
   type="button"
-  aria-label="切换深色/浅色模式"
-  title="切换深色/浅色模式"
+  aria-label={label}
+  title={label}
   class="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center opacity-90 transition-opacity hover:opacity-100"
 >
   <!-- 月亮（深色模式时显示） -->
