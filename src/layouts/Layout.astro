@@ -1,0 +1,228 @@
+---
+import BackToTop from "../components/BackToTop.astro";
+import {
+  DEFAULT_LOCALE,
+  HREFLANG,
+  OG_LOCALE,
+  useTranslations,
+  type Locale,
+} from "../i18n";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  type?: "website" | "article";
+  publishedAt?: string;
+  locale?: Locale;
+  keywords?: string;
+  alternates?: Partial<Record<Locale, string>>;
+  detectLocale?: boolean;
+}
+
+const {
+  title = "LevWu - 全栈开发者 | You only live once",
+  description = "LevWu 的个人网站。全栈开发者，热爱开源，专注于 Vue、Nuxt、TypeScript 等前端技术，分享技术博客、开源项目与生活随笔。",
+  image = "/avatar.png",
+  type = "website",
+  publishedAt,
+  locale = DEFAULT_LOCALE,
+  keywords = "LevWu, 全栈开发, Vue, TypeScript, Nuxt, 开源, 前端, 博客",
+  alternates = {},
+  detectLocale = false,
+} = Astro.props;
+
+const t = useTranslations(locale);
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const imageURL = new URL(image, Astro.site);
+const alternateEntries = Object.entries(alternates).filter(
+  (entry): entry is [Locale, string] => Boolean(entry[1]),
+);
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": type === "article" ? "BlogPosting" : "WebPage",
+  headline: title,
+  description,
+  image: imageURL.href,
+  url: canonicalURL.href,
+  inLanguage: locale,
+  ...(publishedAt ? { datePublished: publishedAt } : {}),
+  author: { "@type": "Person", name: "LevWu", url: Astro.site?.href },
+};
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <script is:inline>
+      (() => {
+        const storageKey = "page-enter:last";
+        const compactWindow = 30_000;
+        let mode = "full";
+
+        try {
+          const lastVisit = sessionStorage.getItem(storageKey);
+          const sameOrigin = Boolean(document.referrer) &&
+            new URL(document.referrer).origin === window.location.origin;
+          const elapsed = lastVisit ? Date.now() - Number(lastVisit) : Infinity;
+
+          if (sameOrigin && elapsed >= 0 && elapsed < compactWindow) {
+            mode = "compact";
+          }
+        } catch {
+          // A full entrance remains the safe fallback when storage is unavailable.
+        }
+
+        document.documentElement.dataset.enterMode = mode;
+        window.addEventListener(
+          "DOMContentLoaded",
+          () => {
+            try {
+              sessionStorage.setItem(storageKey, String(Date.now()));
+            } catch {
+              // Navigation and animation remain usable without session storage.
+            }
+          },
+          { once: true },
+        );
+      })();
+    </script>
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#080808" media="(prefers-color-scheme: dark)" />
+    <link rel="canonical" href={canonicalURL.href} />
+    {
+      alternateEntries.map(([alternateLocale, href]) => (
+        <link
+          rel="alternate"
+          hreflang={HREFLANG[alternateLocale]}
+          href={new URL(href, Astro.site).href}
+        />
+      ))
+    }
+    {
+      alternates[DEFAULT_LOCALE] && (
+        <link
+          rel="alternate"
+          hreflang="x-default"
+          href={new URL(alternates[DEFAULT_LOCALE], Astro.site).href}
+        />
+      )
+    }
+    <meta name="author" content="LevWu" />
+    <meta name="keywords" content={keywords} />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonicalURL.href} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={imageURL.href} />
+    <meta property="og:site_name" content="LevWu" />
+    <meta property="og:locale" content={OG_LOCALE[locale]} />
+    {
+      alternateEntries
+        .filter(([alternateLocale]) => alternateLocale !== locale)
+        .map(([alternateLocale]) => (
+          <meta
+            property="og:locale:alternate"
+            content={OG_LOCALE[alternateLocale]}
+          />
+        ))
+    }
+    {
+      publishedAt && (
+        <meta property="article:published_time" content={publishedAt} />
+      )
+    }
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageURL.href} />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="LevWu"
+      href={new URL("rss.xml", Astro.site)}
+    />
+
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+    <script is:inline>
+      try {
+        const storedTheme = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)",
+        ).matches;
+        if (storedTheme === "dark" || (!storedTheme && prefersDark)) {
+          document.documentElement.classList.add("dark");
+        }
+      } catch {
+        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+          document.documentElement.classList.add("dark");
+        }
+      }
+    </script>
+
+    {
+      detectLocale && (
+        <script
+          is:inline
+          define:vars={{
+            currentLocale: locale,
+            localeTargets: alternates,
+          }}
+        >
+          try {
+            const supportedLocales = Object.keys(localeTargets);
+            const storedLocale = localStorage.getItem("locale");
+            let preferredLocale = supportedLocales.includes(storedLocale)
+              ? storedLocale
+              : undefined;
+
+            if (!preferredLocale) {
+              preferredLocale = navigator.languages.find((language) =>
+                supportedLocales.some(
+                  (supported) =>
+                    language.toLowerCase() === supported.toLowerCase() ||
+                    language.toLowerCase().startsWith(`${supported.toLowerCase()}-`) ||
+                    (supported === "zh-CN" && language.toLowerCase().startsWith("zh")),
+                ),
+              );
+              preferredLocale = preferredLocale?.toLowerCase().startsWith("zh")
+                ? "zh-CN"
+                : preferredLocale?.toLowerCase().startsWith("en")
+                  ? "en"
+                  : undefined;
+            }
+
+            const target = preferredLocale && localeTargets[preferredLocale];
+            if (target && preferredLocale !== currentLocale) {
+              const nextURL = new URL(target, window.location.origin);
+              nextURL.search = window.location.search;
+              nextURL.hash = window.location.hash;
+              window.location.replace(nextURL);
+            }
+          } catch {
+            // Explicit URL remains usable when browser storage is unavailable.
+          }
+        </script>
+      )
+    }
+  </head>
+  <body class="min-h-screen bg-white text-black dark:bg-black dark:text-white/90">
+    <a class="skip-link" href="#main-content">{t.layout.skipToContent}</a>
+    <slot />
+    <BackToTop />
+  </body>
+</html>

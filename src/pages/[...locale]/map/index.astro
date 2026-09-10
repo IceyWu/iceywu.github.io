@@ -1,0 +1,235 @@
+---
+import DarkToggle from "../../../components/DarkToggle.astro";
+import LangToggle from "../../../components/LangToggle.astro";
+import Logo from "../../../components/Logo.astro";
+import {
+  getLocalePageContext,
+  getLocaleStaticPaths,
+  localeUrl,
+  type LocalePageProps,
+} from "../../../i18n";
+import Layout from "../../../layouts/Layout.astro";
+
+const MAP_URL = "https://lpalette.cn/map/mkIo6X4FryYKOcUzuz4Kew";
+
+export function getStaticPaths() {
+  return getLocaleStaticPaths();
+}
+
+const { alternates, locale, t } = getLocalePageContext(
+  Astro.props as LocalePageProps,
+  "map",
+);
+---
+
+<Layout
+  title={t.map.seo.title}
+  description={t.map.seo.description}
+  keywords={t.map.seo.keywords}
+  locale={locale}
+  alternates={alternates}
+>
+  <main id="main-content" class="fixed inset-0 overflow-hidden bg-[#ebe8e2] dark:bg-[#1d1d1d]">
+    <iframe
+      id="map-iframe"
+      title={t.map.iframeTitle}
+      class="h-full w-full border-0"
+      loading="eager"
+      referrerpolicy="strict-origin-when-cross-origin"
+      aria-busy="true"
+      data-base-url={MAP_URL}
+    ></iframe>
+
+    <noscript>
+      <iframe
+        src={MAP_URL}
+        title={t.map.iframeTitle}
+        class="absolute inset-0 h-full w-full border-0"
+        loading="eager"
+        referrerpolicy="strict-origin-when-cross-origin"
+      ></iframe>
+    </noscript>
+
+    <header class="map-toolbar pointer-events-none fixed z-30 flex items-start justify-between gap-2">
+      <div
+        class="pointer-events-auto flex h-11 items-center gap-2.5 rounded-xl border border-black/10 bg-white/88 px-3 shadow-sm backdrop-blur-md dark:border-white/12 dark:bg-black/78"
+      >
+        <a
+          href={localeUrl(locale)}
+          aria-label={t.map.homeLabel}
+          class="inline-flex shrink-0"
+        >
+          <Logo class="w-16 sm:w-20" />
+        </a>
+        <span aria-hidden="true" class="h-4 w-px bg-black/12 dark:bg-white/15"></span>
+        <a
+          href={localeUrl(locale)}
+          class="inline-flex min-h-10 items-center text-xs font-medium text-black/55 transition-colors hover:text-black dark:text-white/58 dark:hover:text-white"
+        >
+          {t.home.homeLinkLabel}
+        </a>
+        <span aria-hidden="true" class="h-4 w-px bg-black/12 dark:bg-white/15"></span>
+        <h1 class="text-sm font-medium tracking-tight text-black/75 dark:text-white/78">
+          {t.map.title}
+        </h1>
+      </div>
+
+      <div
+        class="pointer-events-auto flex h-11 items-center gap-0.5 rounded-xl border border-black/10 bg-white/88 px-1.5 shadow-sm backdrop-blur-md dark:border-white/12 dark:bg-black/78"
+      >
+        <LangToggle locale={locale} path="map" />
+        <a
+          href={MAP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          title={t.map.openMapLabel}
+          aria-label={t.map.openMapLabel}
+          class="flex h-10 w-10 items-center justify-center text-lg text-black/48 transition-colors hover:text-black dark:text-white/50 dark:hover:text-white"
+        >
+          <span aria-hidden="true">↗</span>
+        </a>
+        <DarkToggle label={t.home.themeToggleLabel} />
+      </div>
+
+      <p class="sr-only">{t.map.intro}</p>
+    </header>
+
+    <div
+      id="map-status"
+      class="map-status fixed z-30 w-[calc(100%-2rem)] max-w-lg rounded-xl border border-black/10 bg-white/92 p-4 shadow-sm backdrop-blur-md transition-opacity duration-200 dark:border-white/12 dark:bg-black/88"
+      role="status"
+      aria-live="polite"
+      data-loading-text={t.map.loading}
+      data-timeout-text={t.map.timeout}
+      data-error-text={t.map.error}
+    >
+      <p id="map-status-text" class="text-sm leading-6 text-black/62 dark:text-white/65">
+        {t.map.loading}
+      </p>
+      <div id="map-actions" class="mt-3 hidden flex-wrap items-center justify-center gap-x-4 gap-y-2">
+        <button
+          id="map-retry"
+          type="button"
+          class="min-h-10 text-sm font-medium text-black/72 underline-offset-4 hover:text-black hover:underline dark:text-white/75 dark:hover:text-white"
+        >
+          {t.map.retryLabel}
+        </button>
+        <a
+          href={MAP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex min-h-10 items-center text-sm font-medium text-black/72 underline-offset-4 hover:text-black hover:underline dark:text-white/75 dark:hover:text-white"
+        >
+          {t.map.openMapLabel} ↗
+        </a>
+        <button
+          id="map-dismiss"
+          type="button"
+          class="min-h-10 text-sm text-black/45 underline-offset-4 hover:text-black hover:underline dark:text-white/48 dark:hover:text-white"
+        >
+          {t.map.dismissLabel}
+        </button>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  const iframe = document.querySelector<HTMLIFrameElement>("#map-iframe");
+  const status = document.querySelector<HTMLDivElement>("#map-status");
+  const statusText = document.querySelector<HTMLParagraphElement>("#map-status-text");
+  const actions = document.querySelector<HTMLDivElement>("#map-actions");
+  const retry = document.querySelector<HTMLButtonElement>("#map-retry");
+  const dismiss = document.querySelector<HTMLButtonElement>("#map-dismiss");
+
+  if (iframe && status && statusText && actions && retry && dismiss) {
+    const baseUrl = iframe.dataset.baseUrl;
+    const loadingText = status.dataset.loadingText ?? "";
+    const timeoutText = status.dataset.timeoutText ?? "";
+    const errorText = status.dataset.errorText ?? "";
+    let loadTimer = 0;
+    let hideTimer = 0;
+
+    const getTheme = () =>
+      document.documentElement.classList.contains("dark") ? "dark" : "light";
+
+    const getMapUrl = () => {
+      const url = new URL(baseUrl ?? "", window.location.href);
+      url.searchParams.set("theme", getTheme());
+      url.searchParams.set("lang", document.documentElement.lang);
+      url.searchParams.set("t", String(Date.now()));
+      return url.href;
+    };
+
+    const showStatus = (message: string, showActions: boolean) => {
+      window.clearTimeout(hideTimer);
+      status.hidden = false;
+      status.classList.remove("pointer-events-none", "opacity-0");
+      statusText.textContent = message;
+      actions.classList.toggle("hidden", !showActions);
+      actions.classList.toggle("flex", showActions);
+    };
+
+    const hideStatus = () => {
+      status.classList.add("pointer-events-none", "opacity-0");
+      hideTimer = window.setTimeout(() => {
+        status.hidden = true;
+      }, 200);
+    };
+
+    const sendTheme = () => {
+      if (!baseUrl) return;
+      iframe.contentWindow?.postMessage(
+        { type: "theme-change", theme: getTheme() },
+        new URL(baseUrl).origin,
+      );
+    };
+
+    const loadMap = () => {
+      if (!baseUrl) return;
+      window.clearTimeout(loadTimer);
+      showStatus(loadingText, false);
+      iframe.setAttribute("aria-busy", "true");
+      iframe.src = getMapUrl();
+      loadTimer = window.setTimeout(() => {
+        showStatus(timeoutText, true);
+      }, 15000);
+    };
+
+    iframe.addEventListener("load", () => {
+      window.clearTimeout(loadTimer);
+      iframe.setAttribute("aria-busy", "false");
+      sendTheme();
+      hideStatus();
+    });
+
+    iframe.addEventListener("error", () => {
+      window.clearTimeout(loadTimer);
+      iframe.setAttribute("aria-busy", "false");
+      showStatus(errorText, true);
+    });
+
+    retry.addEventListener("click", loadMap);
+    dismiss.addEventListener("click", () => {
+      window.clearTimeout(loadTimer);
+      hideStatus();
+    });
+    document.addEventListener("theme-change", sendTheme);
+
+    loadMap();
+  }
+</script>
+
+<style>
+  .map-toolbar {
+    top: max(1rem, env(safe-area-inset-top));
+    right: max(1rem, env(safe-area-inset-right));
+    left: max(1rem, env(safe-area-inset-left));
+  }
+
+  .map-status {
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    left: 50%;
+    transform: translateX(-50%);
+  }
+</style>

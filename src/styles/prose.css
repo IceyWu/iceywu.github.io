@@ -1,0 +1,203 @@
+.prose {
+  --prose-fg: 0, 0, 0;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: rgba(var(--prose-fg), 0.82);
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.dark .prose {
+  --prose-fg: 255, 255, 255;
+  color: rgba(var(--prose-fg), 0.9);
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+  margin: 2em 0 0.8em;
+  font-family: inherit;
+  font-weight: 600;
+  line-height: 1.25;
+  color: rgba(var(--prose-fg), 0.95);
+  scroll-margin-top: 8rem;
+}
+
+.prose h1 {
+  margin-top: 0;
+  font-size: 2.4rem;
+}
+.prose h2 {
+  font-size: 1.8rem;
+}
+.prose h3 {
+  font-size: 1.4rem;
+}
+.prose h4 {
+  font-size: 1.15rem;
+}
+
+.prose p {
+  margin: 1.1em 0;
+}
+
+.prose strong {
+  font-weight: 600;
+  color: rgba(var(--prose-fg), 0.95);
+}
+
+/* 正文链接下划线 */
+.prose :not(h1, h2, h3, h4, h5) > a {
+  display: inline;
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(var(--prose-fg), 0.45);
+  transition: border-bottom-color 0.3s ease;
+}
+.prose :not(h1, h2, h3, h4, h5) > a:hover {
+  border-bottom-color: rgba(var(--prose-fg), 0.8);
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.4em;
+  margin: 1.1em 0;
+}
+.prose ul {
+  list-style: none;
+}
+.prose ul > li {
+  position: relative;
+}
+.prose ul > li::before {
+  position: absolute;
+  left: -1.4em;
+  content: "—";
+  opacity: 0.4;
+}
+.prose ol {
+  list-style: decimal;
+}
+.prose li {
+  margin: 0.4em 0;
+}
+
+.prose blockquote {
+  padding-left: 1em;
+  margin: 1.4em 0;
+  font-style: italic;
+  border-left: 2px solid rgba(var(--prose-fg), 0.4);
+  opacity: 0.8;
+}
+
+/* 行内代码 */
+.prose :not(pre) > code {
+  padding: 0.1em 0.4em;
+  font-family: ui-monospace, "SFMono-Regular", "Menlo", monospace;
+  font-size: 0.85em;
+  background-color: rgba(var(--prose-fg), 0.06);
+  border: 1px solid rgba(var(--prose-fg), 0.12);
+  border-radius: 0.4em;
+}
+
+/* 代码块 */
+.prose pre {
+  padding: 1.1em 1.3em;
+  margin: 1.4em 0;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  border: 1px solid rgba(var(--prose-fg), 0.12);
+  border-radius: 0.6em;
+}
+.prose pre code {
+  font-family: ui-monospace, "SFMono-Regular", "Menlo", monospace;
+}
+
+/* Shiki 双主题：暗黑模式切换配色 */
+.dark .astro-code,
+.dark .astro-code span {
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+  color: var(--shiki-dark) !important;
+  text-decoration: var(--shiki-dark-text-decoration) !important;
+  background-color: var(--shiki-dark-bg) !important;
+}
+
+.prose img:not(.not-prose *) {
+  max-width: 100%;
+  margin: 1.4em auto;
+  border-radius: 0.5em;
+}
+
+.prose video:not(.not-prose *) {
+  display: block;
+  max-width: 100%;
+  margin: 1.4em auto;
+  border-radius: 0.5em;
+}
+
+.prose hr {
+  margin: 2.4em 0;
+  border: none;
+  border-top: 1px dashed rgba(var(--prose-fg), 0.25);
+}
+
+.prose iframe:not(.not-prose *) {
+  max-width: 100%;
+  margin: 1.4em 0;
+  border: 1px solid rgba(var(--prose-fg), 0.12);
+  border-radius: 0.5em;
+}
+
+.prose table {
+  width: 100%;
+  margin: 1.4em 0;
+  font-size: 0.9rem;
+  border-collapse: collapse;
+}
+.prose th,
+.prose td {
+  padding: 0.5em 0.8em;
+  text-align: left;
+  border: 1px solid rgba(var(--prose-fg), 0.15);
+}
+
+.article-content {
+  line-height: var(--article-line-height, 1.8);
+}
+
+.article-content > header h1 {
+  margin: 0;
+  font-size: 1.875rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+@media (min-width: 40rem) {
+  .article-content > header h1 {
+    font-size: 2.25rem;
+  }
+}
+
+.article-content h2 {
+  margin-top: 2.4em;
+  margin-bottom: 0.75em;
+  font-size: 1.5rem;
+  line-height: 1.35;
+}
+
+.article-content h3 {
+  margin-top: 2em;
+  margin-bottom: 0.65em;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.article-content :not(h1, h2, h3, h4, h5) > a {
+  border-bottom-style: solid;
+}
+
+.article-content hr {
+  border-top-style: solid;
+}

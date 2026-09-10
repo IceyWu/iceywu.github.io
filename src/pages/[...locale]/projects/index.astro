@@ -1,0 +1,198 @@
+---
+import PageIntro from "../../../components/PageIntro.astro";
+import SiteFooter from "../../../components/SiteFooter.astro";
+import SiteHeader from "../../../components/SiteHeader.astro";
+import {
+  getLocalePageContext,
+  getLocaleStaticPaths,
+  interpolate,
+  type LocalePageProps,
+} from "../../../i18n";
+import Layout from "../../../layouts/Layout.astro";
+import {
+  formatProjectDate,
+  getProjects,
+  type RepoCard,
+} from "../../../lib/projects";
+
+export function getStaticPaths() {
+  return getLocaleStaticPaths();
+}
+
+const { alternates, locale, t } = getLocalePageContext(
+  Astro.props as LocalePageProps,
+  "projects",
+);
+const projects = await getProjects();
+
+const groups: {
+  description: string;
+  id: string;
+  repos: RepoCard[];
+  title: string;
+}[] = [
+  ...(projects.contributions.length
+    ? [
+        {
+          description: t.projects.contributionsDescription,
+          id: "open-source-contributions",
+          repos: projects.contributions,
+          title: t.projects.contributionsTitle,
+        },
+      ]
+    : []),
+  {
+    description: t.projects.ownDescription,
+    id: "own-projects",
+    repos: projects.own,
+    title: t.projects.ownTitle,
+  },
+];
+---
+
+<Layout
+  title={t.projects.seo.title}
+  description={t.projects.seo.description}
+  keywords={t.projects.seo.keywords}
+  locale={locale}
+  alternates={alternates}
+>
+  <div class="min-h-screen bg-white/[0.9] dark:bg-black/[0.88]">
+    <SiteHeader locale={locale} path="projects" />
+
+    <main id="main-content" class="mx-auto max-w-3xl px-6 pt-12 pb-24 sm:pt-16 sm:pb-28">
+      <PageIntro
+        title={t.projects.title}
+        intro={t.projects.intro}
+        spacing="wide"
+      />
+
+      {projects.source === "fallback" && (
+        <p class="mb-12 max-w-xl border-black/15 border-l-2 pl-4 text-sm leading-6 text-black/50 dark:border-white/20 dark:text-white/50">
+          {t.projects.fallbackNotice}
+        </p>
+      )}
+
+      {groups.some((group) => group.repos.length) ? (
+        <div
+          aria-label={t.projects.archiveLabel}
+          class="space-y-24 sm:space-y-32"
+          data-page-enter-list
+        >
+          {groups.map((group, groupIndex) =>
+            group.repos.length ? (
+              <section id={group.id} aria-labelledby={`${group.id}-title`}>
+                <div class="grid gap-5 border-black/20 border-t pt-6 dark:border-white/20 sm:grid-cols-2 sm:gap-10 sm:pt-8">
+                  <div>
+                    <span
+                      aria-hidden="true"
+                      class="text-xs font-medium tracking-[0.18em] text-black/30 dark:text-white/30"
+                    >
+                      {String(groupIndex + 1).padStart(2, "0")}
+                    </span>
+                    <h2
+                      id={`${group.id}-title`}
+                      class="mt-2 text-3xl leading-tight font-bold tracking-tight text-black/85 dark:text-white/85 sm:text-4xl"
+                    >
+                      {group.title}
+                    </h2>
+                  </div>
+                  <div class="sm:pt-7">
+                    <p class="max-w-md text-sm leading-6 text-black/50 dark:text-white/50">
+                      {group.description}
+                    </p>
+                    <p class="mt-3 text-xs tabular-nums text-black/30 dark:text-white/30">
+                      {interpolate(t.projects.countLabel, {
+                        count: group.repos.length,
+                      })}
+                    </p>
+                  </div>
+                </div>
+
+                <ul class="mt-10 grid grid-cols-1 gap-x-10 gap-y-9 md:grid-cols-2">
+                  {group.repos.map((repo) => {
+                    const description = repo.description;
+                    const displayName = repo.owner
+                      ? `${repo.owner.name}/${repo.name}`
+                      : repo.name;
+                    const homepageUrl =
+                      repo.homepageUrl && repo.homepageUrl !== repo.githubUrl
+                        ? repo.homepageUrl
+                        : null;
+
+                    return (
+                      <li class="min-w-0 border-black/10 border-t pt-5 dark:border-white/10">
+                        <div class="flex items-start justify-between gap-4">
+                          <h3 class="min-w-0 text-base leading-6 font-medium">
+                            <a
+                              href={repo.githubUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              aria-label={interpolate(t.projects.openRepositoryLabel, {
+                                name: displayName,
+                              })}
+                              class="break-words text-black/85 underline-offset-4 hover:text-black hover:underline dark:text-white/85 dark:hover:text-white"
+                            >
+                              {displayName}
+                            </a>
+                          </h3>
+                          {homepageUrl && (
+                            <a
+                              href={homepageUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              class="inline-flex min-h-6 shrink-0 items-center text-xs text-black/45 underline-offset-4 hover:text-black hover:underline dark:text-white/45 dark:hover:text-white"
+                            >
+                              {t.projects.visitLabel} ↗
+                            </a>
+                          )}
+                        </div>
+
+                        {description && (
+                          <p class="mt-1.5 text-sm leading-6 text-black/55 dark:text-white/55">
+                            {description}
+                          </p>
+                        )}
+
+                        <div class="mt-2.5 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-black/35 dark:text-white/35">
+                          {repo.language && <span>{repo.language}</span>}
+                          {repo.stars !== null && repo.stars > 0 && (
+                            <span aria-label={`${repo.stars} ${t.projects.starsLabel}`}>
+                              ★ {repo.stars}
+                            </span>
+                          )}
+                          {repo.forks !== null && repo.forks > 0 && (
+                            <span aria-label={`${repo.forks} ${t.projects.forksLabel}`}>
+                              ⑂ {repo.forks}
+                            </span>
+                          )}
+                          {repo.isTemplate && <span>{t.projects.templateLabel}</span>}
+                          {repo.updatedAt && (
+                            <span>
+                              {interpolate(t.projects.updatedLabel, {
+                                date: formatProjectDate(repo.updatedAt, locale),
+                              })}
+                            </span>
+                          )}
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
+            ) : null,
+          )}
+        </div>
+      ) : (
+        <div class="py-16 text-center">
+          <h2 class="text-lg font-medium">{t.projects.emptyTitle}</h2>
+          <p class="mt-2 text-sm text-black/50 dark:text-white/50">
+            {t.projects.emptyDescription}
+          </p>
+        </div>
+      )}
+
+      <SiteFooter spacing="spacious" />
+    </main>
+  </div>
+</Layout>

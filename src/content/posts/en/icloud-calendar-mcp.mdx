@@ -1,0 +1,93 @@
+---
+title: I Built an iCloud Calendar MCP with TypeScript
+date: 2026-08-18T16:00:00+08:00
+description: Connect to iCloud Calendar through CalDAV so AI can reliably query, create, and adjust events.
+route: icloud-calendar-mcp
+translationKey: icloud-calendar-mcp
+tags:
+  - MCP
+  - TypeScript
+  - CalDAV
+lang: en
+---
+
+![iCloud Calendar MCP](/posts/icloud-calendar-mcp.png)
+
+AI can already write code, research information, and manage files. Now it can manage your iCloud calendar as well.
+
+I recently open-sourced **iCloud Calendar MCP**, an MCP Server developed in TypeScript that connects to Apple iCloud Calendar through CalDAV.
+
+- [GitHub](https://github.com/IceyWu/icloud-calendar-mcp)
+- [npm](https://www.npmjs.com/package/icloud-calendar-mcp)
+- Official MCP Registry: `io.github.IceyWu/icloud-calendar`
+
+## What It Can Do
+
+Once connected to an MCP-compatible client, you can manage your calendar directly with natural language:
+
+> Show me my schedule for tomorrow.
+
+> Create a 30-minute project discussion tomorrow at 10:00 a.m.
+
+> Check whether I have any scheduling conflicts tomorrow afternoon.
+
+> Move Friday's meeting to next Monday morning.
+
+It currently supports querying calendars and events, full event CRUD operations, conflict detection, free/busy calculation, all-day events, time zones, reminders, attendees, and RRULE recurring events.
+
+## Quick Start
+
+Prepare your Apple Account email address and an **app-specific password**. Do not use your primary Apple Account password.
+
+Add the following to your MCP client:
+
+```json
+{
+  "mcpServers": {
+    "icloud-calendar": {
+      "command": "npx",
+      "args": ["-y", "icloud-calendar-mcp"],
+      "env": {
+        "ICLOUD_USERNAME": "you@example.com",
+        "ICLOUD_APP_PASSWORD": "xxxx-xxxx-xxxx-xxxx"
+      }
+    }
+  }
+}
+```
+
+After restarting the client, you can ask AI to query or schedule events.
+
+## More Than a Simple CalDAV Wrapper
+
+Calendar writes can easily result in duplicate events or concurrent updates overwriting one another. To address these issues, the project includes:
+
+- `request_id` and stable UIDs to reduce the risk of duplicate creation
+- `If-None-Match`, `If-Match`, and ETag-based concurrency control
+- Request records and event handles that can be reused across processes
+- Timeouts, exponential backoff, `Retry-After`, and read-after-write handling
+- Redaction of passwords, Authorization data, sensitive URLs, and event content
+
+The project also explicitly handles time zones, daylight saving time, and all-day event semantics. When a recurring event cannot be modified safely, it returns a clear error instead of silently changing the entire series incorrectly.
+
+## Why TypeScript
+
+I wanted it to be directly usable through npm without requiring another language runtime or depending on macOS, AppleScript, or Calendar.app:
+
+```bash
+npx -y icloud-calendar-mcp
+```
+
+The project uses the official `@modelcontextprotocol/sdk` and runs over stdio by default, while also retaining an authenticated and security-restricted Streamable HTTP mode.
+
+CI uses a fake CalDAV Server, so no real Apple account is required. It covers scenarios including the MCP handshake, event CRUD, idempotent replay, ETag conflicts, recurring events, DST, rate limiting, and retries.
+
+## Published to the Official MCP Registry
+
+The project has been published to npm and registered in the Official MCP Registry:
+
+```text
+io.github.IceyWu/icloud-calendar
+```
+
+If you use Codex, Claude Desktop, Cursor, or another MCP-compatible client, you are welcome to [try the project](https://github.com/IceyWu/icloud-calendar-mcp) and submit an Issue or PR.

@@ -1,0 +1,39 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <title>LevWu</title>
+  <style>
+  .paper {
+    fill: #fafafa;
+    stroke: #171717;
+  }
+  .mark {
+    stroke: #171717;
+  }
+  @media (prefers-color-scheme: dark) {
+    .paper {
+      fill: #171717;
+      stroke: #fafafa;
+    }
+    .mark {
+      stroke: #fafafa;
+    }
+  }
+  </style>
+  <rect
+    class="paper"
+    fill="none"
+    height="58"
+    rx="15"
+    stroke-width="2"
+    width="58"
+    x="3"
+    y="3"
+  />
+  <path
+    class="mark"
+    d="M 10 49 C 17 40 24 25 28 11 C 30 5 34 5 32 14 C 29 29 20 43 17 50 C 15 55 21 57 27 52 C 33 47 36 39 40 29 C 38 40 38 50 42 53 C 47 57 54 42 58 31"
+    fill="none"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="4"
+  />
+</svg>

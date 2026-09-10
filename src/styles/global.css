@@ -1,0 +1,204 @@
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/inter/wght-italic.css";
+@import "@fontsource-variable/noto-sans-sc";
+@import "tailwindcss";
+
+/* 基于 .dark class 的暗黑模式变体 */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-black: #080808;
+  --font-sans:
+    "Inter Variable", "Noto Sans SC Variable", "Segoe UI", "Microsoft YaHei",
+    "PingFang SC", system-ui, sans-serif;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+html {
+  font-family: var(--font-sans);
+}
+
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 100;
+  padding: 0.65rem 1rem;
+  color: CanvasText;
+  background: Canvas;
+  border-radius: 999px;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+:where(a, button, input, textarea, select):focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  /* 点阵纹理背景 - 浅色 */
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgZmlsbD0ibm9uZSIgdmlld0JveD0iMCAwIDMwIDMwIj4KICA8Y2lyY2xlIGN4PSIxNSIgY3k9IjE1IiByPSIxIiBmaWxsPSIjY2NjIi8+Cjwvc3ZnPg==");
+  background-repeat: repeat;
+  background-size: 30px 30px;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.dark body {
+  /* 点阵纹理背景 - 深色 */
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgZmlsbD0ibm9uZSIgdmlld0JveD0iMCAwIDMwIDMwIj4KICA8Y2lyY2xlIGN4PSIxNSIgY3k9IjE1IiByPSIxIiBmaWxsPSIjNDQ0Ii8+Cjwvc3ZnPg==");
+  background-size: 30px 30px;
+}
+
+/* 允许文本元素可被选中 */
+input,
+textarea,
+pre,
+code,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+a,
+li,
+td,
+th,
+[contenteditable="true"] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* 页面内容按语义层级分批进入 */
+@keyframes slide-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-enter-mode="full"] [data-page-enter],
+  html[data-enter-mode="full"] [data-page-enter-list] > *,
+  html[data-enter-mode="compact"] [data-enter-priority] {
+    --enter-stage: 0;
+    --enter-step: 90ms;
+    --enter-initial: 0ms;
+    animation: slide-enter 1s ease both;
+    animation-delay: calc(
+      var(--enter-initial) +
+      var(--enter-stage) *
+      var(--enter-step)
+    );
+  }
+
+  [data-page-enter-list] > :nth-child(1) {
+    --enter-stage: 2;
+  }
+  [data-page-enter-list] > :nth-child(2) {
+    --enter-stage: 3;
+  }
+  [data-page-enter-list] > :nth-child(3) {
+    --enter-stage: 4;
+  }
+  [data-page-enter-list] > :nth-child(4) {
+    --enter-stage: 5;
+  }
+  [data-page-enter-list] > :nth-child(5) {
+    --enter-stage: 6;
+  }
+  [data-page-enter-list] > :nth-child(6) {
+    --enter-stage: 7;
+  }
+  [data-page-enter-list] > :nth-child(7) {
+    --enter-stage: 8;
+  }
+  [data-page-enter-list] > :nth-child(8) {
+    --enter-stage: 9;
+  }
+  [data-page-enter-list] > :nth-child(9) {
+    --enter-stage: 10;
+  }
+  [data-page-enter-list] > :nth-child(10) {
+    --enter-stage: 11;
+  }
+  [data-page-enter-list] > :nth-child(11) {
+    --enter-stage: 12;
+  }
+  [data-page-enter-list] > :nth-child(12) {
+    --enter-stage: 13;
+  }
+  [data-page-enter-list] > :nth-child(13) {
+    --enter-stage: 14;
+  }
+  [data-page-enter-list] > :nth-child(14) {
+    --enter-stage: 15;
+  }
+  [data-page-enter-list] > :nth-child(15) {
+    --enter-stage: 16;
+  }
+  [data-page-enter-list] > :nth-child(16) {
+    --enter-stage: 17;
+  }
+  [data-page-enter-list] > :nth-child(17) {
+    --enter-stage: 18;
+  }
+  [data-page-enter-list] > :nth-child(18) {
+    --enter-stage: 19;
+  }
+  [data-page-enter-list] > :nth-child(19) {
+    --enter-stage: 20;
+  }
+  [data-page-enter-list] > :nth-child(20) {
+    --enter-stage: 21;
+  }
+}
+
+/* 暗黑模式切换圆形揭示过渡 */
+::view-transition-old(root),
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+  animation: none;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 2;
+}
+
+html.dark::view-transition-old(root) {
+  z-index: 2;
+}
+
+html.dark::view-transition-new(root) {
+  z-index: 1;
+}

@@ -1,0 +1,227 @@
+---
+import PageIntro from "../../../components/PageIntro.astro";
+import SiteFooter from "../../../components/SiteFooter.astro";
+import SiteHeader from "../../../components/SiteHeader.astro";
+import {
+  getLocalePageContext,
+  getLocaleStaticPaths,
+  interpolate,
+  type LocalePageProps,
+} from "../../../i18n";
+import Layout from "../../../layouts/Layout.astro";
+import { demos } from "../../../lib/demos";
+
+export function getStaticPaths() {
+  return getLocaleStaticPaths();
+}
+
+const { alternates, locale, t } = getLocalePageContext(
+  Astro.props as LocalePageProps,
+  "demos",
+);
+
+function formatDate(date: string) {
+  return new Intl.DateTimeFormat(locale === "zh-CN" ? "zh-CN" : "en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(`${date}T00:00:00Z`));
+}
+---
+
+<Layout
+  title={t.demos.seo.title}
+  description={t.demos.seo.description}
+  keywords={t.demos.seo.keywords}
+  locale={locale}
+  alternates={alternates}
+>
+  <div class="min-h-screen bg-white/[0.9] dark:bg-black/[0.88]">
+    <SiteHeader locale={locale} path="demos" width="6xl" />
+
+    <main
+      id="main-content"
+      class="mx-auto max-w-6xl px-6 pt-12 pb-24 sm:pt-16 sm:pb-28"
+    >
+      <PageIntro title={t.demos.title} intro={t.demos.intro}>
+        <p
+          slot="meta"
+          class="mt-4 text-xs tabular-nums text-black/35 dark:text-white/35"
+        >
+          {interpolate(t.demos.countLabel, { count: demos.length })}
+        </p>
+      </PageIntro>
+
+      <ul
+        aria-label={t.demos.archiveLabel}
+        class="grid grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 sm:gap-y-16 lg:grid-cols-3"
+      >
+        {
+          demos.map((demo, index) => (
+            <li
+              class="demo-item min-w-0"
+              data-page-enter={index < 6 ? true : undefined}
+              data-scroll-enter={index >= 6 ? true : undefined}
+              style={index < 6 ? `--enter-stage:${index + 2};` : undefined}
+            >
+              <a
+                href={demo.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={interpolate(t.demos.openDemoLabel, {
+                  name: demo.title,
+                })}
+                class="group block no-underline"
+              >
+                <div
+                  class="relative overflow-hidden rounded-lg border border-black/8 bg-black/[0.025] dark:border-white/10 dark:bg-white/[0.04]"
+                  style="aspect-ratio:16/10"
+                >
+                  {demo.video ? (
+                    <video
+                      class="demo-video h-full w-full object-cover transition duration-500 group-hover:scale-[1.015] group-hover:opacity-90 group-focus-visible:scale-[1.015] motion-reduce:transition-none"
+                      data-src={demo.video}
+                      poster={demo.cover}
+                      preload="none"
+                      muted
+                      loop
+                      playsinline
+                      aria-hidden="true"
+                    />
+                  ) : (
+                    <img
+                      src={demo.cover}
+                      alt=""
+                      width="800"
+                      height="500"
+                      class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.015] group-hover:opacity-90 group-focus-visible:scale-[1.015] motion-reduce:transition-none"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  )}
+                </div>
+
+                <div class="mt-4">
+                  <div class="flex items-baseline justify-between gap-4">
+                    <h2
+                      class="truncate text-base leading-6 font-medium text-black/85 group-hover:text-black dark:text-white/85 dark:group-hover:text-white"
+                    >
+                      {demo.title}
+                    </h2>
+                    <span
+                      aria-hidden="true"
+                      class="shrink-0 text-sm text-black/30 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 dark:text-white/30 motion-reduce:transition-none"
+                    >
+                      ↗
+                    </span>
+                  </div>
+                  <p
+                    class="mt-1.5 text-sm leading-6 text-black/52 dark:text-white/52"
+                  >
+                    {demo.description[locale]}
+                  </p>
+                  <time
+                    datetime={demo.date}
+                    class="mt-3 block text-xs tabular-nums text-black/32 dark:text-white/32"
+                  >
+                    {formatDate(demo.date)}
+                  </time>
+                </div>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <SiteFooter spacing="spacious" />
+    </main>
+  </div>
+</Layout>
+
+<script>
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const items = document.querySelectorAll<HTMLElement>(".demo-item");
+  const useScrollEntrance =
+    document.documentElement.dataset.enterMode === "full" &&
+    !reduceMotion.matches;
+
+  const loadVideo = (video: HTMLVideoElement) => {
+    const src = video.dataset.src;
+    if (!src || video.src) return;
+
+    video.src = src;
+    video.load();
+    video.play().catch(() => undefined);
+  };
+
+  const revealItem = (item: HTMLElement) => {
+    const video = item.querySelector<HTMLVideoElement>(".demo-video");
+    if (video && !reduceMotion.matches) loadVideo(video);
+
+    if (!item.classList.contains("scroll-enter-pending")) return;
+
+    item.classList.remove("scroll-enter-pending");
+    item.classList.add("scroll-enter-revealed");
+    item.addEventListener(
+      "animationend",
+      () => item.classList.remove("scroll-enter-revealed"),
+      { once: true },
+    );
+  };
+
+  if (useScrollEntrance) {
+    document
+      .querySelectorAll<HTMLElement>("[data-scroll-enter]")
+      .forEach((item) => item.classList.add("scroll-enter-pending"));
+  }
+
+  if (!reduceMotion.matches) {
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+
+            revealItem(entry.target as HTMLElement);
+            observer.unobserve(entry.target);
+          }
+        },
+        { rootMargin: "0px 0px 160px" },
+      );
+
+      items.forEach((item) => observer.observe(item));
+    } else {
+      items.forEach(revealItem);
+    }
+  }
+</script>
+
+<style>
+  .demo-item {
+    content-visibility: auto;
+    contain-intrinsic-size: 380px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html[data-enter-mode="full"]) .demo-item.scroll-enter-pending {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    :global(html[data-enter-mode="full"]) .demo-item.scroll-enter-revealed {
+      animation: demo-scroll-enter 700ms ease both;
+    }
+  }
+
+  @keyframes demo-scroll-enter {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

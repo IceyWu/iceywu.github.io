@@ -1,0 +1,73 @@
+---
+import { render } from "astro:content";
+import ArticleDetailLayout from "../../../components/ArticleDetailLayout.astro";
+import { localeParam, useTranslations, type Locale } from "../../../i18n";
+import {
+  formatPostDate,
+  getAdjacentPosts,
+  getPostAlternates,
+  getPosts,
+  getPostsUrl,
+  getPostTranslation,
+  getPostUrl,
+  getReadingTime,
+  type PostEntry,
+} from "../../../lib/posts";
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => ({
+    params: {
+      locale: localeParam(post.data.lang),
+      slug: post.data.route,
+    },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props as { post: PostEntry };
+const locale = post.data.lang as Locale;
+const t = useTranslations(locale);
+const posts = await getPosts();
+const { Content, headings } = await render(post);
+const alternates = getPostAlternates(post, posts);
+const targetLocale: Locale = locale === "zh-CN" ? "en" : "zh-CN";
+const translation = getPostTranslation(post, posts, targetLocale);
+const adjacent = getAdjacentPosts(post, posts);
+const readingTime = getReadingTime(post.body ?? "");
+---
+
+<ArticleDetailLayout
+  title={post.data.title}
+  description={post.data.description}
+  locale={locale}
+  alternates={alternates}
+  publishedAt={post.data.date.toISOString()}
+  dateLabel={formatPostDate(post.data.date, locale, true)}
+  readingTimeLabel={`${readingTime} ${locale === "zh-CN" ? "分钟" : "min"}`}
+  tags={post.data.tags}
+  headings={headings}
+  tocLabel={t.posts.tocLabel}
+  archiveLabel={t.posts.archiveLabel}
+  path="posts"
+  backHref={getPostsUrl(locale)}
+  backLabel={t.posts.backToPosts}
+  languagePath={translation ? `posts/${translation.data.route}` : undefined}
+  lineHeight={1.75}
+  newer={adjacent.newer
+    ? {
+        href: getPostUrl(adjacent.newer),
+        label: t.posts.newerPost,
+        title: adjacent.newer.data.title,
+      }
+    : undefined}
+  older={adjacent.older
+    ? {
+        href: getPostUrl(adjacent.older),
+        label: t.posts.olderPost,
+        title: adjacent.older.data.title,
+      }
+    : undefined}
+>
+  <Content />
+</ArticleDetailLayout>

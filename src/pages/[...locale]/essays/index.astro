@@ -1,0 +1,113 @@
+---
+import PageIntro from "../../../components/PageIntro.astro";
+import RssIcon from "../../../components/RssIcon.astro";
+import SiteFooter from "../../../components/SiteFooter.astro";
+import SiteHeader from "../../../components/SiteHeader.astro";
+import {
+  getLocalePageContext,
+  getLocaleStaticPaths,
+  interpolate,
+  type LocalePageProps,
+} from "../../../i18n";
+import Layout from "../../../layouts/Layout.astro";
+import {
+  formatEssayDate,
+  getEssayReadingTime,
+  getEssays,
+  getEssayUrl,
+  groupEssaysByYear,
+} from "../../../lib/essays";
+
+export function getStaticPaths() {
+  return getLocaleStaticPaths();
+}
+
+const { alternates, locale, t } = getLocalePageContext(
+  Astro.props as LocalePageProps,
+  "essays",
+);
+const essays = await getEssays(locale);
+const groups = groupEssaysByYear(essays);
+---
+
+<Layout
+  title={t.essays.seo.title}
+  description={t.essays.seo.description}
+  keywords={t.essays.seo.keywords}
+  locale={locale}
+  alternates={alternates}
+>
+  <div id="main-content" role="main" class="min-h-screen bg-white/[0.9] dark:bg-black/[0.88]">
+    <SiteHeader locale={locale} path="essays" width="xl">
+      <RssIcon slot="extra" label={t.essays.rssLabel} title="RSS" />
+    </SiteHeader>
+
+    <main class="mx-auto max-w-xl px-6 pt-10 pb-24 sm:pt-12 sm:pb-28">
+      <PageIntro
+        title={t.essays.title}
+        intro={t.essays.intro}
+        mode="sr-only"
+      />
+
+      {groups.length > 0 ? (
+        <div
+          aria-label={t.essays.archiveLabel}
+          class="space-y-10 sm:space-y-12"
+          data-page-enter-list
+        >
+          {groups.map((group) => (
+            <section aria-labelledby={`year-${group.year}`}>
+              <h2
+                id={`year-${group.year}`}
+                class="text-3xl leading-9 font-normal tabular-nums tracking-tight text-black/85 dark:text-white/85"
+              >
+                {group.year}
+              </h2>
+              <ul class="mt-3">
+                {group.essays.map((essay) => (
+                  <li>
+                    <a
+                      href={getEssayUrl(essay)}
+                      class="group grid gap-1 py-2.5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start sm:gap-5"
+                    >
+                      <div class="min-w-0">
+                        <h3 class="text-base leading-6 font-normal text-black/80 underline-offset-4 group-hover:text-black group-hover:underline dark:text-white/80 dark:group-hover:text-white">
+                          {essay.data.title}
+                        </h3>
+                        {essay.data.description && (
+                          <p class="mt-0.5 text-sm leading-5 text-black/45 dark:text-white/45">
+                            {essay.data.description}
+                          </p>
+                        )}
+                      </div>
+                      <p class="flex shrink-0 items-center gap-1.5 text-sm leading-6 tabular-nums text-black/40 dark:text-white/40">
+                        <time datetime={essay.data.date.toISOString()}>
+                          {formatEssayDate(essay.data.date, locale)}
+                        </time>
+                        <span aria-hidden="true">·</span>
+                        <span>
+                          {interpolate(t.essays.readingTime, {
+                            minutes: getEssayReadingTime(essay.body ?? ""),
+                          })}
+                        </span>
+                      </p>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
+        </div>
+      ) : (
+        <div class="py-16 text-center">
+          <h2 class="text-lg font-medium">{t.essays.emptyTitle}</h2>
+          <p class="mt-2 text-sm text-black/50 dark:text-white/50">
+            {t.essays.emptyDescription}
+          </p>
+        </div>
+      )}
+
+      <SiteFooter />
+    </main>
+  </div>
+</Layout>

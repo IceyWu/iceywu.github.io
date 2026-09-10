@@ -1,0 +1,37 @@
+---
+title: About Tauri
+date: 2024-05-16T17:23:00+08:00
+description: Exploring Tauri
+route: tauri
+translationKey: tauri
+tags:
+  - Rust
+lang: en
+---
+
+
+
+
+
+## Tauri
+
+Use the quick installer from [Rust](https://www.rust-lang.org/zh-CN/tools/install), then run `rustc --version` to verify that the installation succeeded. It is best to restart afterward.
+
+### Configuring a Chinese Mirror for Rust on Windows
+
+There is a `.cargo` directory in the user's home directory. The home directory is generally located at `C:\Users\` followed by the current username. In the `.cargo` directory, create a `config` (`config.toml`) file with the following content:
+
+```
+[source.crates-io]
+replace-with='rsproxy'
+[source.rsproxy]
+registry="https://rsproxy.cn/crates.io-index"
+[registries.rsproxy]
+index = "https://rsproxy.cn/crates.io-index"
+[net]
+git-fetch-with-cli = true
+```
+
+### Faster Packaging with WixTools
+
+Use the [GitHub download accelerator](https://moeyy.cn/gh-proxy), then download [WixTools-https://github.com/wixtoolset/wix3/releases/download/wix3112rtm/wix311-binaries.zip](https://github.com/wixtoolset/wix3/releases/download/wix3112rtm/wix311-binaries.zip).

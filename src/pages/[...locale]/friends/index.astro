@@ -1,0 +1,148 @@
+---
+import PageIntro from "../../../components/PageIntro.astro";
+import SiteFooter from "../../../components/SiteFooter.astro";
+import SiteHeader from "../../../components/SiteHeader.astro";
+import {
+  getLocalePageContext,
+  getLocaleStaticPaths,
+  interpolate,
+  type LocalePageProps,
+} from "../../../i18n";
+import Layout from "../../../layouts/Layout.astro";
+import { friends } from "../../../lib/friends";
+
+export function getStaticPaths() {
+  return getLocaleStaticPaths();
+}
+
+const { alternates, locale, t } = getLocalePageContext(
+  Astro.props as LocalePageProps,
+  "friends",
+);
+---
+
+<Layout
+  title={t.friends.seo.title}
+  description={t.friends.seo.description}
+  keywords={t.friends.seo.keywords}
+  locale={locale}
+  alternates={alternates}
+>
+  <div class="min-h-screen bg-white/[0.9] dark:bg-black/[0.88]">
+    <SiteHeader locale={locale} path="friends" />
+
+    <main
+      id="main-content"
+      class="mx-auto max-w-3xl px-6 pt-12 pb-24 sm:pt-16 sm:pb-28"
+    >
+      <PageIntro title={t.friends.title} intro={t.friends.intro}>
+        <p
+          slot="meta"
+          class="mt-4 text-xs tabular-nums text-black/35 dark:text-white/35"
+        >
+          {interpolate(t.friends.countLabel, { count: friends.length })}
+        </p>
+      </PageIntro>
+
+      <ul
+        aria-label={t.friends.archiveLabel}
+        class="divide-y divide-black/10 border-black/10 border-y dark:divide-white/10 dark:border-white/10"
+        data-page-enter-list
+      >
+        {
+          friends.map((friend) => (
+            <li>
+              <a
+                href={friend.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={interpolate(t.friends.openFriendLabel, {
+                  name: friend.name,
+                })}
+                class="group flex min-h-24 items-center gap-4 py-5 no-underline sm:gap-5"
+              >
+                <span
+                  class="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-black/[0.055] text-sm font-medium text-black/38 dark:bg-white/[0.09] dark:text-white/42"
+                >
+                  <span aria-hidden="true">{friend.name.slice(0, 1).toUpperCase()}</span>
+                  <img
+                    src={friend.avatar}
+                    alt={friend.name}
+                    width="56"
+                    height="56"
+                    loading="lazy"
+                    decoding="async"
+                    referrerpolicy="no-referrer"
+                    data-friend-avatar
+                    class="absolute inset-0 h-full w-full object-cover grayscale-[12%] transition group-hover:grayscale-0 motion-reduce:transition-none"
+                  />
+                </span>
+
+                <span class="min-w-0 flex-1">
+                  <span
+                    class="block text-base leading-6 font-medium text-black/82 group-hover:text-black dark:text-white/82 dark:group-hover:text-white"
+                  >
+                    {friend.name}
+                  </span>
+                  <span
+                    class="mt-1 block text-sm leading-6 text-black/48 dark:text-white/50"
+                  >
+                    {friend.description[locale]}
+                  </span>
+                </span>
+
+                <span
+                  aria-hidden="true"
+                  class="shrink-0 text-sm text-black/28 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 dark:text-white/30 motion-reduce:transition-none"
+                >
+                  ↗
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <section
+        aria-labelledby="friend-contact-title"
+        class="mt-16 max-w-xl sm:mt-20"
+        data-page-enter
+        style="--enter-stage: 3;"
+      >
+        <h2
+          id="friend-contact-title"
+          class="text-base font-medium text-black/80 dark:text-white/80"
+        >
+          {t.friends.contactTitle}
+        </h2>
+        <p class="mt-2 text-sm leading-6 text-black/50 dark:text-white/52">
+          {t.friends.contact.start}<a
+            href="https://github.com/iceywu"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-black/75 underline decoration-black/25 underline-offset-4 hover:text-black dark:text-white/75 dark:decoration-white/30 dark:hover:text-white"
+          >{t.friends.contact.link}</a>{t.friends.contact.end}
+        </p>
+      </section>
+
+      <SiteFooter spacing="spacious" />
+    </main>
+  </div>
+</Layout>
+
+<script>
+  const hideBrokenAvatar = (image: HTMLImageElement) => {
+    image.hidden = true;
+  };
+
+  document
+    .querySelectorAll<HTMLImageElement>("[data-friend-avatar]")
+    .forEach((image) => {
+      image.addEventListener("error", () => hideBrokenAvatar(image), {
+        once: true,
+      });
+      if (image.complete && image.naturalWidth === 0) {
+        hideBrokenAvatar(image);
+      }
+    });
+</script>

@@ -1,0 +1,223 @@
+---
+title: "From Requirement to Implementation: Notes on Building My SVG Animation Toy Library"
+date: 2025-05-10T12:30:00+08:00
+description: "From Requirement to Implementation: Notes on Building My SVG Animation Toy Library"
+route: svganimate
+translationKey: svganimate
+tags:
+  - SVG
+  - JavaScript
+  - Web
+lang: en
+---
+
+
+
+## Motivation
+
+While working on my personal website over the weekend, I came up with an interesting requirement: I wanted SVG icons to have a stroke animation. There are many mature animation libraries available, but most are feature-heavy and large. I only needed a lightweight SVG animation solution, so I decided to build one myself.
+
+That is how [svg-animate-web](https://github.com/IceyWu/svg-animate-web) came about: a small tool developed entirely out of personal interest, created purely to solve my own needs and shared with anyone who might have similar requirements.
+
+## Core Principles
+
+As a weekend toy project, I set a few simple rules for myself:
+
+- Implement only the features I need instead of pursuing an all-encompassing solution
+- Use no third-party dependencies and implement everything with native APIs
+- Keep the API as simple and clear as possible
+
+## How It Works
+
+Rather than presenting a large number of usage examples, I would like to share the core implementation principles behind this small tool and some of its more interesting technical details.
+
+## Demo
+<iframe
+      class="code-editor-frame"
+      data-code="code-editor-element"
+      data-code-id="7502654189516881972"
+      data-src="https://code.juejin.cn/pen/7502654189516881972"
+      style="display: block;width: 100%; height: 400px;"
+      loading="lazy"
+      src="https://code.juejin.cn/pen/7502654189516881972"
+></iframe>
+
+## Result
+
+![demo.gif](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/35868340435d41c199cd1fe2c65b3540~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAgSWNleVd1:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiMTI3MTQ1NTQzNjc4MTM1MiJ9&rk3s=e9ecf3d6&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1746936722&x-orig-sign=fpxAdylbxSTcjI8g0HZMrLZUphQ%3D)
+
+### Implementing the Stroke Animation
+
+The core of an SVG stroke animation relies on the `stroke-dasharray` and `stroke-dashoffset` properties. The central implementation in the source code is shown below:
+
+```javascript
+// 路径动画应用函数核心逻辑
+function applyPathAnimation(pathElement, options) {
+  // 计算路径长度
+  let pathLength = 0;
+  try {
+    pathLength = pathElement.getTotalLength(); // 获取路径总长度
+  } catch (e) {
+    // 降级处理
+    const bbox = pathElement.getBBox();
+    pathLength = 2 * (bbox.width + bbox.height);
+  }
+
+  // 生成唯一ID
+  const id = Math.random().toString(36).substring(2, 10);
+
+  // 设置初始样式
+  setStyle(pathElement, {
+    stroke: options.stroke,
+    strokeWidth: options.strokeWidth,
+    strokeDasharray: pathLength,
+    strokeDashoffset: pathLength,
+    animation: `animation${id} ${options.duration}s ${options.easing} ${options.delay}s ${options.count} forwards`,
+  });
+
+  // 插入动画关键帧
+  insertKeyframes(`
+    @keyframes animation${id} {
+      0% { stroke-dashoffset: ${pathLength}; }
+      100% { stroke-dashoffset: 0; }
+    }
+  `);
+}
+```
+
+The key technical points are:
+
+1. Use `getTotalLength()` to obtain the path length while providing a fallback
+2. Generate a unique ID for each animation to avoid CSS conflicts
+3. Dynamically create and insert CSS keyframes instead of using JavaScript animation
+
+### Dynamic Style and Keyframe Injection
+
+To avoid polluting the global CSS namespace, I dynamically generate and inject CSS:
+
+```javascript
+function insertKeyframes(keyframes) {
+  let styleEl = document.getElementById("svg-animate-keyframes");
+
+  if (!styleEl) {
+    styleEl = document.createElement("style");
+    styleEl.id = "svg-animate-keyframes";
+    document.head.appendChild(styleEl);
+  }
+
+  try {
+    const sheet = styleEl.sheet;
+    if (sheet) {
+      sheet.insertRule(keyframes, sheet.cssRules.length);
+    } else {
+      throw new Error("Style sheet not available");
+    }
+  } catch (e) {
+    // 回退处理
+    styleEl.textContent += keyframes;
+  }
+}
+```
+
+There is an interesting detail in this code: it first tries to manipulate the style sheet directly through the CSSOM API. If that fails, it falls back to modifying `textContent` directly. This improves compatibility while still using the more efficient API whenever possible.
+
+### Handling Different Element Types
+
+A simple conditional distinguishes between different SVG element types:
+
+```javascript
+export function setPathAnimation(element, options) {
+  if (!element || !(element instanceof SVGElement)) return;
+
+  // 检查是否为矩形元素
+  const isRect = element.tagName.toLowerCase() === "rect";
+
+  if (isRect) {
+    // 应用矩形特有动画
+    applyRectAnimation(element, {
+      // 配置参数
+    });
+  } else {
+    // 应用路径元素动画
+    applyPathAnimation(element, {
+      // 配置参数
+    });
+  }
+}
+```
+
+Although this straightforward approach is not especially elegant, it is simple and clear enough for a personal toy project, and it is easy to understand and modify.
+
+## Some Interesting Implementation Details
+
+### Automatically Handling Existing SVG Element Styles
+
+When applying an animation, the SVG element's existing styles must be considered. For example, this is how existing fill and stroke attributes can be handled gracefully:
+
+```javascript
+function getElementFillColor(element, defaultColor, userColor) {
+  if (userColor) return userColor;
+
+  const inlineFill = element.getAttribute("fill");
+  if (inlineFill && inlineFill !== "none") return inlineFill;
+
+  try {
+    const computedFill = window.getComputedStyle(element).fill;
+    if (
+      computedFill &&
+      computedFill !== "none" &&
+      computedFill !== "rgb(0, 0, 0)"
+    ) {
+      return computedFill;
+    }
+  } catch (e) {
+    // 忽略计算样式错误
+  }
+
+  return defaultColor;
+}
+```
+
+This function checks the following sources in order of priority:
+
+1. A color specified by the user
+2. The element's inline fill attribute
+3. The element's computed style
+4. The default color
+
+These details make the library more robust in real-world use.
+
+### Performance Considerations
+
+Even for a personal toy project, I care about performance. For example, when processing multiple SVG elements, I use a delayed execution strategy:
+
+```javascript
+export function setSvgAnimation(svgElement, options) {
+  if (!svgElement) return;
+
+  const pathElements = svgElement.querySelectorAll(
+    "path, line, polyline, polygon, rect, circle, ellipse"
+  );
+
+  Array.from(pathElements).forEach((element, index) => {
+    if (!(element instanceof SVGElement)) return;
+
+    const elementOptions = { ...options };
+    elementOptions.delay = (options?.delay ?? 0) + index * 0.1; // 错开动画开始时间
+    setPathAnimation(element, elementOptions);
+  });
+}
+```
+
+Assigning each element an increasing delay both creates a sequential animation effect and avoids the performance cost of running a large number of animations at the same time.
+
+
+## Possible Future Improvements
+
+Although this is a personal toy project, there are several interesting ways it could be improved:
+
+- Add dedicated animations for more element types
+- Optimize animation performance, especially for complex SVGs
+- Add more animation control options
+
+If you are interested in this small tool, feel free to submit an issue or PR on [GitHub](https://github.com/IceyWu/svg-animate-web) and help improve it.
